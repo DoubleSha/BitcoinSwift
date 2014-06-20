@@ -76,7 +76,7 @@
 
 - (NSData *)signatureForHash:(NSData *)hash {
   NSAssert([hash length] == 32, @"signatureForHash: only supports 256-bit hashes");
-  ECDSA_SIG *signature = ECDSA_do_sign([hash bytes], [hash length], _ECKey);
+  ECDSA_SIG *signature = ECDSA_do_sign([hash bytes], (int)[hash length], _ECKey);
   if (!signature) {
     return nil;
   }
@@ -108,9 +108,9 @@
   NSAssert([hash length] == 32, @"verifySignature:forHash: only supports 256-bit hashes");
   int result = ECDSA_verify(0,
                             [hash bytes],
-                            [hash length],
+                            (int)[hash length],
                             [signature bytes],
-                            [signature length],
+                            (int)[signature length],
                             _ECKey);
   // -1 = error, 0 = bad sig, 1 = good.
   return result == 1;

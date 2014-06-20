@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
+import BitcoinSwift
 import XCTest
 
 class HashingTests: XCTestCase {
@@ -28,7 +29,7 @@ class HashingTests: XCTestCase {
   }
 
   func testSHA256EmptyData() {
-    XCTAssertNil(NSData().SHA256Hash(), "\n[FAIL] SHA256Hash should be nil for empty data");
+    XCTAssertNil(NSData().SHA256Hash(), "\n[FAIL] SHA256Hash should be nil for empty data")
   }
 
   // RIPEMD160 Tests.
@@ -47,6 +48,6 @@ class HashingTests: XCTestCase {
   }
 
   func testRIPEMD160EmptyData() {
-    XCTAssertNil(NSData().RIPEMD160Hash(), "\n[FAIL] RIPEMD160Hash should be nil for empty data");
+    XCTAssertNil(NSData().RIPEMD160Hash(), "\n[FAIL] RIPEMD160Hash should be nil for empty data")
   }
 }

@@ -6,9 +6,8 @@
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
-import XCTest
-
 import BitcoinSwift
+import XCTest
 
 class ECKeyTests: XCTestCase {
 
