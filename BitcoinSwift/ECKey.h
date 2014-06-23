@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 // Represents a private/public EC key pair, created using the secp256k1 curve.
+// Note: This is objective-c because it depends on the openssl library, which is in c.
 @interface ECKey : NSObject
 
 @property(nonatomic, readonly) NSData *publicKey;

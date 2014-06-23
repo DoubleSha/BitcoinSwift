@@ -7,18 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A248C1C1953F06900C4607E /* NSData+Base58.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A248C1B1953F06900C4607E /* NSData+Base58.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0A248C1E1953F07600C4607E /* NSData+Base58.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C1D1953F07600C4607E /* NSData+Base58.m */; };
+		0A248C1C1953F06900C4607E /* NSData+StringEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A248C1B1953F06900C4607E /* NSData+StringEncoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A248C1E1953F07600C4607E /* NSData+StringEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */; };
 		0A248C201954015200C4607E /* Base58Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C1F1954015200C4607E /* Base58Tests.swift */; };
 		0A248C221954150800C4607E /* BitcoinAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C211954150800C4607E /* BitcoinAddressTests.swift */; };
 		0A52ACD1195397080041541B /* BitcoinSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACD0195397080041541B /* BitcoinSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A52ACD7195397080041541B /* BitcoinSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A52ACCB195397080041541B /* BitcoinSwift.framework */; };
 		0A52ACEB1953979F0041541B /* ECKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACE71953979F0041541B /* ECKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A52ACEC1953979F0041541B /* ECKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACE81953979F0041541B /* ECKey.m */; };
-		0A52ACEE1953979F0041541B /* NSData+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACEA1953979F0041541B /* NSData+HexString.m */; };
 		0A52ACF0195398320041541B /* ECKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACEF195398320041541B /* ECKeyTests.swift */; };
 		0A52ACF2195399FA0041541B /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A52ACF1195399FA0041541B /* libcrypto.a */; };
-		0A52ACF319539B300041541B /* NSData+HexString.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACE91953979F0041541B /* NSData+HexString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A52ACF91953A7690041541B /* NSData+Hashing.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACF81953A7690041541B /* NSData+Hashing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A52ACFB1953A79B0041541B /* NSData+Hashing.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACFA1953A79B0041541B /* NSData+Hashing.m */; };
 		0A52ACFD1953AAA00041541B /* HashingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACFC1953AAA00041541B /* HashingTests.swift */; };
@@ -36,8 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0A248C1B1953F06900C4607E /* NSData+Base58.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base58.h"; sourceTree = "<group>"; };
-		0A248C1D1953F07600C4607E /* NSData+Base58.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base58.m"; sourceTree = "<group>"; };
+		0A248C1B1953F06900C4607E /* NSData+StringEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+StringEncoding.h"; sourceTree = "<group>"; };
+		0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+StringEncoding.m"; sourceTree = "<group>"; };
 		0A248C1F1954015200C4607E /* Base58Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base58Tests.swift; sourceTree = "<group>"; };
 		0A248C211954150800C4607E /* BitcoinAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinAddressTests.swift; sourceTree = "<group>"; };
 		0A52ACCB195397080041541B /* BitcoinSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BitcoinSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,8 +45,6 @@
 		0A52ACDC195397080041541B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A52ACE71953979F0041541B /* ECKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECKey.h; sourceTree = "<group>"; };
 		0A52ACE81953979F0041541B /* ECKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECKey.m; sourceTree = "<group>"; };
-		0A52ACE91953979F0041541B /* NSData+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+HexString.h"; sourceTree = "<group>"; };
-		0A52ACEA1953979F0041541B /* NSData+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+HexString.m"; sourceTree = "<group>"; };
 		0A52ACEF195398320041541B /* ECKeyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ECKeyTests.swift; sourceTree = "<group>"; };
 		0A52ACF1195399FA0041541B /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = Libraries/libcrypto.a; sourceTree = "<group>"; };
 		0A52ACF81953A7690041541B /* NSData+Hashing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Hashing.h"; sourceTree = "<group>"; };
@@ -101,15 +97,13 @@
 			children = (
 				0A52ACE71953979F0041541B /* ECKey.h */,
 				0A52ACE81953979F0041541B /* ECKey.m */,
-				0A52ACE91953979F0041541B /* NSData+HexString.h */,
-				0A52ACEA1953979F0041541B /* NSData+HexString.m */,
 				0A52ACD0195397080041541B /* BitcoinSwift.h */,
 				0A52ACCE195397080041541B /* Supporting Files */,
 				0A52ACF81953A7690041541B /* NSData+Hashing.h */,
 				0A52ACFA1953A79B0041541B /* NSData+Hashing.m */,
 				0A52ACFE1953CA900041541B /* BitcoinAddress.swift */,
-				0A248C1B1953F06900C4607E /* NSData+Base58.h */,
-				0A248C1D1953F07600C4607E /* NSData+Base58.m */,
+				0A248C1B1953F06900C4607E /* NSData+StringEncoding.h */,
+				0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */,
 			);
 			path = BitcoinSwift;
 			sourceTree = "<group>";
@@ -149,8 +143,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A52ACF319539B300041541B /* NSData+HexString.h in Headers */,
-				0A248C1C1953F06900C4607E /* NSData+Base58.h in Headers */,
+				0A248C1C1953F06900C4607E /* NSData+StringEncoding.h in Headers */,
 				0A52ACF91953A7690041541B /* NSData+Hashing.h in Headers */,
 				0A52ACEB1953979F0041541B /* ECKey.h in Headers */,
 				0A52ACD1195397080041541B /* BitcoinSwift.h in Headers */,
@@ -255,10 +248,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A52ACEC1953979F0041541B /* ECKey.m in Sources */,
-				0A248C1E1953F07600C4607E /* NSData+Base58.m in Sources */,
+				0A248C1E1953F07600C4607E /* NSData+StringEncoding.m in Sources */,
 				0A52ACFF1953CA900041541B /* BitcoinAddress.swift in Sources */,
 				0A52ACFB1953A79B0041541B /* NSData+Hashing.m in Sources */,
-				0A52ACEE1953979F0041541B /* NSData+HexString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

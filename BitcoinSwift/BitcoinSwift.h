@@ -17,6 +17,5 @@ FOUNDATION_EXPORT const unsigned char BitcoinSwiftVersionString[];
 // Public objc headers that will be exposed to swift.
 
 #import "ECKey.h"
-#import "NSData+Base58.h"
 #import "NSData+Hashing.h"
-#import "NSData+HexString.h"
+#import "NSData+StringConversion.h"

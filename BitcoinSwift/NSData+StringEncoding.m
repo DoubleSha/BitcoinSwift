@@ -1,18 +1,18 @@
 //
-//  NSData+Base58String.m
+//  NSData+StringEncoding.m
 //  BitcoinSwift
 //
 //  Created by Kevin Greene on 6/19/14.
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
-#import "NSData+Base58.h"
+#import "NSData+StringEncoding.h"
 
 #import <openssl/bn.h>
 
 static const char base58Chars[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
-@implementation NSData (Base58)
+@implementation NSData (StringEncoding)
 
 - (NSString *)base58String {
   if (![self length]) {
@@ -49,6 +49,19 @@ static const char base58Chars[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkm
   // Reverse the string because we have been building it backwards. It's more efficient to reverse
   // the string after we are finished, rather than appending to the front as we go.
   return [self reversedStringWithString:base58String];
+}
+
+- (NSString *)hexString {
+  const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
+  if (!dataBuffer) {
+    return [NSString string];
+  }
+  NSUInteger dataLength = [self length];
+  NSMutableString *hexString = [NSMutableString stringWithCapacity:(dataLength * 2)];
+  for (int i = 0; i < dataLength; ++i) {
+    [hexString appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)dataBuffer[i]]];
+  }
+  return hexString;
 }
 
 #pragma mark Private Methods
