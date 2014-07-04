@@ -57,26 +57,29 @@ struct Message {
   }
 
   static func fromData(data: NSData) -> Message? {
+    if data.length == 0 {
+      return nil
+    }
     let stream = NSInputStream(data:data)
     stream.open()
-    let networkMagicValueInt = stream.readUInt32()
-    if !networkMagicValueInt {
+    let networkMagicValueRaw = stream.readUInt32()
+    if !networkMagicValueRaw {
       println("WARN: Failed to parse network magic value")
       return nil
     }
-    let networkMagicValue = NetworkMagicValue.fromRaw(networkMagicValueInt!)
+    let networkMagicValue = NetworkMagicValue.fromRaw(networkMagicValueRaw!)
     if !networkMagicValue {
-      println("WARN: Unsupported networkMagicValue \(networkMagicValueInt)")
+      println("WARN: Unsupported networkMagicValue \(networkMagicValueRaw)")
       return nil
     }
-    let commandString = stream.readASCIIStringWithLength(Command.encodedLength)
-    if !commandString {
+    let commandRaw = stream.readASCIIStringWithLength(Command.encodedLength)
+    if !commandRaw {
       println("WARN: Failed to parse command")
       return nil
     }
-    let command = Command.fromRaw(commandString!)
+    let command = Command.fromRaw(commandRaw!)
     if !command {
-      println("WARN: Unsupported command \(commandString!)")
+      println("WARN: Unsupported command \(commandRaw!)")
       return nil
     }
     let length = stream.readUInt32()
