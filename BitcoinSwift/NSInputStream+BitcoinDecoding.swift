@@ -10,7 +10,7 @@ import Foundation
 
 extension NSInputStream {
 
-  // TODO: Do this in a generic way instaed of copy-pasting.
+  // TODO: Read UInt's in a generic way instead of copy-pasting.
 
   func readUInt8() -> UInt8? {
     var int: UInt8 = 0
