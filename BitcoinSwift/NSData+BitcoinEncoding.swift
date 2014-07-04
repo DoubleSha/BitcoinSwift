@@ -1,5 +1,5 @@
 //
-//  NSData+IntegerEncoding.swift
+//  NSData+BitcoinEncoding.swift
 //  BitcoinSwift
 //
 //  Created by Kevin Greene on 6/29/14.
@@ -10,12 +10,12 @@ import Foundation
 
 extension NSData {
 
-  func UInt32AtIndex(index: Int, endianness: Endianness = .LittleEndian) -> UInt32 {
+  func UInt32AtIndex(index: Int, endianness: Endianness = .LittleEndian) -> UInt32? {
     assert(index + sizeof(UInt32) <= self.length)
     let subdata = self.subdataWithRange(NSRange(location:index, length:sizeof(UInt32)))
     let stream = NSInputStream(data:subdata)
     stream.open()
-    var int: UInt32 = stream.readUInt32(endianness:endianness)
+    var int: UInt32? = stream.readUInt32(endianness:endianness)
     stream.close()
     return int
   }
