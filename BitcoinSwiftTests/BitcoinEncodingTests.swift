@@ -61,6 +61,35 @@ class BitcoinEncodingTests: XCTestCase {
     XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
 
+  func testAppendVarIntUInt8() {
+    var data = NSMutableData()
+    data.appendVarInt(0xfc)
+    let expectedData = NSData(bytes:[0xfc] as UInt8[], length:1)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendVarIntUInt16() {
+    var data = NSMutableData()
+    data.appendVarInt(0x00fd)
+    let expectedData = NSData(bytes:[0xfd, 0xfd, 0x00] as UInt8[], length:3)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendVarIntUInt32() {
+    var data = NSMutableData()
+    data.appendVarInt(0x010000)
+    let expectedData = NSData(bytes:[0xfe, 0x00, 0x00, 0x01, 0x00] as UInt8[], length:5)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendVarIntUInt64() {
+    var data = NSMutableData()
+    data.appendVarInt(0x0100000000)
+    let expectedData =
+        NSData(bytes:[0xff, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00] as UInt8[], length:9)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
   func testReadUInt32LittleEndian() {
     let data = NSData(bytes:[0x01, 0x02, 0x03, 0x04] as UInt8[], length:4)
     let expectedInt: UInt32 = 0x04030201
@@ -240,6 +269,58 @@ class BitcoinEncodingTests: XCTestCase {
     }
 
     XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
+  func testReadVarIntUInt8() {
+    let bytes: UInt8[] = [0xfc]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let uint8 = inputStream.readVarInt() {
+      XCTAssertEqual(uint8, 0xfc, "\n[FAIL] Invalid int \(uint8)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read varint")
+    }
+    inputStream.close()
+  }
+
+  func testReadVarIntUInt16() {
+    let bytes: UInt8[] = [0xfd, 0x02, 0x01]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let uint16 = inputStream.readVarInt() {
+      XCTAssertEqual(uint16, 0x0102, "\n[FAIL] Invalid int \(uint16)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read varint")
+    }
+    inputStream.close()
+  }
+
+  func testReadVarIntUInt32() {
+    let bytes: UInt8[] = [0xfe, 0x04, 0x03, 0x02, 0x01]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let uint32 = inputStream.readVarInt() {
+      XCTAssertEqual(uint32, 0x01020304, "\n[FAIL] Invalid int \(uint32)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read varint")
+    }
+    inputStream.close()
+  }
+
+  func testReadVarIntUInt64() {
+    let bytes: UInt8[] = [0xff, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let uint64 = inputStream.readVarInt() {
+      XCTAssertEqual(uint64, 0x0102030405060708, "\n[FAIL] Invalid int \(uint64)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read varint")
+    }
     inputStream.close()
   }
 }

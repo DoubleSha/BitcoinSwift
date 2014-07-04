@@ -70,4 +70,25 @@ extension NSMutableData {
     }
     self.appendBytes(bytes, length:bytes.count)
   }
+
+  func appendVarInt(myInt: UInt64, endianness: Endianness = .LittleEndian) {
+    switch myInt {
+      case 0..0xfd:
+        appendUInt8(UInt8(myInt))
+      case 0xfd...0xffff:
+        appendUInt8(0xfd)
+        appendUInt16(UInt16(myInt), endianness:endianness)
+      case 0x010000...0xffffffff:
+        appendUInt8(0xfe)
+        appendUInt32(UInt32(myInt), endianness:endianness)
+      default:
+        appendUInt8(0xff)
+        appendUInt64(myInt, endianness:endianness)
+    }
+  }
+
+  func appendVarInt(myInt: Int, endianness: Endianness = .LittleEndian) {
+    assert(myInt >= 0)
+    appendVarInt(UInt64(myInt), endianness:endianness)
+  }
 }

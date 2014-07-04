@@ -119,7 +119,25 @@ extension NSInputStream {
     return data
   }
 
-  func readVarInt() -> Int64? {
+  func readVarInt() -> UInt64? {
+    if let uint8 = readUInt8() {
+      switch uint8 {
+        case 0..0xfd:
+          return UInt64(uint8)
+        case 0xfd:
+          if let uint16 = readUInt16() {
+            return UInt64(uint16)
+          }
+        case 0xfe:
+          if let uint32 = readUInt32() {
+            return UInt64(uint32)
+          }
+        case 0xff:
+          return readUInt64()
+        default:
+          return nil
+      }
+    }
     return nil
   }
 
