@@ -23,7 +23,7 @@ extension NSData {
 
 extension NSMutableData {
 
-  // TODO: Append UInt's in a generic way instaed of copy-pasting.
+  // TODO: Append UInt's in a generic way instead of copy-pasting.
 
   // ZOMGWTF Apple. The dummy Bool is needed because of an Apple bug. It doesn't compile
   // without that.
