@@ -10,6 +10,35 @@ import Foundation
 
 extension NSInputStream {
 
+  // TODO: Do this in a generic way instaed of copy-pasting.
+
+  func readUInt8() -> UInt8? {
+    var int: UInt8 = 0
+    let numberOfBytesRead = self.read(&int, maxLength:sizeof(UInt8))
+    if numberOfBytesRead != sizeof(UInt8) {
+      return nil
+    }
+    return int
+  }
+
+  func readUInt16(endianness: Endianness = .LittleEndian) -> UInt16? {
+    var readBuffer = Array<UInt8>(count:sizeof(UInt16), repeatedValue:0)
+    let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
+    if numberOfBytesRead != sizeof(UInt16) {
+      return nil
+    }
+    var int: UInt16 = 0
+    for i in 0..sizeof(UInt16) {
+      switch endianness {
+        case .LittleEndian:
+          int |= UInt16(readBuffer[i]) << UInt16(i * 8)
+        case .BigEndian:
+          int |= UInt16(readBuffer[i]) << UInt16((sizeof(UInt16) - 1 - i) * 8)
+      }
+    }
+    return int
+  }
+
   func readUInt32(endianness: Endianness = .LittleEndian) -> UInt32? {
     var readBuffer = Array<UInt8>(count:sizeof(UInt32), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
@@ -23,6 +52,24 @@ extension NSInputStream {
           int |= UInt32(readBuffer[i]) << UInt32(i * 8)
         case .BigEndian:
           int |= UInt32(readBuffer[i]) << UInt32((sizeof(UInt32) - 1 - i) * 8)
+      }
+    }
+    return int
+  }
+
+  func readUInt64(endianness: Endianness = .LittleEndian) -> UInt64? {
+    var readBuffer = Array<UInt8>(count:sizeof(UInt64), repeatedValue:0)
+    let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
+    if numberOfBytesRead != sizeof(UInt64) {
+      return nil
+    }
+    var int: UInt64 = 0
+    for i in 0..sizeof(UInt64) {
+      switch endianness {
+        case .LittleEndian:
+          int |= UInt64(readBuffer[i]) << UInt64(i * 8)
+        case .BigEndian:
+          int |= UInt64(readBuffer[i]) << UInt64((sizeof(UInt64) - 1 - i) * 8)
       }
     }
     return int
@@ -70,5 +117,13 @@ extension NSInputStream {
       }
     }
     return data
+  }
+
+  func readVarInt() -> Int64? {
+    return nil
+  }
+
+  func readVarString() -> String? {
+    return nil
   }
 }

@@ -23,14 +23,49 @@ extension NSData {
 
 extension NSMutableData {
 
-  func appendUInt32(int: UInt32, endianness: Endianness = .LittleEndian) {
+  // TODO: Do this in a generic way instaed of copy-pasting.
+
+  // ZOMGWTF Apple. The dummy Bool is needed because of an Apple bug. It doesn't compile
+  // without that.
+  // TODO: Remove this when the bug is fixed.
+  func appendUInt8(myInt: UInt8, dummy: Bool = false) {
+    self.appendBytes([myInt], length:1)
+  }
+
+  func appendUInt16(myInt: UInt16, endianness: Endianness = .LittleEndian) {
+    var bytes = UInt8[]()
+    for i in 0..sizeof(UInt16) {
+      switch endianness {
+        case .LittleEndian:
+          bytes.append(UInt8(myInt >> UInt16(i * 8) & UInt16(0xff)))
+        case .BigEndian:
+          bytes.append(UInt8(myInt >> UInt16((sizeof(UInt16) - 1 - i) * 8) & UInt16(0xff)))
+      }
+    }
+    self.appendBytes(bytes, length:bytes.count)
+  }
+
+  func appendUInt32(myInt: UInt32, endianness: Endianness = .LittleEndian) {
     var bytes = UInt8[]()
     for i in 0..sizeof(UInt32) {
       switch endianness {
         case .LittleEndian:
-          bytes.append(UInt8(int >> UInt32(i * 8) & UInt32(0xff)))
+          bytes.append(UInt8(myInt >> UInt32(i * 8) & UInt32(0xff)))
         case .BigEndian:
-          bytes.append(UInt8(int >> UInt32((sizeof(UInt32) - 1 - i) * 8) & UInt32(0xff)))
+          bytes.append(UInt8(myInt >> UInt32((sizeof(UInt32) - 1 - i) * 8) & UInt32(0xff)))
+      }
+    }
+    self.appendBytes(bytes, length:bytes.count)
+  }
+
+  func appendUInt64(myInt: UInt64, endianness: Endianness = .LittleEndian) {
+    var bytes = UInt8[]()
+    for i in 0..sizeof(UInt64) {
+      switch endianness {
+        case .LittleEndian:
+          bytes.append(UInt8(myInt >> UInt64(i * 8) & UInt64(0xff)))
+        case .BigEndian:
+          bytes.append(UInt8(myInt >> UInt64((sizeof(UInt64) - 1 - i) * 8) & UInt64(0xff)))
       }
     }
     self.appendBytes(bytes, length:bytes.count)
