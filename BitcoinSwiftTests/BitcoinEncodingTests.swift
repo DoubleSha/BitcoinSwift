@@ -10,6 +10,8 @@ import XCTest
 
 class BitcoinEncodingTests: XCTestCase {
 
+  // MARK: - Encoding Tests
+
   func testAppendUInt8() {
     var data = NSMutableData()
     data.appendUInt8(0x1)
@@ -89,6 +91,15 @@ class BitcoinEncodingTests: XCTestCase {
         NSData(bytes:[0xff, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00] as UInt8[], length:9)
     XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
+
+  func testAppendVarString() {
+    var data = NSMutableData()
+    data.appendVarString("abc")
+    let expectedData = NSData(bytes:[0x03, 0x61, 0x62, 0x63] as UInt8[], length:4)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  // MARK: - Decoding Tests
 
   func testReadUInt32LittleEndian() {
     let data = NSData(bytes:[0x01, 0x02, 0x03, 0x04] as UInt8[], length:4)
