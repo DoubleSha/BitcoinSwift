@@ -141,7 +141,12 @@ extension NSInputStream {
     return nil
   }
 
-  func readVarString() -> String? {
+  // The dummy bool is needed because of a compiler bug.
+  // TODO: Remove the dummy bool when Apple fixes the bug.
+  func readVarString(dummy: Bool = false) -> String? {
+    if let length = readVarInt() {
+      return readASCIIStringWithLength(Int(length))
+    }
     return nil
   }
 }

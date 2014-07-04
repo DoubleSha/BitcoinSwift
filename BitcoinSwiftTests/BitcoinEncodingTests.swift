@@ -334,4 +334,18 @@ class BitcoinEncodingTests: XCTestCase {
     }
     inputStream.close()
   }
+
+  func testReadVarString() {
+    let bytes: UInt8[] = [0x03, 0x61, 0x62, 0x63] // "abc"
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let string = inputStream.readVarString() {
+      XCTAssertEqual(string, "abc", "\n[FAIL] Unexpected string \(string)")
+    } else {
+      XCTFail("\n[FAIL] Failed to parse string")
+    }
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
 }
