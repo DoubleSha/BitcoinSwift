@@ -1,5 +1,5 @@
 //
-//  MessageParsingTests.swift
+//  MessageTests.swift
 //  BitcoinSwift
 //
 //  Created by Kevin Greene on 7/3/14.
@@ -9,7 +9,7 @@
 import BitcoinSwift
 import XCTest
 
-class MessageParsingTests: XCTestCase {
+class MessageTests: XCTestCase {
 
   let networkMagicValue = Message.NetworkMagicValue.MainNet
   let command = Message.Command.Version
