@@ -23,8 +23,6 @@ extension NSData {
 
 extension NSMutableData {
 
-  // TODO: Append UInt's in a generic way instead of copy-pasting.
-
   // ZOMGWTF Apple. The dummy Bool is needed because of an Apple bug. It doesn't compile
   // without that.
   // TODO: Remove this when the bug is fixed.
@@ -97,6 +95,31 @@ extension NSMutableData {
     appendVarInt(length)
     if length > 0 {
       appendBytes(string.dataUsingEncoding(NSASCIIStringEncoding).bytes, length:length)
+    }
+  }
+
+  func appendNetworkAddress(networkAddress: NetworkAddress) {
+    appendUInt32(UInt32(networkAddress.date.timeIntervalSince1970))
+    appendUInt64(networkAddress.services.toRaw())
+    appendIPAddress(networkAddress.IP)
+    appendUInt16(networkAddress.port, endianness:.BigEndian)  // Network byte order.
+  }
+
+  func appendIPAddress(IP: NetworkAddress.IPAddress) {
+    // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
+    // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
+    // Addresses are encoded using network byte order.
+    switch IP {
+      case .IPV4(let word):
+        appendUInt32(0, endianness:.BigEndian)
+        appendUInt32(0, endianness:.BigEndian)
+        appendUInt32(0xffff, endianness:.BigEndian)
+        appendUInt32(word, endianness:.BigEndian)
+      case .IPV6(let word0, let word1, let word2, let word3):
+        appendUInt32(word0, endianness:.BigEndian)
+        appendUInt32(word1, endianness:.BigEndian)
+        appendUInt32(word2, endianness:.BigEndian)
+        appendUInt32(word3, endianness:.BigEndian)
     }
   }
 }

@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
+import BitcoinSwift
 import XCTest
 
 class BitcoinEncodingTests: XCTestCase {
@@ -96,6 +97,48 @@ class BitcoinEncodingTests: XCTestCase {
     var data = NSMutableData()
     data.appendVarString("abc")
     let expectedData = NSData(bytes:[0x03, 0x61, 0x62, 0x63] as UInt8[], length:4)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendIPV4Address() {
+    var data = NSMutableData()
+    data.appendIPAddress(NetworkAddress.IPAddress.IPV4(0x01020304))
+    let IPBytes: UInt8[] = [0x00, 0x00, 0x00, 0x00,
+                            0x00, 0x00, 0x00, 0x00,
+                            0x00, 0x00, 0xff, 0xff,
+                            0x01, 0x02, 0x03, 0x04]
+    let expectedData = NSData(bytes:IPBytes, length:IPBytes.count)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendIPV6Address() {
+    var data = NSMutableData()
+    data.appendIPAddress(NetworkAddress.IPAddress.IPV6(0x01020304,
+                                                       0x11121314,
+                                                       0x21222324,
+                                                       0x31323334))
+    let IPBytes: UInt8[] = [0x01, 0x02, 0x03, 0x04,
+                            0x11, 0x12, 0x13, 0x14,
+                            0x21, 0x22, 0x23, 0x24,
+                            0x31, 0x32, 0x33, 0x34]
+    let expectedData = NSData(bytes:IPBytes, length:IPBytes.count)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendNetworkAddress() {
+    let date = NSDate(timeIntervalSince1970:0)
+    let services = Message.Services.NodeNetwork
+    let IP = NetworkAddress.IPAddress.IPV4(0x01020304)
+    let port: UInt16 = 0x8333
+    let networkAddress = NetworkAddress(date:date, services:services, IP:IP, port:port)
+    var data = NSMutableData()
+    data.appendNetworkAddress(networkAddress)
+    let expectedBytes: UInt8[] = [0x00, 0x00, 0x00, 0x00,                         // timestamp
+                                  0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+                                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
+                                  0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
+                                  0x83, 0x33]                                     // port
+    let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
     XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
 
@@ -344,6 +387,69 @@ class BitcoinEncodingTests: XCTestCase {
       XCTAssertEqual(string, "abc", "\n[FAIL] Unexpected string \(string)")
     } else {
       XCTFail("\n[FAIL] Failed to parse string")
+    }
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
+  func testReadIPV4Address() {
+    let bytes: UInt8[] = [0x00, 0x00, 0x00, 0x00,
+                          0x00, 0x00, 0x00, 0x00,
+                          0x00, 0x00, 0xff, 0xff,
+                          0x01, 0x02, 0x03, 0x04]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let IP = inputStream.readIPAddress() {
+      let expectedIP = NetworkAddress.IPAddress.IPV4(0x01020304)
+      XCTAssertEqual(IP, expectedIP, "\n[FAIL] Invalid IP")
+    } else {
+      XCTFail("\n[FAIL] Failed to parse IP")
+    }
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
+  func testReadIPV6Address() {
+    let bytes: UInt8[] = [0x01, 0x02, 0x03, 0x04,
+                          0x11, 0x12, 0x13, 0x14,
+                          0x21, 0x22, 0x23, 0x24,
+                          0x31, 0x32, 0x33, 0x34]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let IP = inputStream.readIPAddress() {
+      let expectedIP = NetworkAddress.IPAddress.IPV6(0x01020304,
+                                                     0x11121314,
+                                                     0x21222324,
+                                                     0x31323334)
+      XCTAssertEqual(IP, expectedIP, "\n[FAIL] Invalid IP")
+    } else {
+      XCTFail("\n[FAIL] Failed to parse IP")
+    }
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+
+  }
+
+  func testReadNetworkAddress() {
+    let bytes: UInt8[] = [0x00, 0x00, 0x00, 0x00,                         // timestamp
+                          0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+                          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
+                          0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
+                          0x83, 0x33]                                     // port
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let networkAddress = inputStream.readNetworkAddress() {
+      let date = NSDate(timeIntervalSince1970:0)
+      let services = Message.Services.NodeNetwork
+      let IP = NetworkAddress.IPAddress.IPV4(0x01020304)
+      let port: UInt16 = 0x8333
+      let expectedNetworkAddress = NetworkAddress(date:date, services:services, IP:IP, port:port)
+      XCTAssertEqual(networkAddress, expectedNetworkAddress, "\n[FAIL] Invalid NetworkAddress")
+    } else {
+      XCTFail("\n[FAIL] Failed to parse NetworkAddress")
     }
     XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
     inputStream.close()

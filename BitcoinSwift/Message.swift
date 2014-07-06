@@ -13,6 +13,10 @@ protocol MessagePayload {
   var bytes: NSData { get }
 }
 
+func ==(lhs: Message.Services, rhs: Message.Services) -> Bool {
+  return lhs.value == rhs.value
+}
+
 struct Message {
 
   // Magic value indicating message origin network, and used to seek to next message when stream
@@ -35,6 +39,20 @@ struct Message {
                                 withBytes:ASCIIStringData.bytes)
       return bytes
     }
+  }
+
+  // Bitfield of features to be enabled for this connection.
+  struct Services : RawOptionSet {
+    var value: UInt64 = 0
+    init(_ value: UInt64) { self.value = value }
+    func toRaw() -> UInt64 { return self.value }
+    func getLogicValue() -> Bool { return self.value != 0 }
+    static func fromRaw(raw: UInt64) -> Services? { return Services(raw) }
+    static func fromMask(raw: UInt64) -> Services { return Services(raw) }
+
+    static var None: Services { return Services(0) }
+    // This node can be asked for full blocks instead of just headers.
+    static var NodeNetwork: Services { return Services(1 << 0) }
   }
 
   let networkMagicValue: NetworkMagicValue
