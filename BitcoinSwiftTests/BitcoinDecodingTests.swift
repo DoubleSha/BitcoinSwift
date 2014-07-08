@@ -410,8 +410,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadNetworkAddress() {
-    let bytes: UInt8[] = [0x00, 0x00, 0x00, 0x00,                         // timestamp
-                          0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+    let bytes: UInt8[] = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
                           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
                           0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
                           0x20, 0x8D]                                     // port
@@ -419,11 +418,10 @@ class BitcoinDecodingTests: XCTestCase {
     let inputStream = NSInputStream(data:data)
     inputStream.open()
     if let networkAddress = inputStream.readNetworkAddress() {
-      let date = NSDate(timeIntervalSince1970:0)
       let services = Message.Services.NodeNetwork
       let IP = NetworkAddress.IPAddress.IPV4(0x01020304)
       let port: UInt16 = 8333
-      let expectedNetworkAddress = NetworkAddress(date:date, services:services, IP:IP, port:port)
+      let expectedNetworkAddress = NetworkAddress(services:services, IP:IP, port:port)
       XCTAssertEqual(networkAddress, expectedNetworkAddress, "\n[FAIL] Invalid NetworkAddress")
     } else {
       XCTFail("\n[FAIL] Failed to parse NetworkAddress")

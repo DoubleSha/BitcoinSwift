@@ -10,7 +10,7 @@ import Foundation
 
 struct VersionMessage: MessagePayload {
 
-  let protocolVersion: UInt32
+  let protocolVersion: Int32
   let services: Message.Services
   let date: NSDate
   let senderAddress: NetworkAddress
@@ -18,7 +18,7 @@ struct VersionMessage: MessagePayload {
   let nonce: UInt64
   let userAgent: String
   let blockStartHeight: Int32
-  let relayTransactions: Bool
+  let announceRelayedTransactions: Bool
 
   // MARK: - MessagePayload
 
@@ -28,7 +28,7 @@ struct VersionMessage: MessagePayload {
 
   var data: NSData {
     var data = NSMutableData()
-    data.appendUInt32(protocolVersion)
+    data.appendInt32(protocolVersion)
     data.appendUInt64(services.toRaw())
     data.appendInt64(Int64(date.timeIntervalSince1970))
     data.appendNetworkAddress(receiverAddress)
@@ -36,7 +36,7 @@ struct VersionMessage: MessagePayload {
     data.appendUInt64(nonce)
     data.appendVarString(userAgent)
     data.appendInt32(blockStartHeight)
-    data.appendBool(relayTransactions)
+    data.appendBool(announceRelayedTransactions)
     return data
   }
 
@@ -46,7 +46,7 @@ struct VersionMessage: MessagePayload {
     }
     let stream = NSInputStream(data:data)
     stream.open()
-    let protocolVersion = stream.readUInt32()
+    let protocolVersion = stream.readInt32()
     if !protocolVersion {
       println("WARN: Failed to parse protocolVersion from VersionMessage \(data)")
       return nil
@@ -88,9 +88,9 @@ struct VersionMessage: MessagePayload {
       println("WARN: Failed to parse blockStartHeight from VersionMessage \(data)")
       return nil
     }
-    let relayTransactions = stream.readBool()
-    if !relayTransactions {
-      println("WARN: Failed to parse relayTransactions from VersionMessage \(data)")
+    let announceRelayedTransactions = stream.readBool()
+    if !announceRelayedTransactions {
+      println("WARN: Failed to parse announceRelayedTransactions from VersionMessage \(data)")
       return nil
     }
     return VersionMessage(protocolVersion:protocolVersion!,
@@ -101,6 +101,6 @@ struct VersionMessage: MessagePayload {
                           nonce:nonce!,
                           userAgent:userAgent!,
                           blockStartHeight:blockStartHeight!,
-                          relayTransactions:relayTransactions!)
+                          announceRelayedTransactions:announceRelayedTransactions!)
   }
 }

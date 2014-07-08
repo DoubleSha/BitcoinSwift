@@ -9,8 +9,7 @@
 import Foundation
 
 func ==(lhs: NetworkAddress, rhs: NetworkAddress) -> Bool {
-  return lhs.date.isEqualToDate(rhs.date) &&
-      lhs.services == rhs.services &&
+  return lhs.services == rhs.services &&
       lhs.IP == rhs.IP &&
       lhs.port == rhs.port
 }
@@ -41,7 +40,6 @@ struct NetworkAddress: Equatable {
     case IPV6(UInt32, UInt32, UInt32, UInt32)
   }
 
-  var date: NSDate
   let services: Message.Services
   let IP: IPAddress
   let port: UInt16

@@ -216,11 +216,6 @@ extension NSInputStream {
   }
 
   func readNetworkAddress() -> NetworkAddress? {
-    let timestamp = readUInt32()
-    if !timestamp {
-      return nil
-    }
-    let date = NSDate(timeIntervalSince1970:NSTimeInterval(timestamp!))
     let servicesRaw = readUInt64()
     if !servicesRaw {
       return nil
@@ -234,7 +229,7 @@ extension NSInputStream {
     if !port {
       return nil
     }
-    return NetworkAddress(date:date, services:services, IP:IP!, port:port!)
+    return NetworkAddress(services:services, IP:IP!, port:port!)
   }
 
   func readIPAddress() -> NetworkAddress.IPAddress? {

@@ -142,8 +142,10 @@ extension NSMutableData {
     }
   }
 
-  func appendNetworkAddress(networkAddress: NetworkAddress) {
-    appendUInt32(UInt32(networkAddress.date.timeIntervalSince1970))
+  func appendNetworkAddress(networkAddress: NetworkAddress, withTimestamp timestamp: Bool = false) {
+    if timestamp {
+      appendUInt32(UInt32(NSDate().timeIntervalSince1970))
+    }
     appendUInt64(networkAddress.services.toRaw())
     appendIPAddress(networkAddress.IP)
     appendUInt16(networkAddress.port, endianness:.BigEndian)  // Network byte order.
