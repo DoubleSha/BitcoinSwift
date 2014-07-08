@@ -19,4 +19,8 @@ struct VersionAckMessage: MessagePayload {
   var data: NSData {
     return NSData(bytes:[0] as UInt8[], length:1)
   }
+
+  static func fromData(data: NSData) -> VersionAckMessage?  {
+    return nil
+  }
 }

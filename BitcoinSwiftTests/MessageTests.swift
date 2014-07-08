@@ -26,7 +26,7 @@ class MessageTests: XCTestCase {
     let message = Message(networkMagicValue:networkMagicValue,
                           command:command,
                           payloadData:payloadData)
-    let encodedMessage = message.bytes
+    let encodedMessage = message.data
     let messageData = NSData(bytes:messageBytes, length:messageBytes.count)
     XCTAssertEqual(encodedMessage, messageData,
                    "\n[FAIL] Invalid encoded message \(encodedMessage)")

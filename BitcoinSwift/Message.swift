@@ -11,6 +11,7 @@ import Foundation
 protocol MessagePayload {
   var command: Message.Command { get }
   var data: NSData { get }
+  class func fromData(data: NSData) -> Self?
 }
 
 func ==(lhs: Message.Services, rhs: Message.Services) -> Bool {
@@ -121,7 +122,7 @@ struct Message {
                    payloadData:payloadData!)
   }
 
-  var bytes: NSData {
+  var data: NSData {
     var bytes = NSMutableData()
     bytes.appendUInt32(networkMagicValue.toRaw())
     bytes.appendData(command.data)
@@ -130,6 +131,8 @@ struct Message {
     bytes.appendData(payload)
     return bytes
   }
+
+  // MARK: - Private Methods
 
   static func checksumForPayload(payload: NSData) -> UInt32 {
     return payload.SHA256Hash().SHA256Hash().UInt32AtIndex(0)!

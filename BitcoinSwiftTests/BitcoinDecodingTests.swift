@@ -414,7 +414,7 @@ class BitcoinDecodingTests: XCTestCase {
                           0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
                           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
                           0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
-                          0x83, 0x33]                                     // port
+                          0x20, 0x8D]                                     // port
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -422,7 +422,7 @@ class BitcoinDecodingTests: XCTestCase {
       let date = NSDate(timeIntervalSince1970:0)
       let services = Message.Services.NodeNetwork
       let IP = NetworkAddress.IPAddress.IPV4(0x01020304)
-      let port: UInt16 = 0x8333
+      let port: UInt16 = 8333
       let expectedNetworkAddress = NetworkAddress(date:date, services:services, IP:IP, port:port)
       XCTAssertEqual(networkAddress, expectedNetworkAddress, "\n[FAIL] Invalid NetworkAddress")
     } else {

@@ -181,7 +181,7 @@ class BitcoinEncodingTests: XCTestCase {
     let date = NSDate(timeIntervalSince1970:1)
     let services = Message.Services.NodeNetwork
     let IP = NetworkAddress.IPAddress.IPV4(0x01020304)
-    let port: UInt16 = 0x8333
+    let port: UInt16 = 8333
     let networkAddress = NetworkAddress(date:date, services:services, IP:IP, port:port)
     var data = NSMutableData()
     data.appendNetworkAddress(networkAddress)
@@ -189,7 +189,7 @@ class BitcoinEncodingTests: XCTestCase {
                                   0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
                                   0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
-                                  0x83, 0x33]                                     // port
+                                  0x20, 0x8D]                                     // port
     let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
     XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
