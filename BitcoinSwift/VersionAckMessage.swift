@@ -16,7 +16,7 @@ struct VersionAckMessage: MessagePayload {
     return Message.Command.VersionAck
   }
 
-  var bytes: NSData {
+  var data: NSData {
     return NSData(bytes:[0] as UInt8[], length:1)
   }
 }

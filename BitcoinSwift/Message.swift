@@ -10,7 +10,7 @@ import Foundation
 
 protocol MessagePayload {
   var command: Message.Command { get }
-  var bytes: NSData { get }
+  var data: NSData { get }
 }
 
 func ==(lhs: Message.Services, rhs: Message.Services) -> Bool {
@@ -32,12 +32,12 @@ struct Message {
     static let encodedLength = 12
 
     // The command string encoded into 12 bytes, null padded.
-    var bytes: NSData {
-      var bytes = NSMutableData(length:Command.encodedLength)
+    var data: NSData {
+      var data = NSMutableData(length:Command.encodedLength)
       let ASCIIStringData = self.toRaw().dataUsingEncoding(NSASCIIStringEncoding)
-      bytes.replaceBytesInRange(NSRange(location:0, length:ASCIIStringData.length),
-                                withBytes:ASCIIStringData.bytes)
-      return bytes
+      data.replaceBytesInRange(NSRange(location:0, length:ASCIIStringData.length),
+                               withBytes:ASCIIStringData.bytes)
+      return data
     }
   }
 
@@ -60,17 +60,17 @@ struct Message {
   let payload: NSData
   let payloadChecksum: UInt32
 
-  init(networkMagicValue: NetworkMagicValue, command: Command, payloadBytes: NSData) {
+  init(networkMagicValue: NetworkMagicValue, command: Command, payloadData: NSData) {
     self.networkMagicValue = networkMagicValue
     self.command = command
-    self.payload = payloadBytes
+    self.payload = payloadData
     self.payloadChecksum = Message.checksumForPayload(payload)
   }
 
   init(networkMagicValue: NetworkMagicValue, payload: MessagePayload) {
     self.networkMagicValue = networkMagicValue
     command = payload.command
-    self.payload = payload.bytes
+    self.payload = payload.data
     self.payloadChecksum = Message.checksumForPayload(self.payload)
   }
 
@@ -110,21 +110,21 @@ struct Message {
       println("WARN: Failed to parse checksum")
       return nil
     }
-    let payloadBytes = stream.readData()
-    if !payloadBytes || payloadBytes!.length == 0 {
+    let payloadData = stream.readData()
+    if !payloadData || payloadData!.length == 0 {
       println("WARN: Failed to parse payload")
       return nil
     }
     stream.close()
     return Message(networkMagicValue:networkMagicValue!,
                    command:command!,
-                   payloadBytes:payloadBytes!)
+                   payloadData:payloadData!)
   }
 
   var bytes: NSData {
     var bytes = NSMutableData()
     bytes.appendUInt32(networkMagicValue.toRaw())
-    bytes.appendData(command.bytes)
+    bytes.appendData(command.data)
     bytes.appendUInt32(UInt32(payload.length))
     bytes.appendUInt32(payloadChecksum)
     bytes.appendData(payload)

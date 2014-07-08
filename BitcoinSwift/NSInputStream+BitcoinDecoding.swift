@@ -10,7 +10,7 @@ import Foundation
 
 extension NSInputStream {
 
-  // TODO: Read UInt's in a generic way instead of copy-pasting.
+  // TODO: Read Ints in a generic way instead of copy-pasting.
 
   func readUInt8() -> UInt8? {
     var int: UInt8 = 0
@@ -70,6 +70,60 @@ extension NSInputStream {
           int |= UInt64(readBuffer[i]) << UInt64(i * 8)
         case .BigEndian:
           int |= UInt64(readBuffer[i]) << UInt64((sizeof(UInt64) - 1 - i) * 8)
+      }
+    }
+    return int
+  }
+
+  func readInt16(endianness: Endianness = .LittleEndian) -> Int16? {
+    var readBuffer = Array<UInt8>(count:sizeof(Int16), repeatedValue:0)
+    let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
+    if numberOfBytesRead != sizeof(Int16) {
+      return nil
+    }
+    var int: Int16 = 0
+    for i in 0..sizeof(Int16) {
+      switch endianness {
+        case .LittleEndian:
+          int |= Int16(readBuffer[i]) << Int16(i * 8)
+        case .BigEndian:
+          int |= Int16(readBuffer[i]) << Int16((sizeof(Int16) - 1 - i) * 8)
+      }
+    }
+    return int
+  }
+
+  func readInt32(endianness: Endianness = .LittleEndian) -> Int32? {
+    var readBuffer = Array<UInt8>(count:sizeof(Int32), repeatedValue:0)
+    let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
+    if numberOfBytesRead != sizeof(Int32) {
+      return nil
+    }
+    var int: Int32 = 0
+    for i in 0..sizeof(Int32) {
+      switch endianness {
+        case .LittleEndian:
+          int |= Int32(readBuffer[i]) << Int32(i * 8)
+        case .BigEndian:
+          int |= Int32(readBuffer[i]) << Int32((sizeof(Int32) - 1 - i) * 8)
+      }
+    }
+    return int
+  }
+
+  func readInt64(endianness: Endianness = .LittleEndian) -> Int64? {
+    var readBuffer = Array<UInt8>(count:sizeof(Int64), repeatedValue:0)
+    let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
+    if numberOfBytesRead != sizeof(Int64) {
+      return nil
+    }
+    var int: Int64 = 0
+    for i in 0..sizeof(Int64) {
+      switch endianness {
+        case .LittleEndian:
+          int |= Int64(readBuffer[i]) << Int64(i * 8)
+        case .BigEndian:
+          int |= Int64(readBuffer[i]) << Int64((sizeof(Int64) - 1 - i) * 8)
       }
     }
     return int
@@ -137,6 +191,17 @@ extension NSInputStream {
         default:
           return nil
       }
+    }
+    return nil
+  }
+
+  // TODO: Remove the dummy Bool once Apple fixes their shit.
+  func readBool(dummy: Bool = false) -> Bool? {
+    if let uint8 = readUInt8() {
+      if uint8 > 0 {
+        return true
+      }
+      return false
     }
     return nil
   }

@@ -62,6 +62,50 @@ class BitcoinEncodingTests: XCTestCase {
     XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
 
+  func testAppendInt16LittleEndian() {
+    var data = NSMutableData()
+    data.appendInt16(-2)
+    let expectedData = NSData(bytes:[0xfe, 0xff] as UInt8[], length:2)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendInt16BigEndian() {
+    var data = NSMutableData()
+    data.appendInt16(-2, endianness:.BigEndian)
+    let expectedData = NSData(bytes:[0xff, 0xfe] as UInt8[], length:2)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendInt32LittleEndian() {
+    var data = NSMutableData()
+    data.appendInt32(-2)
+    let expectedData = NSData(bytes:[0xfe, 0xff, 0xff, 0xff] as UInt8[], length:4)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendInt32BigEndian() {
+    var data = NSMutableData()
+    data.appendInt32(-2, endianness:.BigEndian)
+    let expectedData = NSData(bytes:[0xff, 0xff, 0xff, 0xfe] as UInt8[], length:4)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendInt64LittleEndian() {
+    var data = NSMutableData()
+    data.appendInt64(-2)
+    let expectedData = NSData(bytes:[0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff] as UInt8[],
+                              length:8)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendInt64BigEndian() {
+    var data = NSMutableData()
+    data.appendInt64(-2, endianness:.BigEndian)
+    let expectedData = NSData(bytes:[0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe] as UInt8[],
+                              length:8)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
   func testAppendVarIntUInt8() {
     var data = NSMutableData()
     data.appendVarInt(0xfc)
@@ -88,6 +132,16 @@ class BitcoinEncodingTests: XCTestCase {
     data.appendVarInt(0x0100000000)
     let expectedData =
         NSData(bytes:[0xff, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00] as UInt8[], length:9)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendBool() {
+    var data = NSMutableData()
+    data.appendBool(true)
+    var expectedData = NSData(bytes:[0x01] as UInt8[], length:1)
+    XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+    data.appendBool(false)
+    expectedData = NSData(bytes:[0x01, 0x00] as UInt8[], length:2)
     XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
 
@@ -124,14 +178,14 @@ class BitcoinEncodingTests: XCTestCase {
   }
 
   func testAppendNetworkAddress() {
-    let date = NSDate(timeIntervalSince1970:0)
+    let date = NSDate(timeIntervalSince1970:1)
     let services = Message.Services.NodeNetwork
     let IP = NetworkAddress.IPAddress.IPV4(0x01020304)
     let port: UInt16 = 0x8333
     let networkAddress = NetworkAddress(date:date, services:services, IP:IP, port:port)
     var data = NSMutableData()
     data.appendNetworkAddress(networkAddress)
-    let expectedBytes: UInt8[] = [0x00, 0x00, 0x00, 0x00,                         // timestamp
+    let expectedBytes: UInt8[] = [0x01, 0x00, 0x00, 0x00,                         // timestamp
                                   0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
                                   0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP

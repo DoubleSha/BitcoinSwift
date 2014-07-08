@@ -137,6 +137,94 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.close()
   }
 
+  func testReadInt16FromStream() {
+    let bytes: UInt8[] = [0xfe, 0xff, 0xff, 0xfe, 0x05]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+
+    // Test reading a little-endian Int16.
+    if let int = inputStream.readInt16() {
+      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read int")
+    }
+
+    // Test reading a big-endian Int16.
+    if let int = inputStream.readInt16(endianness:.BigEndian) {
+      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read int")
+    }
+
+    // There is only one byte left, which is not long enough.
+    if let int = inputStream.readInt16() {
+      XCTFail("\n[FAIL] Expected to fail")
+    }
+
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
+  func testReadInt32FromStream() {
+    let bytes: UInt8[] = [0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0x09]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+
+    // Test reading a little-endian Int32.
+    if let int = inputStream.readInt32() {
+      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read int")
+    }
+
+    // Test reading a big-endian Int32.
+    if let int = inputStream.readInt32(endianness:.BigEndian) {
+      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read int")
+    }
+
+    // There is only one byte left, which is not long enough.
+    if let int = inputStream.readInt32() {
+      XCTFail("\n[FAIL] Expected to fail")
+    }
+
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
+  func testReadInt64FromStream() {
+    let bytes: UInt8[] = [0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+                          0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0x11]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+
+    // Test reading a little-endian Int64.
+    if let int = inputStream.readInt64() {
+      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read int")
+    }
+
+    // Test reading a big-endian Int64.
+    if let int = inputStream.readInt64(endianness:.BigEndian) {
+      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read int")
+    }
+
+    // There is only one byte left, which is not long enough.
+    if let int = inputStream.readInt64() {
+      XCTFail("\n[FAIL] Expected to fail")
+    }
+
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
   func testReadASCIIString() {
     let bytes: UInt8[] = [0x61, 0x62, 0x63] // "abc"
     let data = NSData(bytes:bytes, length:bytes.count)
@@ -242,6 +330,25 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.open()
     if let uint64 = inputStream.readVarInt() {
       XCTAssertEqual(uint64, 0x0102030405060708, "\n[FAIL] Invalid int \(uint64)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read varint")
+    }
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
+  func testReadBool() {
+    let bytes: UInt8[] = [0x01, 0x00]
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let bool = inputStream.readBool() {
+      XCTAssertTrue(bool, "\n[FAIL] Invalid bool \(bool)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read varint")
+    }
+    if let bool = inputStream.readBool() {
+      XCTAssertFalse(bool, "\n[FAIL] Invalid bool \(bool)")
     } else {
       XCTFail("\n[FAIL] Failed to read varint")
     }

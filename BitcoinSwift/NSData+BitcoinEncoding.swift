@@ -23,9 +23,9 @@ extension NSData {
 
 extension NSMutableData {
 
-  // ZOMGWTF Apple. The dummy Bool is needed because of an Apple bug. It doesn't compile
-  // without that.
-  // TODO: Remove this when the bug is fixed.
+  // TODO: Append Ints in a generic way instead of copy-pasting.
+
+  // TODO: Remove the dummy Bool when Apple fixes their shit.
   func appendUInt8(value: UInt8, dummy: Bool = false) {
     self.appendBytes([value], length:1)
   }
@@ -69,6 +69,45 @@ extension NSMutableData {
     self.appendBytes(bytes, length:bytes.count)
   }
 
+  func appendInt16(value: Int16, endianness: Endianness = .LittleEndian) {
+    var bytes = UInt8[]()
+    for i in 0..sizeof(Int16) {
+      switch endianness {
+        case .LittleEndian:
+          bytes.append(UInt8(value >> Int16(i * 8) & Int16(0xff)))
+        case .BigEndian:
+          bytes.append(UInt8(value >> Int16((sizeof(Int16) - 1 - i) * 8) & Int16(0xff)))
+      }
+    }
+    self.appendBytes(bytes, length:bytes.count)
+  }
+
+  func appendInt32(value: Int32, endianness: Endianness = .LittleEndian) {
+    var bytes = UInt8[]()
+    for i in 0..sizeof(Int32) {
+      switch endianness {
+        case .LittleEndian:
+          bytes.append(UInt8(value >> Int32(i * 8) & Int32(0xff)))
+        case .BigEndian:
+          bytes.append(UInt8(value >> Int32((sizeof(Int32) - 1 - i) * 8) & Int32(0xff)))
+      }
+    }
+    self.appendBytes(bytes, length:bytes.count)
+  }
+
+  func appendInt64(value: Int64, endianness: Endianness = .LittleEndian) {
+    var bytes = UInt8[]()
+    for i in 0..sizeof(Int64) {
+      switch endianness {
+        case .LittleEndian:
+          bytes.append(UInt8(value >> Int64(i * 8) & Int64(0xff)))
+        case .BigEndian:
+          bytes.append(UInt8(value >> Int64((sizeof(Int64) - 1 - i) * 8) & Int64(0xff)))
+      }
+    }
+    self.appendBytes(bytes, length:bytes.count)
+  }
+
   func appendVarInt(value: UInt64, endianness: Endianness = .LittleEndian) {
     switch value {
       case 0..0xfd:
@@ -88,6 +127,11 @@ extension NSMutableData {
   func appendVarInt(value: Int, endianness: Endianness = .LittleEndian) {
     assert(value >= 0)
     appendVarInt(UInt64(value), endianness:endianness)
+  }
+
+  // TODO: Remove the dummy Bool once Apple fixes their shit.
+  func appendBool(value: Bool, dummy: Bool = false) {
+    value ? appendUInt8(1) : appendUInt8(0)
   }
 
   func appendVarString(string: String) {
