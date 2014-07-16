@@ -9,7 +9,7 @@
 import Foundation
 
 protocol PeerDiscovery {
-  func nextPeerHostname() -> NSURL
+  func peersWithCompletion(completion: (peerAddresses: IPAddress[]))
 }
 
 @class_protocol protocol PeerConnectionDelegate {
@@ -27,8 +27,8 @@ class PeerConnection: NSObject, NSURLConnectionDataDelegate {
   }
 
   func open() {
-    let request = NSURLRequest(URL:peerDiscovery.nextPeerHostname())
-    var conn = NSURLConnection(request:request, delegate:self)
+//    let request = NSURLRequest(URL:peerDiscovery.nextPeerHostname())
+//    var conn = NSURLConnection(request:request, delegate:self)
   }
 
   func close() {

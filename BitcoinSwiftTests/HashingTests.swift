@@ -13,7 +13,7 @@ class HashingTests: XCTestCase {
 
   let data = NSData(bytes:"abc".cStringUsingEncoding(NSASCIIStringEncoding)!, length:3)
 
-  // SHA256 Tests.
+  // MARK: - SHA256 Tests
 
   func testSHA256() {
     let expectedSHA256HashBytes: UInt8[] = [0xba, 0x78, 0x16, 0xbf, 0x8f, 0x01, 0xcf, 0xea,
@@ -32,7 +32,7 @@ class HashingTests: XCTestCase {
     XCTAssertNil(NSData().SHA256Hash(), "\n[FAIL] SHA256Hash should be nil for empty data")
   }
 
-  // RIPEMD160 Tests.
+  // MARK: - RIPEMD160 Tests
 
   func testRIPEMD160() {
     let expectedRIPEMD160HashBytes: UInt8[] = [0x8e, 0xb2, 0x08, 0xf7, 0xe0, 0x5d, 0x98, 0x7a,

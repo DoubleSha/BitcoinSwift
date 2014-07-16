@@ -379,7 +379,7 @@ class BitcoinDecodingTests: XCTestCase {
     let inputStream = NSInputStream(data:data)
     inputStream.open()
     if let IP = inputStream.readIPAddress() {
-      let expectedIP = NetworkAddress.IPAddress.IPV4(0x01020304)
+      let expectedIP = IPAddress.IPV4(0x01020304)
       XCTAssertEqual(IP, expectedIP, "\n[FAIL] Invalid IP")
     } else {
       XCTFail("\n[FAIL] Failed to parse IP")
@@ -397,10 +397,10 @@ class BitcoinDecodingTests: XCTestCase {
     let inputStream = NSInputStream(data:data)
     inputStream.open()
     if let IP = inputStream.readIPAddress() {
-      let expectedIP = NetworkAddress.IPAddress.IPV6(0x01020304,
-                                                     0x11121314,
-                                                     0x21222324,
-                                                     0x31323334)
+      let expectedIP = IPAddress.IPV6(0x01020304,
+                                      0x11121314,
+                                      0x21222324,
+                                      0x31323334)
       XCTAssertEqual(IP, expectedIP, "\n[FAIL] Invalid IP")
     } else {
       XCTFail("\n[FAIL] Failed to parse IP")
@@ -409,7 +409,7 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.close()
   }
 
-  func testReadNetworkAddress() {
+  func testReadPeerAddress() {
     let bytes: UInt8[] = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
                           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
                           0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
@@ -417,14 +417,14 @@ class BitcoinDecodingTests: XCTestCase {
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
-    if let networkAddress = inputStream.readNetworkAddress() {
+    if let peerAddress = inputStream.readPeerAddress() {
       let services = Message.Services.NodeNetwork
-      let IP = NetworkAddress.IPAddress.IPV4(0x01020304)
+      let IP = IPAddress.IPV4(0x01020304)
       let port: UInt16 = 8333
-      let expectedNetworkAddress = NetworkAddress(services:services, IP:IP, port:port)
-      XCTAssertEqual(networkAddress, expectedNetworkAddress, "\n[FAIL] Invalid NetworkAddress")
+      let expectedPeerAddress = PeerAddress(services:services, IP:IP, port:port)
+      XCTAssertEqual(peerAddress, expectedPeerAddress, "\n[FAIL] Invalid PeerAddress")
     } else {
-      XCTFail("\n[FAIL] Failed to parse NetworkAddress")
+      XCTFail("\n[FAIL] Failed to parse PeerAddress")
     }
     XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
     inputStream.close()

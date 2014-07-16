@@ -154,7 +154,7 @@ class BitcoinEncodingTests: XCTestCase {
 
   func testAppendIPV4Address() {
     var data = NSMutableData()
-    data.appendIPAddress(NetworkAddress.IPAddress.IPV4(0x01020304))
+    data.appendIPAddress(IPAddress.IPV4(0x01020304))
     let IPBytes: UInt8[] = [0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0xff, 0xff,
@@ -165,7 +165,7 @@ class BitcoinEncodingTests: XCTestCase {
 
   func testAppendIPV6Address() {
     var data = NSMutableData()
-    data.appendIPAddress(NetworkAddress.IPAddress.IPV6(0x01020304,
+    data.appendIPAddress(IPAddress.IPV6(0x01020304,
                                                        0x11121314,
                                                        0x21222324,
                                                        0x31323334))
@@ -177,13 +177,13 @@ class BitcoinEncodingTests: XCTestCase {
     XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
 
-  func testAppendNetworkAddress() {
+  func testAppendPeerAddress() {
     let services = Message.Services.NodeNetwork
-    let IP = NetworkAddress.IPAddress.IPV4(0x01020304)
+    let IP = IPAddress.IPV4(0x01020304)
     let port: UInt16 = 8333
-    let networkAddress = NetworkAddress(services:services, IP:IP, port:port)
+    let peerAddress = PeerAddress(services:services, IP:IP, port:port)
     var data = NSMutableData()
-    data.appendNetworkAddress(networkAddress)
+    data.appendPeerAddress(peerAddress)
     let expectedBytes: UInt8[] = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
                                   0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP

@@ -142,16 +142,16 @@ extension NSMutableData {
     }
   }
 
-  func appendNetworkAddress(networkAddress: NetworkAddress, withTimestamp timestamp: Bool = false) {
+  func appendPeerAddress(peerAddress: PeerAddress, withTimestamp timestamp: Bool = false) {
     if timestamp {
       appendUInt32(UInt32(NSDate().timeIntervalSince1970))
     }
-    appendUInt64(networkAddress.services.toRaw())
-    appendIPAddress(networkAddress.IP)
-    appendUInt16(networkAddress.port, endianness:.BigEndian)  // Network byte order.
+    appendUInt64(peerAddress.services.toRaw())
+    appendIPAddress(peerAddress.IP)
+    appendUInt16(peerAddress.port, endianness:.BigEndian)  // Network byte order.
   }
 
-  func appendIPAddress(IP: NetworkAddress.IPAddress) {
+  func appendIPAddress(IP: IPAddress) {
     // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
     // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
     // Addresses are encoded using network byte order.

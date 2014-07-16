@@ -1,20 +1,14 @@
 //
-//  NetworkAddress.swift
+//  IPAddress.swift
 //  BitcoinSwift
 //
-//  Created by Kevin Greene on 7/4/14.
+//  Created by Kevin Greene on 7/15/14.
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
 import Foundation
 
-func ==(lhs: NetworkAddress, rhs: NetworkAddress) -> Bool {
-  return lhs.services == rhs.services &&
-      lhs.IP == rhs.IP &&
-      lhs.port == rhs.port
-}
-
-func ==(lhs: NetworkAddress.IPAddress, rhs: NetworkAddress.IPAddress) -> Bool {
+func ==(lhs: IPAddress, rhs: IPAddress) -> Bool {
   switch lhs {
     case .IPV4(let lword):
       switch rhs {
@@ -33,14 +27,7 @@ func ==(lhs: NetworkAddress.IPAddress, rhs: NetworkAddress.IPAddress) -> Bool {
   }
 }
 
-struct NetworkAddress: Equatable {
-
-  enum IPAddress: Equatable {
-    case IPV4(UInt32)
-    case IPV6(UInt32, UInt32, UInt32, UInt32)
-  }
-
-  let services: Message.Services
-  let IP: IPAddress
-  let port: UInt16
+enum IPAddress: Equatable {
+  case IPV4(UInt32)
+  case IPV6(UInt32, UInt32, UInt32, UInt32)
 }

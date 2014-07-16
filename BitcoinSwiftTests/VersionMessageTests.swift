@@ -32,11 +32,11 @@ class VersionMessageTests: XCTestCase {
       XCTAssertEqual(versionMessage.protocolVersion, 70001)
       XCTAssertEqual(versionMessage.services, Message.Services.NodeNetwork)
       XCTAssertEqualObjects(versionMessage.date, NSDate(timeIntervalSince1970:1355854353))
-      let emptyNetworkAddress = NetworkAddress(services:Message.Services.NodeNetwork,
-                                               IP:NetworkAddress.IPAddress.IPV4(0),
+      let emptyPeerAddress = PeerAddress(services:Message.Services.NodeNetwork,
+                                               IP:IPAddress.IPV4(0),
                                                port:0)
-      XCTAssertEqual(versionMessage.receiverAddress, emptyNetworkAddress)
-      XCTAssertEqual(versionMessage.senderAddress, emptyNetworkAddress)
+      XCTAssertEqual(versionMessage.receiverAddress, emptyPeerAddress)
+      XCTAssertEqual(versionMessage.senderAddress, emptyPeerAddress)
       XCTAssertEqual(versionMessage.userAgent, "/Satoshi:0.7.2/")
       XCTAssertEqual(versionMessage.blockStartHeight, 212672)
       XCTAssertTrue(versionMessage.announceRelayedTransactions)

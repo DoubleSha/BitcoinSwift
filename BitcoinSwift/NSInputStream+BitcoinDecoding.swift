@@ -215,7 +215,7 @@ extension NSInputStream {
     return nil
   }
 
-  func readNetworkAddress() -> NetworkAddress? {
+  func readPeerAddress() -> PeerAddress? {
     let servicesRaw = readUInt64()
     if !servicesRaw {
       return nil
@@ -229,10 +229,10 @@ extension NSInputStream {
     if !port {
       return nil
     }
-    return NetworkAddress(services:services, IP:IP!, port:port!)
+    return PeerAddress(services:services, IP:IP!, port:port!)
   }
 
-  func readIPAddress() -> NetworkAddress.IPAddress? {
+  func readIPAddress() -> IPAddress? {
     // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
     // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
     // Addresses are encoded using network byte order.
@@ -244,8 +244,8 @@ extension NSInputStream {
       return nil
     }
     if word0! == 0 && word1! == 0 && word2! == 0xffff {
-      return NetworkAddress.IPAddress.IPV4(word3!)
+      return IPAddress.IPV4(word3!)
     }
-    return NetworkAddress.IPAddress.IPV6(word0!, word1!, word2!, word3!)
+    return IPAddress.IPV6(word0!, word1!, word2!, word3!)
   }
 }
