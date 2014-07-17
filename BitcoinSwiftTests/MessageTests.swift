@@ -13,8 +13,8 @@ class MessageTests: XCTestCase {
 
   let networkMagicValue = Message.NetworkMagicValue.MainNet
   let command = Message.Command.Version
-  let payloadBytes: UInt8[] = [0xaa, 0xbb]
-  let messageBytes: UInt8[] = [
+  let payloadBytes: [UInt8] = [0xaa, 0xbb]
+  let messageBytes: [UInt8] = [
       0xf9, 0xbe, 0xb4, 0xd9, // networkMagicValue (little-endian)
       0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x00, 0x00, 0x00, 0x00, 0x00, // "version" command
       0x02, 0x00, 0x00, 0x00, // payload size (little-endian)

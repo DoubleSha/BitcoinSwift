@@ -25,14 +25,13 @@ extension NSMutableData {
 
   // TODO: Append Ints in a generic way instead of copy-pasting.
 
-  // TODO: Remove the dummy Bool when Apple fixes their shit.
-  func appendUInt8(value: UInt8, dummy: Bool = false) {
-    self.appendBytes([value], length:1)
+  func appendUInt8(value: UInt8) {
+    self.appendBytes([value] as [UInt8], length:1)
   }
 
   func appendUInt16(value: UInt16, endianness: Endianness = .LittleEndian) {
-    var bytes = UInt8[]()
-    for i in 0..sizeof(UInt16) {
+    var bytes = [UInt8]()
+    for i in 0..<sizeof(UInt16) {
       switch endianness {
         case .LittleEndian:
           bytes.append(UInt8(value >> UInt16(i * 8) & UInt16(0xff)))
@@ -44,8 +43,8 @@ extension NSMutableData {
   }
 
   func appendUInt32(value: UInt32, endianness: Endianness = .LittleEndian) {
-    var bytes = UInt8[]()
-    for i in 0..sizeof(UInt32) {
+    var bytes = [UInt8]()
+    for i in 0..<sizeof(UInt32) {
       switch endianness {
         case .LittleEndian:
           bytes.append(UInt8(value >> UInt32(i * 8) & UInt32(0xff)))
@@ -57,8 +56,8 @@ extension NSMutableData {
   }
 
   func appendUInt64(value: UInt64, endianness: Endianness = .LittleEndian) {
-    var bytes = UInt8[]()
-    for i in 0..sizeof(UInt64) {
+    var bytes = [UInt8]()
+    for i in 0..<sizeof(UInt64) {
       switch endianness {
         case .LittleEndian:
           bytes.append(UInt8(value >> UInt64(i * 8) & UInt64(0xff)))
@@ -70,8 +69,8 @@ extension NSMutableData {
   }
 
   func appendInt16(value: Int16, endianness: Endianness = .LittleEndian) {
-    var bytes = UInt8[]()
-    for i in 0..sizeof(Int16) {
+    var bytes = [UInt8]()
+    for i in 0..<sizeof(Int16) {
       switch endianness {
         case .LittleEndian:
           bytes.append(UInt8(value >> Int16(i * 8) & Int16(0xff)))
@@ -83,8 +82,8 @@ extension NSMutableData {
   }
 
   func appendInt32(value: Int32, endianness: Endianness = .LittleEndian) {
-    var bytes = UInt8[]()
-    for i in 0..sizeof(Int32) {
+    var bytes = [UInt8]()
+    for i in 0..<sizeof(Int32) {
       switch endianness {
         case .LittleEndian:
           bytes.append(UInt8(value >> Int32(i * 8) & Int32(0xff)))
@@ -96,8 +95,8 @@ extension NSMutableData {
   }
 
   func appendInt64(value: Int64, endianness: Endianness = .LittleEndian) {
-    var bytes = UInt8[]()
-    for i in 0..sizeof(Int64) {
+    var bytes = [UInt8]()
+    for i in 0..<sizeof(Int64) {
       switch endianness {
         case .LittleEndian:
           bytes.append(UInt8(value >> Int64(i * 8) & Int64(0xff)))
@@ -110,7 +109,7 @@ extension NSMutableData {
 
   func appendVarInt(value: UInt64, endianness: Endianness = .LittleEndian) {
     switch value {
-      case 0..0xfd:
+      case 0..<0xfd:
         appendUInt8(UInt8(value))
       case 0xfd...0xffff:
         appendUInt8(0xfd)
@@ -129,8 +128,7 @@ extension NSMutableData {
     appendVarInt(UInt64(value), endianness:endianness)
   }
 
-  // TODO: Remove the dummy Bool once Apple fixes their shit.
-  func appendBool(value: Bool, dummy: Bool = false) {
+  func appendBool(value: Bool) {
     value ? appendUInt8(1) : appendUInt8(0)
   }
 
@@ -138,7 +136,7 @@ extension NSMutableData {
     let length = string.lengthOfBytesUsingEncoding(NSASCIIStringEncoding)
     appendVarInt(length)
     if length > 0 {
-      appendBytes(string.dataUsingEncoding(NSASCIIStringEncoding).bytes, length:length)
+      appendBytes(string.dataUsingEncoding(NSASCIIStringEncoding)!.bytes, length:length)
     }
   }
 

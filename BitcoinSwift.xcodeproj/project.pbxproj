@@ -13,6 +13,8 @@
 		0A248C221954150800C4607E /* BitcoinAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C211954150800C4607E /* BitcoinAddressTests.swift */; };
 		0A2D51BC196E52EA009B6B25 /* DNSPeerDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */; };
 		0A2D51BE19763819009B6B25 /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51BD19763819009B6B25 /* IPAddress.swift */; };
+		0A2D51C819777320009B6B25 /* DNSDiscoveryLiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51C719777320009B6B25 /* DNSDiscoveryLiveTests.swift */; };
+		0A2D51C919777320009B6B25 /* BitcoinSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A52ACCB195397080041541B /* BitcoinSwift.framework */; };
 		0A34DF63196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF62196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift */; };
 		0A34DF651961197D007BBC35 /* Endianness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF641961197D007BBC35 /* Endianness.swift */; };
 		0A34DF6719663B06007BBC35 /* VersionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF6619663B06007BBC35 /* VersionMessage.swift */; };
@@ -38,6 +40,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0A2D51CA19777320009B6B25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A52ACC2195397080041541B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A52ACCA195397080041541B;
+			remoteInfo = BitcoinSwift;
+		};
 		0A52ACD8195397080041541B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A52ACC2195397080041541B /* Project object */;
@@ -54,6 +63,9 @@
 		0A248C211954150800C4607E /* BitcoinAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinAddressTests.swift; sourceTree = "<group>"; };
 		0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSPeerDiscovery.swift; sourceTree = "<group>"; };
 		0A2D51BD19763819009B6B25 /* IPAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPAddress.swift; sourceTree = "<group>"; };
+		0A2D51C319777320009B6B25 /* BitcoinSwiftLiveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcoinSwiftLiveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A2D51C619777320009B6B25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A2D51C719777320009B6B25 /* DNSDiscoveryLiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSDiscoveryLiveTests.swift; sourceTree = "<group>"; };
 		0A34DF62196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSInputStream+BitcoinDecoding.swift"; sourceTree = "<group>"; };
 		0A34DF641961197D007BBC35 /* Endianness.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endianness.swift; sourceTree = "<group>"; };
 		0A34DF6619663B06007BBC35 /* VersionMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionMessage.swift; sourceTree = "<group>"; };
@@ -82,6 +94,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0A2D51C019777320009B6B25 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A2D51C919777320009B6B25 /* BitcoinSwift.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0A52ACC7195397080041541B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -101,12 +121,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A2D51C419777320009B6B25 /* BitcoinSwiftLiveTests */ = {
+			isa = PBXGroup;
+			children = (
+				0A2D51C719777320009B6B25 /* DNSDiscoveryLiveTests.swift */,
+				0A2D51C519777320009B6B25 /* Supporting Files */,
+			);
+			path = BitcoinSwiftLiveTests;
+			sourceTree = "<group>";
+		};
+		0A2D51C519777320009B6B25 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0A2D51C619777320009B6B25 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		0A52ACC1195397080041541B = {
 			isa = PBXGroup;
 			children = (
 				0A52ACF1195399FA0041541B /* libcrypto.a */,
 				0A52ACCD195397080041541B /* BitcoinSwift */,
 				0A52ACDA195397080041541B /* BitcoinSwiftTests */,
+				0A2D51C419777320009B6B25 /* BitcoinSwiftLiveTests */,
 				0A52ACCC195397080041541B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,6 +154,7 @@
 			children = (
 				0A52ACCB195397080041541B /* BitcoinSwift.framework */,
 				0A52ACD6195397080041541B /* BitcoinSwiftTests.xctest */,
+				0A2D51C319777320009B6B25 /* BitcoinSwiftLiveTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -195,6 +234,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		0A2D51C219777320009B6B25 /* BitcoinSwiftLiveTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A2D51CC19777320009B6B25 /* Build configuration list for PBXNativeTarget "BitcoinSwiftLiveTests" */;
+			buildPhases = (
+				0A2D51BF19777320009B6B25 /* Sources */,
+				0A2D51C019777320009B6B25 /* Frameworks */,
+				0A2D51C119777320009B6B25 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A2D51CB19777320009B6B25 /* PBXTargetDependency */,
+			);
+			name = BitcoinSwiftLiveTests;
+			productName = BitcoinSwiftLiveTests;
+			productReference = 0A2D51C319777320009B6B25 /* BitcoinSwiftLiveTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		0A52ACCA195397080041541B /* BitcoinSwift */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0A52ACE1195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwift" */;
@@ -240,6 +297,10 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = DoubleSha;
 				TargetAttributes = {
+					0A2D51C219777320009B6B25 = {
+						CreatedOnToolsVersion = 6.0;
+						TestTargetID = 0A52ACCA195397080041541B;
+					};
 					0A52ACCA195397080041541B = {
 						CreatedOnToolsVersion = 6.0;
 					};
@@ -263,11 +324,19 @@
 			targets = (
 				0A52ACCA195397080041541B /* BitcoinSwift */,
 				0A52ACD5195397080041541B /* BitcoinSwiftTests */,
+				0A2D51C219777320009B6B25 /* BitcoinSwiftLiveTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0A2D51C119777320009B6B25 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0A52ACC9195397080041541B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -285,6 +354,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0A2D51BF19777320009B6B25 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A2D51C819777320009B6B25 /* DNSDiscoveryLiveTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0A52ACC6195397080041541B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -324,6 +401,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0A2D51CB19777320009B6B25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A52ACCA195397080041541B /* BitcoinSwift */;
+			targetProxy = 0A2D51CA19777320009B6B25 /* PBXContainerItemProxy */;
+		};
 		0A52ACD9195397080041541B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0A52ACCA195397080041541B /* BitcoinSwift */;
@@ -332,6 +414,38 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		0A2D51CD19777320009B6B25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BitcoinSwiftLiveTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0A2D51CE19777320009B6B25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BitcoinSwiftLiveTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		0A52ACDF195397080041541B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -507,6 +621,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0A2D51CC19777320009B6B25 /* Build configuration list for PBXNativeTarget "BitcoinSwiftLiveTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A2D51CD19777320009B6B25 /* Debug */,
+				0A2D51CE19777320009B6B25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		0A52ACC5195397080041541B /* Build configuration list for PBXProject "BitcoinSwift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

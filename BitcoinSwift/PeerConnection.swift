@@ -9,7 +9,7 @@
 import Foundation
 
 protocol PeerDiscovery {
-  func peersWithCompletion(completion: (peerAddresses: IPAddress[]))
+  func peersWithCompletion(completion: [IPAddress] -> Void)
 }
 
 @class_protocol protocol PeerConnectionDelegate {

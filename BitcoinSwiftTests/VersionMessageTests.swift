@@ -12,7 +12,7 @@ import XCTest
 class VersionMessageTests: XCTestCase {
 
   func testVersionMessageEncoding() {
-    let bytes: UInt8[] = [
+    let bytes: [UInt8] = [
         0x71, 0x11, 0x01, 0x00,                           // - 70001 (protocol version 70001)
         0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,   // - 1 (NODE_NETWORK services)
         0x11, 0xb2, 0xd0, 0x50, 0x00, 0x00, 0x00, 0x00,   // - Tue Dec 18 10:12:33 PST 2012
@@ -33,8 +33,8 @@ class VersionMessageTests: XCTestCase {
       XCTAssertEqual(versionMessage.services, Message.Services.NodeNetwork)
       XCTAssertEqualObjects(versionMessage.date, NSDate(timeIntervalSince1970:1355854353))
       let emptyPeerAddress = PeerAddress(services:Message.Services.NodeNetwork,
-                                               IP:IPAddress.IPV4(0),
-                                               port:0)
+                                         IP:IPAddress.IPV4(0),
+                                         port:0)
       XCTAssertEqual(versionMessage.receiverAddress, emptyPeerAddress)
       XCTAssertEqual(versionMessage.senderAddress, emptyPeerAddress)
       XCTAssertEqual(versionMessage.userAgent, "/Satoshi:0.7.2/")

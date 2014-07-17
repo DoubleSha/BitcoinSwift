@@ -22,13 +22,13 @@ extension NSInputStream {
   }
 
   func readUInt16(endianness: Endianness = .LittleEndian) -> UInt16? {
-    var readBuffer = Array<UInt8>(count:sizeof(UInt16), repeatedValue:0)
+    var readBuffer = [UInt8](count:sizeof(UInt16), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(UInt16) {
       return nil
     }
     var int: UInt16 = 0
-    for i in 0..sizeof(UInt16) {
+    for i in 0..<sizeof(UInt16) {
       switch endianness {
         case .LittleEndian:
           int |= UInt16(readBuffer[i]) << UInt16(i * 8)
@@ -40,13 +40,13 @@ extension NSInputStream {
   }
 
   func readUInt32(endianness: Endianness = .LittleEndian) -> UInt32? {
-    var readBuffer = Array<UInt8>(count:sizeof(UInt32), repeatedValue:0)
+    var readBuffer = [UInt8](count:sizeof(UInt32), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(UInt32) {
       return nil
     }
     var int: UInt32 = 0
-    for i in 0..sizeof(UInt32) {
+    for i in 0..<sizeof(UInt32) {
       switch endianness {
         case .LittleEndian:
           int |= UInt32(readBuffer[i]) << UInt32(i * 8)
@@ -58,13 +58,13 @@ extension NSInputStream {
   }
 
   func readUInt64(endianness: Endianness = .LittleEndian) -> UInt64? {
-    var readBuffer = Array<UInt8>(count:sizeof(UInt64), repeatedValue:0)
+    var readBuffer = [UInt8](count:sizeof(UInt64), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(UInt64) {
       return nil
     }
     var int: UInt64 = 0
-    for i in 0..sizeof(UInt64) {
+    for i in 0..<sizeof(UInt64) {
       switch endianness {
         case .LittleEndian:
           int |= UInt64(readBuffer[i]) << UInt64(i * 8)
@@ -76,13 +76,13 @@ extension NSInputStream {
   }
 
   func readInt16(endianness: Endianness = .LittleEndian) -> Int16? {
-    var readBuffer = Array<UInt8>(count:sizeof(Int16), repeatedValue:0)
+    var readBuffer = [UInt8](count:sizeof(Int16), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(Int16) {
       return nil
     }
     var int: Int16 = 0
-    for i in 0..sizeof(Int16) {
+    for i in 0..<sizeof(Int16) {
       switch endianness {
         case .LittleEndian:
           int |= Int16(readBuffer[i]) << Int16(i * 8)
@@ -94,13 +94,13 @@ extension NSInputStream {
   }
 
   func readInt32(endianness: Endianness = .LittleEndian) -> Int32? {
-    var readBuffer = Array<UInt8>(count:sizeof(Int32), repeatedValue:0)
+    var readBuffer = [UInt8](count:sizeof(Int32), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(Int32) {
       return nil
     }
     var int: Int32 = 0
-    for i in 0..sizeof(Int32) {
+    for i in 0..<sizeof(Int32) {
       switch endianness {
         case .LittleEndian:
           int |= Int32(readBuffer[i]) << Int32(i * 8)
@@ -112,13 +112,13 @@ extension NSInputStream {
   }
 
   func readInt64(endianness: Endianness = .LittleEndian) -> Int64? {
-    var readBuffer = Array<UInt8>(count:sizeof(Int64), repeatedValue:0)
+    var readBuffer = [UInt8](count:sizeof(Int64), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(Int64) {
       return nil
     }
     var int: Int64 = 0
-    for i in 0..sizeof(Int64) {
+    for i in 0..<sizeof(Int64) {
       switch endianness {
         case .LittleEndian:
           int |= Int64(readBuffer[i]) << Int64(i * 8)
@@ -130,7 +130,7 @@ extension NSInputStream {
   }
 
   func readASCIIStringWithLength(var length:Int) -> String? {
-    var readBuffer = Array<UInt8>(count:length, repeatedValue:0)
+    var readBuffer = [UInt8](count:length, repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != length {
       return nil
@@ -150,14 +150,15 @@ extension NSInputStream {
   // Returns nil if there is no data remaining to parse, or if parsing fails for another reason.
   func readData(var length: Int = 0) -> NSData? {
     let data = NSMutableData()
-    var readBuffer = Array<UInt8>(count:256, repeatedValue:0)
+    var readBuffer = [UInt8](count:256, repeatedValue:0)
     if length == 0 {
       while hasBytesAvailable {
         var numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
         if numberOfBytesRead == 0 {
           return nil
         }
-        data.appendBytes(readBuffer[0..numberOfBytesRead], length:numberOfBytesRead)
+        let subarray = [UInt8](readBuffer[0..<numberOfBytesRead])
+        data.appendBytes(subarray, length:numberOfBytesRead)
       }
     } else {
       while hasBytesAvailable && length > 0 {
@@ -166,7 +167,8 @@ extension NSInputStream {
         if numberOfBytesRead != numberOfBytesToRead {
           return nil
         }
-        data.appendBytes(readBuffer[0..numberOfBytesRead], length:numberOfBytesRead)
+        let subarray = [UInt8](readBuffer[0..<numberOfBytesRead])
+        data.appendBytes(subarray, length:numberOfBytesRead)
         length -= numberOfBytesRead
       }
     }
@@ -176,7 +178,7 @@ extension NSInputStream {
   func readVarInt() -> UInt64? {
     if let uint8 = readUInt8() {
       switch uint8 {
-        case 0..0xfd:
+        case 0..<0xfd:
           return UInt64(uint8)
         case 0xfd:
           if let uint16 = readUInt16() {
@@ -195,8 +197,7 @@ extension NSInputStream {
     return nil
   }
 
-  // TODO: Remove the dummy Bool once Apple fixes their shit.
-  func readBool(dummy: Bool = false) -> Bool? {
+  func readBool() -> Bool? {
     if let uint8 = readUInt8() {
       if uint8 > 0 {
         return true
@@ -206,9 +207,7 @@ extension NSInputStream {
     return nil
   }
 
-  // The dummy bool is needed because of a compiler bug.
-  // TODO: Remove the dummy bool when Apple fixes the bug.
-  func readVarString(dummy: Bool = false) -> String? {
+  func readVarString() -> String? {
     if let length = readVarInt() {
       return readASCIIStringWithLength(Int(length))
     }

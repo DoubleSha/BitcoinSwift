@@ -12,21 +12,21 @@ import XCTest
 class BitcoinDecodingTests: XCTestCase {
 
   func testReadUInt32LittleEndian() {
-    let data = NSData(bytes:[0x01, 0x02, 0x03, 0x04] as UInt8[], length:4)
+    let data = NSData(bytes:[0x01, 0x02, 0x03, 0x04] as [UInt8], length:4)
     let expectedInt: UInt32 = 0x04030201
     let int: UInt32 = data.UInt32AtIndex(0)!
     XCTAssertEqual(int, expectedInt, "\n[FAIL] Invalid int \(int)")
   }
 
   func testReadUInt32BigEndian() {
-    let data = NSData(bytes:[0x01, 0x02, 0x03, 0x04] as UInt8[], length:4)
+    let data = NSData(bytes:[0x01, 0x02, 0x03, 0x04] as [UInt8], length:4)
     let expectedInt: UInt32 = 0x01020304
     let int: UInt32 = data.UInt32AtIndex(0, endianness:.BigEndian)!
     XCTAssertEqual(int, expectedInt, "\n[FAIL] Invalid int \(int)")
   }
 
   func testReadUInt8FromStream() {
-    let bytes: UInt8[] = [0x01, 0x02]
+    let bytes: [UInt8] = [0x01, 0x02]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -50,7 +50,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadUInt16FromStream() {
-    let bytes: UInt8[] = [0x01, 0x02, 0x03, 0x04, 0x05]
+    let bytes: [UInt8] = [0x01, 0x02, 0x03, 0x04, 0x05]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -79,7 +79,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadUInt32FromStream() {
-    let bytes: UInt8[] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09]
+    let bytes: [UInt8] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -108,7 +108,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadUInt64FromStream() {
-    let bytes: UInt8[] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+    let bytes: [UInt8] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
                           0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
@@ -138,7 +138,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadInt16FromStream() {
-    let bytes: UInt8[] = [0xfe, 0xff, 0xff, 0xfe, 0x05]
+    let bytes: [UInt8] = [0xfe, 0xff, 0xff, 0xfe, 0x05]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -167,7 +167,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadInt32FromStream() {
-    let bytes: UInt8[] = [0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0x09]
+    let bytes: [UInt8] = [0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0x09]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -196,7 +196,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadInt64FromStream() {
-    let bytes: UInt8[] = [0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    let bytes: [UInt8] = [0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
                           0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0x11]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
@@ -226,7 +226,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadASCIIString() {
-    let bytes: UInt8[] = [0x61, 0x62, 0x63] // "abc"
+    let bytes: [UInt8] = [0x61, 0x62, 0x63] // "abc"
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -240,7 +240,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadASCIIStringWithTrailingZeros() {
-    let bytes: UInt8[] = [0x61, 0x62, 0x63, 0x00, 0x00, 0x00, 0x00] // "abc" with trailing 0's
+    let bytes: [UInt8] = [0x61, 0x62, 0x63, 0x00, 0x00, 0x00, 0x00] // "abc" with trailing 0's
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -254,14 +254,14 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadBytes() {
-    let bytes: UInt8[] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09]
+    let bytes: [UInt8] = [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
 
     // Test reading data of a fixed length.
     if let data = inputStream.readData(length:4) {
-      let expectedBytes: UInt8[] = [0x01, 0x02, 0x03, 0x04]
+      let expectedBytes: [UInt8] = [0x01, 0x02, 0x03, 0x04]
       let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
       XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data \(data)")
     } else {
@@ -270,7 +270,7 @@ class BitcoinDecodingTests: XCTestCase {
 
     // Test reading the remaining data.
     if let data = inputStream.readData() {
-      let expectedBytes: UInt8[] = [0x05, 0x06, 0x07, 0x08, 0x09]
+      let expectedBytes: [UInt8] = [0x05, 0x06, 0x07, 0x08, 0x09]
       let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
       XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data \(data)")
     } else {
@@ -282,7 +282,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadVarIntUInt8() {
-    let bytes: UInt8[] = [0xfc]
+    let bytes: [UInt8] = [0xfc]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -296,7 +296,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadVarIntUInt16() {
-    let bytes: UInt8[] = [0xfd, 0x02, 0x01]
+    let bytes: [UInt8] = [0xfd, 0x02, 0x01]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -310,7 +310,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadVarIntUInt32() {
-    let bytes: UInt8[] = [0xfe, 0x04, 0x03, 0x02, 0x01]
+    let bytes: [UInt8] = [0xfe, 0x04, 0x03, 0x02, 0x01]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -324,7 +324,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadVarIntUInt64() {
-    let bytes: UInt8[] = [0xff, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01]
+    let bytes: [UInt8] = [0xff, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -338,7 +338,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadBool() {
-    let bytes: UInt8[] = [0x01, 0x00]
+    let bytes: [UInt8] = [0x01, 0x00]
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -357,7 +357,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadVarString() {
-    let bytes: UInt8[] = [0x03, 0x61, 0x62, 0x63] // "abc"
+    let bytes: [UInt8] = [0x03, 0x61, 0x62, 0x63] // "abc"
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
@@ -371,7 +371,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadIPV4Address() {
-    let bytes: UInt8[] = [0x00, 0x00, 0x00, 0x00,
+    let bytes: [UInt8] = [0x00, 0x00, 0x00, 0x00,
                           0x00, 0x00, 0x00, 0x00,
                           0x00, 0x00, 0xff, 0xff,
                           0x01, 0x02, 0x03, 0x04]
@@ -389,7 +389,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadIPV6Address() {
-    let bytes: UInt8[] = [0x01, 0x02, 0x03, 0x04,
+    let bytes: [UInt8] = [0x01, 0x02, 0x03, 0x04,
                           0x11, 0x12, 0x13, 0x14,
                           0x21, 0x22, 0x23, 0x24,
                           0x31, 0x32, 0x33, 0x34]
@@ -410,7 +410,7 @@ class BitcoinDecodingTests: XCTestCase {
   }
 
   func testReadPeerAddress() {
-    let bytes: UInt8[] = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+    let bytes: [UInt8] = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
                           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
                           0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
                           0x20, 0x8D]                                     // port

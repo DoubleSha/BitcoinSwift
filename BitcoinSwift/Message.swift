@@ -35,7 +35,7 @@ struct Message {
     // The command string encoded into 12 bytes, null padded.
     var data: NSData {
       var data = NSMutableData(length:Command.encodedLength)
-      let ASCIIStringData = self.toRaw().dataUsingEncoding(NSASCIIStringEncoding)
+      let ASCIIStringData = self.toRaw().dataUsingEncoding(NSASCIIStringEncoding)!
       data.replaceBytesInRange(NSRange(location:0, length:ASCIIStringData.length),
                                withBytes:ASCIIStringData.bytes)
       return data
@@ -50,6 +50,7 @@ struct Message {
     func getLogicValue() -> Bool { return self.value != 0 }
     static func fromRaw(raw: UInt64) -> Services? { return Services(raw) }
     static func fromMask(raw: UInt64) -> Services { return Services(raw) }
+    static func convertFromNilLiteral() -> Services { return self(0) }
 
     static var None: Services { return Services(0) }
     // This node can be asked for full blocks instead of just headers.
