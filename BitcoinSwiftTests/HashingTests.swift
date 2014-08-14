@@ -23,9 +23,9 @@ class HashingTests: XCTestCase {
     let expectedSHA256Hash = NSData(bytes:expectedSHA256HashBytes, length:32)
     let SHA256Hash = data.SHA256Hash()
     XCTAssertNotNil(SHA256Hash, "\nSHA256Hash is nil")
-    XCTAssertEqualObjects(SHA256Hash, expectedSHA256Hash, "\n[FAIL] Incorrect SHA256Hash:\n  " +
-                          "Expected \(expectedSHA256Hash.hexString())\n  " +
-                          "Actual   \(SHA256Hash.hexString())")
+    XCTAssertEqual(SHA256Hash, expectedSHA256Hash, "\n[FAIL] Incorrect SHA256Hash:\n  " +
+                   "Expected \(expectedSHA256Hash.hexString())\n  " +
+                   "Actual   \(SHA256Hash.hexString())")
   }
 
   func testSHA256EmptyData() {
@@ -41,10 +41,10 @@ class HashingTests: XCTestCase {
     let expectedRIPEMD160Hash = NSData(bytes:expectedRIPEMD160HashBytes, length:20)
     let RIPEMD160Hash = data.RIPEMD160Hash()
     XCTAssertNotNil(RIPEMD160Hash, "\nRIPEMD160Hash is nil");
-    XCTAssertEqualObjects(RIPEMD160Hash, expectedRIPEMD160Hash,
-                          "\n[FAIL] Incorrect RIPEMD160Hash:\n  " +
-                          "Expected \(expectedRIPEMD160Hash.hexString())\n  " +
-                          "Actual   \(RIPEMD160Hash.hexString())")
+    XCTAssertEqual(RIPEMD160Hash, expectedRIPEMD160Hash,
+                   "\n[FAIL] Incorrect RIPEMD160Hash:\n  " +
+                   "Expected \(expectedRIPEMD160Hash.hexString())\n  " +
+                   "Actual   \(RIPEMD160Hash.hexString())")
   }
 
   func testRIPEMD160EmptyData() {

@@ -8,35 +8,35 @@
 
 import Foundation
 
-class DNSPeerDiscovery: PeerDiscovery {
+public class DNSPeerDiscovery: PeerDiscovery {
 
-  let seeds: [String]
+  public let seeds: [String]
 
-  init(seeds: [String]) {
+  public init(seeds: [String]) {
     self.seeds = seeds
   }
 
   // MARK: - PeerDiscovery
 
-  func peersWithCompletion(completion: [IPAddress] -> Void) {
-    let hostRef = CFHostCreateWithName(kCFAllocatorDefault, "google.com").takeRetainedValue()
-    var resolved = CFHostStartInfoResolution(hostRef, CFHostInfoType.Addresses, nil)
-    let sockAddrs = CFHostGetAddressing(hostRef, &resolved).takeRetainedValue() as NSArray
-    var IPAddresses = [IPAddress]()
-    for sockAddrData in sockAddrs as [NSData] {
-      let sockAddrP = UnsafePointer<sockaddr_storage>.alloc(1)
-      sockAddrData.getBytes(sockAddrP, length:sizeof(sockaddr_storage))
-      let sockAddr = sockAddrP.memory
-      switch Int32(sockAddr.ss_family) {
-        case AF_INET:
-          IPAddresses.append(IPAddress.IPV4(0))
-        case AF_INET6:
-          IPAddresses.append(IPAddress.IPV6(0, 0, 0, 0))
-        default:
-          break
-      }
-      sockAddrP.destroy()
-    }
-    completion(IPAddresses)
+  public func peersWithCompletion(completion: [IPAddress] -> Void) {
+//    let hostRef = CFHostCreateWithName(kCFAllocatorDefault, "google.com").takeRetainedValue()
+//    var resolved = CFHostStartInfoResolution(hostRef, CFHostInfoType.Addresses, nil)
+//    let sockAddrs = CFHostGetAddressing(hostRef, &resolved).takeRetainedValue() as NSArray
+//    var IPAddresses = [IPAddress]()
+//    for sockAddrData in sockAddrs as [NSData] {
+//      let sockAddrP = UnsafePointer<sockaddr_storage>.alloc(1)
+//      sockAddrData.getBytes(sockAddrP, length:sizeof(sockaddr_storage))
+//      let sockAddr = sockAddrP.memory
+//      switch Int32(sockAddr.ss_family) {
+//        case AF_INET:
+//          IPAddresses.append(IPAddress.IPV4(0))
+//        case AF_INET6:
+//          IPAddresses.append(IPAddress.IPV6(0, 0, 0, 0))
+//        default:
+//          break
+//      }
+//      sockAddrP.destroy()
+//    }
+//    completion(IPAddresses)
   }
 }

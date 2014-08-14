@@ -8,11 +8,11 @@
 
 import Foundation
 
-extension NSInputStream {
+public extension NSInputStream {
 
   // TODO: Read Ints in a generic way instead of copy-pasting.
 
-  func readUInt8() -> UInt8? {
+  public func readUInt8() -> UInt8? {
     var int: UInt8 = 0
     let numberOfBytesRead = self.read(&int, maxLength:sizeof(UInt8))
     if numberOfBytesRead != sizeof(UInt8) {
@@ -21,7 +21,7 @@ extension NSInputStream {
     return int
   }
 
-  func readUInt16(endianness: Endianness = .LittleEndian) -> UInt16? {
+  public func readUInt16(endianness: Endianness = .LittleEndian) -> UInt16? {
     var readBuffer = [UInt8](count:sizeof(UInt16), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(UInt16) {
@@ -39,7 +39,7 @@ extension NSInputStream {
     return int
   }
 
-  func readUInt32(endianness: Endianness = .LittleEndian) -> UInt32? {
+  public func readUInt32(endianness: Endianness = .LittleEndian) -> UInt32? {
     var readBuffer = [UInt8](count:sizeof(UInt32), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(UInt32) {
@@ -57,7 +57,7 @@ extension NSInputStream {
     return int
   }
 
-  func readUInt64(endianness: Endianness = .LittleEndian) -> UInt64? {
+  public func readUInt64(endianness: Endianness = .LittleEndian) -> UInt64? {
     var readBuffer = [UInt8](count:sizeof(UInt64), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(UInt64) {
@@ -75,7 +75,7 @@ extension NSInputStream {
     return int
   }
 
-  func readInt16(endianness: Endianness = .LittleEndian) -> Int16? {
+  public func readInt16(endianness: Endianness = .LittleEndian) -> Int16? {
     var readBuffer = [UInt8](count:sizeof(Int16), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(Int16) {
@@ -93,7 +93,7 @@ extension NSInputStream {
     return int
   }
 
-  func readInt32(endianness: Endianness = .LittleEndian) -> Int32? {
+  public func readInt32(endianness: Endianness = .LittleEndian) -> Int32? {
     var readBuffer = [UInt8](count:sizeof(Int32), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(Int32) {
@@ -111,7 +111,7 @@ extension NSInputStream {
     return int
   }
 
-  func readInt64(endianness: Endianness = .LittleEndian) -> Int64? {
+  public func readInt64(endianness: Endianness = .LittleEndian) -> Int64? {
     var readBuffer = [UInt8](count:sizeof(Int64), repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != sizeof(Int64) {
@@ -129,7 +129,7 @@ extension NSInputStream {
     return int
   }
 
-  func readASCIIStringWithLength(var length:Int) -> String? {
+  public func readASCIIStringWithLength(var length:Int) -> String? {
     var readBuffer = [UInt8](count:length, repeatedValue:0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength:readBuffer.count)
     if numberOfBytesRead != length {
@@ -148,7 +148,7 @@ extension NSInputStream {
   // Reads the number of bytes provided by |length|, or the rest of the remaining bytes if length
   // is not provided.
   // Returns nil if there is no data remaining to parse, or if parsing fails for another reason.
-  func readData(var length: Int = 0) -> NSData? {
+  public func readData(var length: Int = 0) -> NSData? {
     let data = NSMutableData()
     var readBuffer = [UInt8](count:256, repeatedValue:0)
     if length == 0 {
@@ -175,7 +175,7 @@ extension NSInputStream {
     return data
   }
 
-  func readVarInt() -> UInt64? {
+  public func readVarInt() -> UInt64? {
     if let uint8 = readUInt8() {
       switch uint8 {
         case 0..<0xfd:
@@ -197,7 +197,7 @@ extension NSInputStream {
     return nil
   }
 
-  func readBool() -> Bool? {
+  public func readBool() -> Bool? {
     if let uint8 = readUInt8() {
       if uint8 > 0 {
         return true
@@ -207,31 +207,31 @@ extension NSInputStream {
     return nil
   }
 
-  func readVarString() -> String? {
+  public func readVarString() -> String? {
     if let length = readVarInt() {
       return readASCIIStringWithLength(Int(length))
     }
     return nil
   }
 
-  func readPeerAddress() -> PeerAddress? {
+  public func readPeerAddress() -> PeerAddress? {
     let servicesRaw = readUInt64()
-    if !servicesRaw {
+    if servicesRaw == nil {
       return nil
     }
     let services = Message.Services.fromMask(servicesRaw!)
     let IP = readIPAddress()
-    if !IP {
+    if IP == nil {
       return nil
     }
     let port = readUInt16(endianness:.BigEndian)  // Network byte order.
-    if !port {
+    if port == nil {
       return nil
     }
     return PeerAddress(services:services, IP:IP!, port:port!)
   }
 
-  func readIPAddress() -> IPAddress? {
+  public func readIPAddress() -> IPAddress? {
     // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
     // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
     // Addresses are encoded using network byte order.
@@ -239,7 +239,7 @@ extension NSInputStream {
     let word1 = readUInt32(endianness:.BigEndian)
     let word2 = readUInt32(endianness:.BigEndian)
     let word3 = readUInt32(endianness:.BigEndian)
-    if !word0 || !word1 || !word2 || !word3 {
+    if word0 == nil || word1 == nil || word2 == nil || word3 == nil {
       return nil
     }
     if word0! == 0 && word1! == 0 && word2! == 0xffff {

@@ -263,7 +263,7 @@ class BitcoinDecodingTests: XCTestCase {
     if let data = inputStream.readData(length:4) {
       let expectedBytes: [UInt8] = [0x01, 0x02, 0x03, 0x04]
       let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
-      XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data \(data)")
+      XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data \(data)")
     } else {
       XCTFail("\n[FAIL] Failed to read data")
     }
@@ -272,7 +272,7 @@ class BitcoinDecodingTests: XCTestCase {
     if let data = inputStream.readData() {
       let expectedBytes: [UInt8] = [0x05, 0x06, 0x07, 0x08, 0x09]
       let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
-      XCTAssertEqualObjects(data, expectedData, "\n[FAIL] Invalid data \(data)")
+      XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data \(data)")
     } else {
       XCTFail("\n[FAIL] Failed to read data")
     }

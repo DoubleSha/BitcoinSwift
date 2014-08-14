@@ -8,19 +8,19 @@
 
 import Foundation
 
-struct VersionAckMessage: MessagePayload {
+public struct VersionAckMessage: MessagePayload {
 
   // MARK: - MessagePayload
 
-  var command: Message.Command {
+  public var command: Message.Command {
     return Message.Command.VersionAck
   }
 
-  var data: NSData {
+  public var data: NSData {
     return NSData(bytes:[0] as [UInt8], length:1)
   }
 
-  static func fromData(data: NSData) -> VersionAckMessage?  {
+  public static func fromData(data: NSData) -> VersionAckMessage?  {
     return nil
   }
 }

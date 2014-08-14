@@ -8,14 +8,21 @@
 
 import Foundation
 
-func ==(lhs: PeerAddress, rhs: PeerAddress) -> Bool {
+public func ==(lhs: PeerAddress, rhs: PeerAddress) -> Bool {
   return lhs.services == rhs.services &&
       lhs.IP == rhs.IP &&
       lhs.port == rhs.port
 }
 
-struct PeerAddress: Equatable {
-  let services: Message.Services
-  let IP: IPAddress
-  let port: UInt16
+public struct PeerAddress: Equatable {
+
+  public let services: Message.Services
+  public let IP: IPAddress
+  public let port: UInt16
+
+  public init(services: Message.Services, IP: IPAddress, port: UInt16) {
+    self.services = services
+    self.IP = IP
+    self.port = port
+  }
 }

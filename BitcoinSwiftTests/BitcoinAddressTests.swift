@@ -22,9 +22,9 @@ class BitcoinAddressTests: XCTestCase {
                               0x18, 0x42, 0x59, 0x9F, 0xBC, 0x4B, 0x76, 0xEB, 0x9A]
     let expectedBitcoinAddr = "1BdadBJNye9Ex8N67KNwedtmqwNk38Xcw9"
     let bitcoinAddr = BitcoinAddress(versionHeader:0 , payload:NSData(bytes:publicKey, length:65))
-    XCTAssertEqualObjects(bitcoinAddr.address, expectedBitcoinAddr,
-                          "\n[FAIL] Incorrect bitcoinAddr:\n  " +
-                          "Expected \(expectedBitcoinAddr)\n  " +
-                          "Actual   \(bitcoinAddr.address)\n")
+    XCTAssertEqual(bitcoinAddr.address, expectedBitcoinAddr,
+                   "\n[FAIL] Incorrect bitcoinAddr:\n  " +
+                   "Expected \(expectedBitcoinAddr)\n  " +
+                   "Actual   \(bitcoinAddr.address)\n")
   }
 }

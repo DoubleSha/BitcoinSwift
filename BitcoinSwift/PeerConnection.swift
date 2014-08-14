@@ -8,44 +8,41 @@
 
 import Foundation
 
-protocol PeerDiscovery {
+public protocol PeerDiscovery {
   func peersWithCompletion(completion: [IPAddress] -> Void)
 }
 
-@class_protocol protocol PeerConnectionDelegate {
-
+public protocol PeerConnectionDelegate : class {
 }
 
-class PeerConnection: NSObject, NSURLConnectionDataDelegate {
+public class PeerConnection: NSObject, NSURLConnectionDataDelegate {
 
-  let peerDiscovery: PeerDiscovery
-  weak var delegate: PeerConnectionDelegate?
+  public let peerDiscovery: PeerDiscovery
+  public weak var delegate: PeerConnectionDelegate?
 
-  init(peerDiscovery: PeerDiscovery, delegate: PeerConnectionDelegate? = nil) {
+  public init(peerDiscovery: PeerDiscovery, delegate: PeerConnectionDelegate? = nil) {
     self.peerDiscovery = peerDiscovery
     self.delegate = delegate
   }
 
-  func open() {
+  public func open() {
 //    let request = NSURLRequest(URL:peerDiscovery.nextPeerHostname())
 //    var conn = NSURLConnection(request:request, delegate:self)
   }
 
-  func close() {
+  public func close() {
 
   }
 
-  // NSURLConnectionDataDelegate
+  // MARK: - NSURLConnectionDataDelegate
 
-  func connection(connection: NSURLConnection!, didFailWithError error: NSError!) {
-
+  public func connection(connection: NSURLConnection!, didFailWithError error: NSError!) {
   }
 
-  func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse!) {
-
+  public func connection(connection: NSURLConnection!,
+                         didReceiveResponse response: NSURLResponse!) {
   }
 
-  func connection(connection: NSURLConnection!, didReceiveData data: NSData!) {
-
+  public func connection(connection: NSURLConnection!, didReceiveData data: NSData!) {
   }
 }

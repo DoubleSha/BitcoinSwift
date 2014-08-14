@@ -14,11 +14,12 @@ protocol BitcoinAddressParameters {
   var P2SHVersionHeader: UInt8 { get }
 }
 
-struct BitcoinAddress {
+// TODO: This is only public for tests. Fix this once Apple fixes their shit.
+public struct BitcoinAddress {
 
-  let address: String
+  public let address: String
 
-  init(versionHeader: UInt8, payload: NSData) {
+  public init(versionHeader: UInt8, payload: NSData) {
     var addressBytes = NSMutableData(bytes:[versionHeader] as [UInt8], length:1)
     addressBytes.appendData(payload.SHA256Hash().RIPEMD160Hash())
     var checksum = addressBytes.SHA256Hash().SHA256Hash()

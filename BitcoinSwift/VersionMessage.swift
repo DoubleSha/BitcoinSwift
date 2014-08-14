@@ -8,25 +8,25 @@
 
 import Foundation
 
-struct VersionMessage: MessagePayload {
+public struct VersionMessage: MessagePayload {
 
-  let protocolVersion: Int32
-  let services: Message.Services
-  let date: NSDate
-  let senderAddress: PeerAddress
-  let receiverAddress: PeerAddress
-  let nonce: UInt64
-  let userAgent: String
-  let blockStartHeight: Int32
-  let announceRelayedTransactions: Bool
+  public let protocolVersion: Int32
+  public let services: Message.Services
+  public let date: NSDate
+  public let senderAddress: PeerAddress
+  public let receiverAddress: PeerAddress
+  public let nonce: UInt64
+  public let userAgent: String
+  public let blockStartHeight: Int32
+  public let announceRelayedTransactions: Bool
 
   // MARK: - MessagePayload
 
-  var command: Message.Command {
+  public var command: Message.Command {
     return Message.Command.Version
   }
 
-  var data: NSData {
+  public var data: NSData {
     var data = NSMutableData()
     data.appendInt32(protocolVersion)
     data.appendUInt64(services.toRaw())
@@ -40,56 +40,56 @@ struct VersionMessage: MessagePayload {
     return data
   }
 
-  static func fromData(data: NSData) -> VersionMessage? {
+  public static func fromData(data: NSData) -> VersionMessage? {
     if data.length == 0 {
       return nil
     }
     let stream = NSInputStream(data:data)
     stream.open()
     let protocolVersion = stream.readInt32()
-    if !protocolVersion {
+    if protocolVersion == nil {
       println("WARN: Failed to parse protocolVersion from VersionMessage \(data)")
       return nil
     }
     let servicesRaw = stream.readUInt64()
-    if !servicesRaw {
+    if servicesRaw == nil {
       println("WARN: Failed to parse servicesRaw from VersionMessage \(data)")
       return nil
     }
     let services = Message.Services.fromMask(servicesRaw!)
     let timestamp = stream.readInt64()
-    if !timestamp {
+    if timestamp == nil {
       println("WARN: Failed to parse timestamp from VersionMessage \(data)")
       return nil
     }
     let date = NSDate(timeIntervalSince1970:NSTimeInterval(timestamp!))
     let receiverAddress = stream.readPeerAddress()
-    if !receiverAddress {
+    if receiverAddress == nil {
       println("WARN: Failed to parse receiverAddress from VersionMessage \(data)")
       return nil
     }
     let senderAddress = stream.readPeerAddress()
-    if !senderAddress {
+    if senderAddress == nil {
       println("WARN: Failed to parse senderAddress from VersionMessage \(data)")
       return nil
     }
     let nonce = stream.readUInt64()
-    if !nonce {
+    if nonce == nil {
       println("WARN: Failed to parse nonce from VersionMessage \(data)")
       return nil
     }
     let userAgent = stream.readVarString()
-    if !userAgent {
+    if userAgent == nil {
       println("WARN: Failed to parse userAgent from VersionMessage \(data)")
       return nil
     }
     let blockStartHeight = stream.readInt32()
-    if !blockStartHeight {
+    if blockStartHeight == nil {
       println("WARN: Failed to parse blockStartHeight from VersionMessage \(data)")
       return nil
     }
     let announceRelayedTransactions = stream.readBool()
-    if !announceRelayedTransactions {
+    if announceRelayedTransactions == nil {
       println("WARN: Failed to parse announceRelayedTransactions from VersionMessage \(data)")
       return nil
     }

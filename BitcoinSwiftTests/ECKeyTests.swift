@@ -18,8 +18,8 @@ class ECKeyTests: XCTestCase {
     let key1 = ECKey()
     XCTAssertNotNil(key1.publicKey, "nil publicKey")
     XCTAssertNotNil(key1.privateKey, "nil privateKey")
-    XCTAssertNotEqualObjects(key.publicKey, key1.publicKey, "publicKeys are not unique")
-    XCTAssertNotEqualObjects(key.privateKey, key1.privateKey, "privateKeys are not unique")
+    XCTAssertNotEqual(key.publicKey!, key1.publicKey!, "publicKeys are not unique")
+    XCTAssertNotEqual(key.privateKey!, key1.privateKey!, "privateKeys are not unique")
   }
 
   func testSignature() {

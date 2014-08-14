@@ -8,9 +8,9 @@
 
 import Foundation
 
-extension NSData {
+public extension NSData {
 
-  func UInt32AtIndex(index: Int, endianness: Endianness = .LittleEndian) -> UInt32? {
+  public func UInt32AtIndex(index: Int, endianness: Endianness = .LittleEndian) -> UInt32? {
     assert(index + sizeof(UInt32) <= self.length)
     let subdata = self.subdataWithRange(NSRange(location:index, length:sizeof(UInt32)))
     let stream = NSInputStream(data:subdata)
@@ -21,15 +21,15 @@ extension NSData {
   }
 }
 
-extension NSMutableData {
+public extension NSMutableData {
 
   // TODO: Append Ints in a generic way instead of copy-pasting.
 
-  func appendUInt8(value: UInt8) {
+  public func appendUInt8(value: UInt8) {
     self.appendBytes([value] as [UInt8], length:1)
   }
 
-  func appendUInt16(value: UInt16, endianness: Endianness = .LittleEndian) {
+  public func appendUInt16(value: UInt16, endianness: Endianness = .LittleEndian) {
     var bytes = [UInt8]()
     for i in 0..<sizeof(UInt16) {
       switch endianness {
@@ -42,7 +42,7 @@ extension NSMutableData {
     self.appendBytes(bytes, length:bytes.count)
   }
 
-  func appendUInt32(value: UInt32, endianness: Endianness = .LittleEndian) {
+  public func appendUInt32(value: UInt32, endianness: Endianness = .LittleEndian) {
     var bytes = [UInt8]()
     for i in 0..<sizeof(UInt32) {
       switch endianness {
@@ -55,7 +55,7 @@ extension NSMutableData {
     self.appendBytes(bytes, length:bytes.count)
   }
 
-  func appendUInt64(value: UInt64, endianness: Endianness = .LittleEndian) {
+  public func appendUInt64(value: UInt64, endianness: Endianness = .LittleEndian) {
     var bytes = [UInt8]()
     for i in 0..<sizeof(UInt64) {
       switch endianness {
@@ -68,7 +68,7 @@ extension NSMutableData {
     self.appendBytes(bytes, length:bytes.count)
   }
 
-  func appendInt16(value: Int16, endianness: Endianness = .LittleEndian) {
+  public func appendInt16(value: Int16, endianness: Endianness = .LittleEndian) {
     var bytes = [UInt8]()
     for i in 0..<sizeof(Int16) {
       switch endianness {
@@ -81,7 +81,7 @@ extension NSMutableData {
     self.appendBytes(bytes, length:bytes.count)
   }
 
-  func appendInt32(value: Int32, endianness: Endianness = .LittleEndian) {
+  public func appendInt32(value: Int32, endianness: Endianness = .LittleEndian) {
     var bytes = [UInt8]()
     for i in 0..<sizeof(Int32) {
       switch endianness {
@@ -94,7 +94,7 @@ extension NSMutableData {
     self.appendBytes(bytes, length:bytes.count)
   }
 
-  func appendInt64(value: Int64, endianness: Endianness = .LittleEndian) {
+  public func appendInt64(value: Int64, endianness: Endianness = .LittleEndian) {
     var bytes = [UInt8]()
     for i in 0..<sizeof(Int64) {
       switch endianness {
@@ -107,7 +107,7 @@ extension NSMutableData {
     self.appendBytes(bytes, length:bytes.count)
   }
 
-  func appendVarInt(value: UInt64, endianness: Endianness = .LittleEndian) {
+  public func appendVarInt(value: UInt64, endianness: Endianness = .LittleEndian) {
     switch value {
       case 0..<0xfd:
         appendUInt8(UInt8(value))
@@ -123,16 +123,16 @@ extension NSMutableData {
     }
   }
 
-  func appendVarInt(value: Int, endianness: Endianness = .LittleEndian) {
+  public func appendVarInt(value: Int, endianness: Endianness = .LittleEndian) {
     assert(value >= 0)
     appendVarInt(UInt64(value), endianness:endianness)
   }
 
-  func appendBool(value: Bool) {
+  public func appendBool(value: Bool) {
     value ? appendUInt8(1) : appendUInt8(0)
   }
 
-  func appendVarString(string: String) {
+  public func appendVarString(string: String) {
     let length = string.lengthOfBytesUsingEncoding(NSASCIIStringEncoding)
     appendVarInt(length)
     if length > 0 {
@@ -140,7 +140,7 @@ extension NSMutableData {
     }
   }
 
-  func appendPeerAddress(peerAddress: PeerAddress, withTimestamp timestamp: Bool = false) {
+  public func appendPeerAddress(peerAddress: PeerAddress, withTimestamp timestamp: Bool = false) {
     if timestamp {
       appendUInt32(UInt32(NSDate().timeIntervalSince1970))
     }
@@ -149,7 +149,7 @@ extension NSMutableData {
     appendUInt16(peerAddress.port, endianness:.BigEndian)  // Network byte order.
   }
 
-  func appendIPAddress(IP: IPAddress) {
+  public func appendIPAddress(IP: IPAddress) {
     // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
     // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
     // Addresses are encoded using network byte order.

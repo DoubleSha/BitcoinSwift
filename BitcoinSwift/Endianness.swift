@@ -6,6 +6,6 @@
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
-enum Endianness {
+public enum Endianness {
   case LittleEndian, BigEndian
 }

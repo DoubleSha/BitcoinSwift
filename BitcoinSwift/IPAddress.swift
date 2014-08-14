@@ -8,7 +8,7 @@
 
 import Foundation
 
-func ==(lhs: IPAddress, rhs: IPAddress) -> Bool {
+public func ==(lhs: IPAddress, rhs: IPAddress) -> Bool {
   switch lhs {
     case .IPV4(let lword):
       switch rhs {
@@ -27,7 +27,7 @@ func ==(lhs: IPAddress, rhs: IPAddress) -> Bool {
   }
 }
 
-enum IPAddress: Equatable {
+public enum IPAddress: Equatable {
   case IPV4(UInt32)
   case IPV6(UInt32, UInt32, UInt32, UInt32)
 }

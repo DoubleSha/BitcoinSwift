@@ -31,7 +31,7 @@ class VersionMessageTests: XCTestCase {
     if let versionMessage = VersionMessage.fromData(data) {
       XCTAssertEqual(versionMessage.protocolVersion, 70001)
       XCTAssertEqual(versionMessage.services, Message.Services.NodeNetwork)
-      XCTAssertEqualObjects(versionMessage.date, NSDate(timeIntervalSince1970:1355854353))
+      XCTAssertEqual(versionMessage.date, NSDate(timeIntervalSince1970:1355854353))
       let emptyPeerAddress = PeerAddress(services:Message.Services.NodeNetwork,
                                          IP:IPAddress.IPV4(0),
                                          port:0)
