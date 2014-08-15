@@ -10,7 +10,7 @@ import Foundation
 
 public struct AddrMessage: MessagePayload {
 
-  let peerAddresses: [PeerAddress]
+  public let peerAddresses: [PeerAddress]
 
   public init(peerAddresses: [PeerAddress]) {
     assert(peerAddresses.count > 0)
@@ -47,8 +47,12 @@ public struct AddrMessage: MessagePayload {
       println("WARN: Failed to parse AddrMessage. count is zero \(data)")
       return nil
     }
+    if count! > 1000 {
+      println("WARN: Failed to parse AddrMessage. count is greater than 1000 \(data)")
+      return nil
+    }
     var peerAddresses = [PeerAddress]()
-    for i in 0..<count! {
+    for _ in 0..<count! {
       let peerAddress = stream.readPeerAddress()
       if peerAddress == nil {
         println("WARN: Failed to parse peer address from AddrMessage \(data)")
