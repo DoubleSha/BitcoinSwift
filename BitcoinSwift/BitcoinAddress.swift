@@ -14,7 +14,6 @@ protocol BitcoinAddressParameters {
   var P2SHVersionHeader: UInt8 { get }
 }
 
-// TODO: This is only public for tests. Fix this once Apple fixes their shit.
 public struct BitcoinAddress {
 
   public let address: String
