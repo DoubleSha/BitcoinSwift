@@ -20,6 +20,26 @@ public struct VersionMessage: MessagePayload {
   public let blockStartHeight: Int32
   public let announceRelayedTransactions: Bool
 
+  public init(protocolVersion: Int32,
+              services: Message.Services,
+              date: NSDate,
+              senderAddress: PeerAddress,
+              receiverAddress: PeerAddress,
+              nonce: UInt64,
+              userAgent: String,
+              blockStartHeight: Int32,
+              announceRelayedTransactions: Bool) {
+    self.protocolVersion = protocolVersion
+    self.services = services
+    self.date = date
+    self.senderAddress = senderAddress
+    self.receiverAddress = receiverAddress
+    self.nonce = nonce
+    self.userAgent = userAgent
+    self.blockStartHeight = blockStartHeight
+    self.announceRelayedTransactions = announceRelayedTransactions
+  }
+
   // MARK: - MessagePayload
 
   public var command: Message.Command {

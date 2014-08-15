@@ -13,7 +13,7 @@ public struct AddrMessage: MessagePayload {
   public let peerAddresses: [PeerAddress]
 
   public init(peerAddresses: [PeerAddress]) {
-    assert(peerAddresses.count > 0)
+    assert(peerAddresses.count > 0 && peerAddresses.count <= 1000)
     self.peerAddresses = peerAddresses
   }
 
