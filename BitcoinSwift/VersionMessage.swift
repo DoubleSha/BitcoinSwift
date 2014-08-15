@@ -31,8 +31,8 @@ public struct VersionMessage: MessagePayload {
     data.appendInt32(protocolVersion)
     data.appendUInt64(services.toRaw())
     data.appendInt64(Int64(date.timeIntervalSince1970))
-    data.appendPeerAddress(receiverAddress)
-    data.appendPeerAddress(senderAddress)
+    data.appendPeerAddress(receiverAddress, includeTimestamp:false)
+    data.appendPeerAddress(senderAddress, includeTimestamp:false)
     data.appendUInt64(nonce)
     data.appendVarString(userAgent)
     data.appendInt32(blockStartHeight)
@@ -63,12 +63,12 @@ public struct VersionMessage: MessagePayload {
       return nil
     }
     let date = NSDate(timeIntervalSince1970:NSTimeInterval(timestamp!))
-    let receiverAddress = stream.readPeerAddress()
+    let receiverAddress = stream.readPeerAddress(includeTimestamp:false)
     if receiverAddress == nil {
       println("WARN: Failed to parse receiverAddress from VersionMessage \(data)")
       return nil
     }
-    let senderAddress = stream.readPeerAddress()
+    let senderAddress = stream.readPeerAddress(includeTimestamp:false)
     if senderAddress == nil {
       println("WARN: Failed to parse senderAddress from VersionMessage \(data)")
       return nil

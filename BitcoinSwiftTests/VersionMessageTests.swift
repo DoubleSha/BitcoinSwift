@@ -11,7 +11,7 @@ import XCTest
 
 class VersionMessageTests: XCTestCase {
 
-  func testVersionMessageEncoding() {
+  func testVersionMessageDecoding() {
     let bytes: [UInt8] = [
         0x71, 0x11, 0x01, 0x00,                           // - 70001 (protocol version 70001)
         0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,   // - 1 (NODE_NETWORK services)
@@ -43,5 +43,9 @@ class VersionMessageTests: XCTestCase {
     } else {
       XCTFail("\n[FAIL] Failed to parse VersionMessage")
     }
+  }
+
+  func testVersionMessageEncoding() {
+    // TODO
   }
 }

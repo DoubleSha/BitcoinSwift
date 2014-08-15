@@ -409,7 +409,7 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.close()
   }
 
-  func testReadPeerAddress() {
+  func testReadPeerAddressWithoutTimestamp() {
     let bytes: [UInt8] = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
                           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
                           0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
@@ -417,11 +417,37 @@ class BitcoinDecodingTests: XCTestCase {
     let data = NSData(bytes:bytes, length:bytes.count)
     let inputStream = NSInputStream(data:data)
     inputStream.open()
-    if let peerAddress = inputStream.readPeerAddress() {
+    if let peerAddress = inputStream.readPeerAddress(includeTimestamp:false) {
       let services = Message.Services.NodeNetwork
       let IP = IPAddress.IPV4(0x01020304)
       let port: UInt16 = 8333
       let expectedPeerAddress = PeerAddress(services:services, IP:IP, port:port)
+      XCTAssertEqual(peerAddress, expectedPeerAddress, "\n[FAIL] Invalid PeerAddress")
+    } else {
+      XCTFail("\n[FAIL] Failed to parse PeerAddress")
+    }
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
+  func testReadPeerAddressWithTimestamp() {
+    let bytes: [UInt8] = [0xe2, 0x15, 0x10, 0x4d,                         // timestamp
+                          0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
+                          0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
+                          0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
+                          0x20, 0x8D]                                     // port
+    let data = NSData(bytes:bytes, length:bytes.count)
+    let inputStream = NSInputStream(data:data)
+    inputStream.open()
+    if let peerAddress = inputStream.readPeerAddress() {
+      let timestamp = NSDate(timeIntervalSince1970:NSTimeInterval(0x4d1015e2))
+      let services = Message.Services.NodeNetwork
+      let IP = IPAddress.IPV4(0x01020304)
+      let port: UInt16 = 8333
+      let expectedPeerAddress = PeerAddress(services:services,
+                                            IP:IP,
+                                            port:port,
+                                            timestamp:timestamp)
       XCTAssertEqual(peerAddress, expectedPeerAddress, "\n[FAIL] Invalid PeerAddress")
     } else {
       XCTFail("\n[FAIL] Failed to parse PeerAddress")

@@ -28,7 +28,7 @@ public struct Message {
 
   public enum Command: String {
 
-    case Version = "version", VersionAck = "verack"
+    case Version = "version", VersionAck = "verack", Addr = "addr"
 
     public static let encodedLength = 12
 

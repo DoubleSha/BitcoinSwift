@@ -214,7 +214,15 @@ public extension NSInputStream {
     return nil
   }
 
-  public func readPeerAddress() -> PeerAddress? {
+  public func readPeerAddress(includeTimestamp: Bool = true) -> PeerAddress? {
+    var timestamp: NSDate? = nil
+    if includeTimestamp {
+      let rawTimestamp = readUInt32()
+      if rawTimestamp == nil {
+        return nil
+      }
+      timestamp = NSDate(timeIntervalSince1970:NSTimeInterval(rawTimestamp!))
+    }
     let servicesRaw = readUInt64()
     if servicesRaw == nil {
       return nil
@@ -228,7 +236,7 @@ public extension NSInputStream {
     if port == nil {
       return nil
     }
-    return PeerAddress(services:services, IP:IP!, port:port!)
+    return PeerAddress(services:services, IP:IP!, port:port!, timestamp: timestamp)
   }
 
   public func readIPAddress() -> IPAddress? {

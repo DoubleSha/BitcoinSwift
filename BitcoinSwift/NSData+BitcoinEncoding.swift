@@ -140,9 +140,13 @@ public extension NSMutableData {
     }
   }
 
-  public func appendPeerAddress(peerAddress: PeerAddress, withTimestamp timestamp: Bool = false) {
-    if timestamp {
-      appendUInt32(UInt32(NSDate().timeIntervalSince1970))
+  public func appendPeerAddress(peerAddress: PeerAddress, includeTimestamp: Bool = true) {
+    if includeTimestamp {
+      if let timestamp = peerAddress.timestamp {
+        appendUInt32(UInt32(timestamp.timeIntervalSince1970))
+      } else {
+        appendUInt32(UInt32(NSDate().timeIntervalSince1970))
+      }
     }
     appendUInt64(peerAddress.services.toRaw())
     appendIPAddress(peerAddress.IP)
@@ -152,7 +156,7 @@ public extension NSMutableData {
   public func appendIPAddress(IP: IPAddress) {
     // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
     // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
-    // Addresses are encoded using network byte order.
+    // Addresses are encoded using network byte order (big endian).
     switch IP {
       case .IPV4(let word):
         appendUInt32(0, endianness:.BigEndian)
