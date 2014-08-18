@@ -31,11 +31,11 @@ class AddrMessageTests: XCTestCase {
     if addrMessage != nil {
       XCTAssertEqual(addrMessage!.peerAddresses.count, 2)
       let expectedPeerAddresses = [
-          PeerAddress(services:Message.Services.NodeNetwork,
+          PeerAddress(services:PeerServices.NodeNetwork,
                       IP:IPAddress.IPV4(0x0a000001),
                       port:8333,
                       timestamp:NSDate(timeIntervalSince1970:1355854353)),
-          PeerAddress(services:Message.Services.NodeNetwork,
+          PeerAddress(services:PeerServices.NodeNetwork,
                       IP:IPAddress.IPV4(0x0a000002),
                       port:8333,
                       timestamp:NSDate(timeIntervalSince1970:1355854353))]
@@ -70,11 +70,11 @@ class AddrMessageTests: XCTestCase {
 
   func testAddrMessageEncoding() {
     let peerAddresses = [
-        PeerAddress(services:Message.Services.NodeNetwork,
+        PeerAddress(services:PeerServices.NodeNetwork,
                     IP:IPAddress.IPV4(0x0a000001),
                     port:8333,
                     timestamp:NSDate(timeIntervalSince1970:1355854353)),
-        PeerAddress(services:Message.Services.NodeNetwork,
+        PeerAddress(services:PeerServices.NodeNetwork,
                     IP:IPAddress.IPV4(0x0a000002),
                     port:8333,
                     timestamp:NSDate(timeIntervalSince1970:1355854353))]

@@ -178,7 +178,7 @@ class BitcoinEncodingTests: XCTestCase {
   }
 
   func testAppendPeerAddressWithoutTimestamp() {
-    let services = Message.Services.NodeNetwork
+    let services = PeerServices.NodeNetwork
     let IP = IPAddress.IPV4(0x01020304)
     let port: UInt16 = 8333
     let peerAddress = PeerAddress(services:services, IP:IP, port:port)
@@ -194,7 +194,7 @@ class BitcoinEncodingTests: XCTestCase {
 
   func testAppendPeerAddressWithTimestamp() {
     let timestamp = NSDate(timeIntervalSince1970:NSTimeInterval(0x4d1015e2))
-    let services = Message.Services.NodeNetwork
+    let services = PeerServices.NodeNetwork
     let IP = IPAddress.IPV4(0x01020304)
     let port: UInt16 = 8333
     let peerAddress = PeerAddress(services:services, IP:IP, port:port, timestamp:timestamp)

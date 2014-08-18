@@ -30,12 +30,12 @@ class VersionMessageTests: XCTestCase {
     let data = NSData(bytes:bytes, length:bytes.count)
     if let versionMessage = VersionMessage.fromData(data) {
       XCTAssertEqual(versionMessage.protocolVersion, 70001)
-      XCTAssertEqual(versionMessage.services, Message.Services.NodeNetwork)
+      XCTAssertEqual(versionMessage.services, PeerServices.NodeNetwork)
       XCTAssertEqual(versionMessage.date, NSDate(timeIntervalSince1970:1355854353))
-      let expectedReceiverPeerAddress = PeerAddress(services:Message.Services.NodeNetwork,
+      let expectedReceiverPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
                                                     IP:IPAddress.IPV4(0x0a000001),
                                                     port:8333)
-      let expectedSenderPeerAddress = PeerAddress(services:Message.Services.NodeNetwork,
+      let expectedSenderPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
                                                   IP:IPAddress.IPV4(0x0a000002),
                                                   port:8333)
       XCTAssertEqual(versionMessage.receiverAddress, expectedReceiverPeerAddress)
@@ -50,14 +50,14 @@ class VersionMessageTests: XCTestCase {
   }
 
   func testVersionMessageEncoding() {
-    let senderPeerAddress = PeerAddress(services:Message.Services.NodeNetwork,
+    let senderPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
                                         IP:IPAddress.IPV4(0x0a000002),
                                         port:8333)
-    let receiverPeerAddress = PeerAddress(services:Message.Services.NodeNetwork,
+    let receiverPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
                                           IP:IPAddress.IPV4(0x0a000001),
                                           port:8333)
     let versionMessage = VersionMessage(protocolVersion:70001,
-                                        services:Message.Services.NodeNetwork,
+                                        services:PeerServices.NodeNetwork,
                                         date:NSDate(timeIntervalSince1970:1355854353),
                                         senderAddress:senderPeerAddress,
                                         receiverAddress:receiverPeerAddress,

@@ -11,7 +11,7 @@ import Foundation
 public struct VersionMessage: MessagePayload {
 
   public let protocolVersion: Int32
-  public let services: Message.Services
+  public let services: PeerServices
   public let date: NSDate
   public let senderAddress: PeerAddress
   public let receiverAddress: PeerAddress
@@ -21,7 +21,7 @@ public struct VersionMessage: MessagePayload {
   public let announceRelayedTransactions: Bool
 
   public init(protocolVersion: Int32,
-              services: Message.Services,
+              services: PeerServices,
               date: NSDate,
               senderAddress: PeerAddress,
               receiverAddress: PeerAddress,
@@ -76,7 +76,7 @@ public struct VersionMessage: MessagePayload {
       println("WARN: Failed to parse servicesRaw from VersionMessage \(data)")
       return nil
     }
-    let services = Message.Services.fromMask(servicesRaw!)
+    let services = PeerServices.fromMask(servicesRaw!)
     let timestamp = stream.readInt64()
     if timestamp == nil {
       println("WARN: Failed to parse timestamp from VersionMessage \(data)")

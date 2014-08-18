@@ -418,7 +418,7 @@ class BitcoinDecodingTests: XCTestCase {
     let inputStream = NSInputStream(data:data)
     inputStream.open()
     if let peerAddress = inputStream.readPeerAddress(includeTimestamp:false) {
-      let services = Message.Services.NodeNetwork
+      let services = PeerServices.NodeNetwork
       let IP = IPAddress.IPV4(0x01020304)
       let port: UInt16 = 8333
       let expectedPeerAddress = PeerAddress(services:services, IP:IP, port:port)
@@ -441,7 +441,7 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.open()
     if let peerAddress = inputStream.readPeerAddress() {
       let timestamp = NSDate(timeIntervalSince1970:NSTimeInterval(0x4d1015e2))
-      let services = Message.Services.NodeNetwork
+      let services = PeerServices.NodeNetwork
       let IP = IPAddress.IPV4(0x01020304)
       let port: UInt16 = 8333
       let expectedPeerAddress = PeerAddress(services:services,

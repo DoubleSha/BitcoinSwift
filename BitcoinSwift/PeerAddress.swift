@@ -17,12 +17,12 @@ public func ==(lhs: PeerAddress, rhs: PeerAddress) -> Bool {
 
 public struct PeerAddress: Equatable {
 
-  public let services: Message.Services
+  public let services: PeerServices
   public let IP: IPAddress
   public let port: UInt16
   public var timestamp: NSDate?
 
-  public init(services: Message.Services, IP: IPAddress, port: UInt16, timestamp: NSDate? = nil) {
+  public init(services: PeerServices, IP: IPAddress, port: UInt16, timestamp: NSDate? = nil) {
     self.services = services
     self.IP = IP
     self.port = port

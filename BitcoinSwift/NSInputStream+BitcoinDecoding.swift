@@ -227,7 +227,7 @@ public extension NSInputStream {
     if servicesRaw == nil {
       return nil
     }
-    let services = Message.Services.fromMask(servicesRaw!)
+    let services = PeerServices.fromMask(servicesRaw!)
     let IP = readIPAddress()
     if IP == nil {
       return nil
