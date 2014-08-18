@@ -8,41 +8,53 @@
 
 import Foundation
 
-public protocol PeerDiscovery {
-  func peersWithCompletion(completion: [IPAddress] -> Void)
-}
-
+// Delegate methods may be called from a background thread.
 public protocol PeerConnectionDelegate : class {
 }
 
-public class PeerConnection: NSObject, NSURLConnectionDataDelegate {
+public class PeerConnection {
+  public var delegate: PeerConnectionDelegate?
+  public enum State { case NotConnected, Connecting, Connected }
 
-  public let peerDiscovery: PeerDiscovery
-  public weak var delegate: PeerConnectionDelegate?
+  private let queue = NSOperationQueue()
 
-  public init(peerDiscovery: PeerDiscovery, delegate: PeerConnectionDelegate? = nil) {
-    self.peerDiscovery = peerDiscovery
+  // Depending on the constructor used, either the hostname or the IP will be non-nil.
+  private let peerHostname: String?
+  private let peerIP: IPAddress?
+  private let peerPort: UInt16
+
+  private var inputStream: NSInputStream?
+  private var outputStream: NSOutputStream?
+
+  init(hostname: String, port: UInt16, delegate: PeerConnectionDelegate? = nil) {
     self.delegate = delegate
+    self.peerIP = nil
+    self.peerHostname = hostname
+    self.peerPort = port
   }
 
-  public func open() {
-//    let request = NSURLRequest(URL:peerDiscovery.nextPeerHostname())
-//    var conn = NSURLConnection(request:request, delegate:self)
+  init(IP: IPAddress, port: UInt16, delegate: PeerConnectionDelegate? = nil) {
+    self.delegate = delegate
+    self.peerIP = IP
+    self.peerHostname = nil
+    self.peerPort = port
   }
 
-  public func close() {
-
+  func connect() {
+    NSLog("Connecting");
+    queue.addOperationWithBlock() {
+      NSStream.getStreamsToHostWithName(self.peerHostname!,
+                                        port:Int(self.peerPort),
+                                        inputStream:&self.inputStream,
+                                        outputStream:&self.outputStream)
+      assert(self.inputStream != nil)
+      assert(self.outputStream != nil)
+      self.inputStream!.open()
+      self.outputStream!.open()
+    }
   }
 
-  // MARK: - NSURLConnectionDataDelegate
+  func disconnect() {
 
-  public func connection(connection: NSURLConnection!, didFailWithError error: NSError!) {
-  }
-
-  public func connection(connection: NSURLConnection!,
-                         didReceiveResponse response: NSURLResponse!) {
-  }
-
-  public func connection(connection: NSURLConnection!, didReceiveData data: NSData!) {
   }
 }
