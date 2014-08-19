@@ -14,6 +14,7 @@ import Foundation
 }
 
 public class PeerConnection: NSObject, NSStreamDelegate {
+
   public var delegate: PeerConnectionDelegate?
   public enum Status { case NotConnected, Connecting, Connected }
 
