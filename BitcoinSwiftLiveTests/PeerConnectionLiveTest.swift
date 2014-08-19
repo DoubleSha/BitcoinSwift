@@ -17,9 +17,24 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
   }
 
   func testConnect() {
-    let conn = PeerConnection(hostname:"173.8.166.106", port:8333, delegate:self)
-    conn.connect()
-    waitForExpectationsWithTimeout(5, handler:nil)
+    let conn = PeerConnection(hostname:"173.8.166.106",
+                              port:8333,
+                              networkMagicValue:Message.NetworkMagicValue.MainNet,
+                              delegate:self)
+    let emptyPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
+                                       IP:IPAddress.IPV4(0),
+                                       port: 8333)
+    let versionMessage = VersionMessage(protocolVersion:70002,
+                                        services:PeerServices.NodeNetwork,
+                                        date: NSDate(),
+                                        senderAddress:emptyPeerAddress,
+                                        receiverAddress:emptyPeerAddress,
+                                        nonce:0,
+                                        userAgent:"test",
+                                        blockStartHeight:0,
+                                        announceRelayedTransactions:true)
+    conn.connectWithVersionMessage(versionMessage)
+    waitForExpectationsWithTimeout(30, handler:nil)
   }
 
   // MARK: - PeerConnectionDelegate

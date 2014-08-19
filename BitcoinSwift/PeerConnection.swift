@@ -15,7 +15,7 @@ import Foundation
 
 public class PeerConnection: NSObject, NSStreamDelegate {
   public var delegate: PeerConnectionDelegate?
-  public enum State { case NotConnected, Connecting, Connected }
+  public enum Status { case NotConnected, Connecting, Connected }
 
   private let queue = NSOperationQueue()
 
@@ -23,26 +23,44 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private let peerHostname: String?
   private let peerIP: IPAddress?
   private let peerPort: UInt16
+  private let networkMagicValue: Message.NetworkMagicValue
 
   private var inputStream: NSInputStream?
   private var outputStream: NSOutputStream?
 
-  public init(hostname: String, port: UInt16, delegate: PeerConnectionDelegate? = nil) {
+  // Messages that are queued to be sent to the connected peer.
+  private var messageSendQueue = [Message]()
+  // Sometimes we aren't able to send the whole message because the buffer is full. When that
+  // happens, we must stash the remaining bytes and try again when we receive a
+  // NSStreamEvent.HasBytesAvailable event from the outputStream.
+  private var pendingSendBytes = [UInt8]()
+
+  public init(hostname: String,
+              port: UInt16,
+              networkMagicValue: Message.NetworkMagicValue,
+              delegate: PeerConnectionDelegate? = nil) {
     self.delegate = delegate
     self.peerIP = nil
     self.peerHostname = hostname
     self.peerPort = port
+    self.networkMagicValue = networkMagicValue
   }
 
-  public init(IP: IPAddress, port: UInt16, delegate: PeerConnectionDelegate? = nil) {
+  public init(IP: IPAddress,
+              port: UInt16,
+              networkMagicValue: Message.NetworkMagicValue,
+              delegate: PeerConnectionDelegate? = nil) {
     self.delegate = delegate
     self.peerIP = IP
     self.peerHostname = nil
     self.peerPort = port
+    self.networkMagicValue = networkMagicValue
   }
 
-  public func connect() {
+  public func connectWithVersionMessage(versionMessage: VersionMessage) {
     queue.addOperationWithBlock() {
+      self.inputStream = nil
+      self.outputStream = nil
       NSStream.getStreamsToHostWithName(self.peerHostname!,
                                         port:Int(self.peerPort),
                                         inputStream:&self.inputStream,
@@ -51,23 +69,37 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       assert(self.outputStream != nil)
       self.inputStream!.delegate = self
       self.outputStream!.delegate = self
+      // TODO: Do we need to create a separate RunLoop for this to run in the background?
+      self.inputStream!.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+      self.outputStream!.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
       self.inputStream!.open()
       self.outputStream!.open()
+      self.sendMessageWithPayload(versionMessage)
     }
   }
 
   public func disconnect() {
-    // TODO
+    queue.cancelAllOperations()
+    if self.inputStream != nil {
+      self.inputStream!.close()
+    }
+    if self.outputStream != nil {
+      self.outputStream!.close()
+    }
   }
 
   public func sendMessageWithPayload(payload: MessagePayload) {
-    // TODO
+    let message = Message(networkMagicValue:networkMagicValue, payload:payload)
+    queue.addOperationWithBlock() {
+      self.messageSendQueue.append(message)
+      self.maybeSend()
+    }
   }
 
   // MARK: - NSStreamDelegate
 
-  public func stream(aStream: NSStream!, handleEvent eventCode: NSStreamEvent) {
-    switch eventCode {
+  public func stream(stream: NSStream!, handleEvent event: NSStreamEvent) {
+    switch event {
       case NSStreamEvent.None:
         println("none")
       case NSStreamEvent.OpenCompleted:
@@ -76,13 +108,40 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         println("has bytes available")
       case NSStreamEvent.HasSpaceAvailable:
         println("has space available")
+        queue.addOperationWithBlock() {
+          self.maybeSend()
+        }
       case NSStreamEvent.ErrorOccurred:
         println("error occurred")
       case NSStreamEvent.EndEncountered:
         println("end encountered")
       default:
-        println("ERROR Invalid NSStreamEvent code \(eventCode)")
-        assert(false, "Invalid NSStreamEvent code")
+        println("ERROR Invalid NSStreamEvent \(event)")
+        assert(false, "Invalid NSStreamEvent")
+    }
+  }
+
+  private func maybeSend() {
+    assert(NSOperationQueue.currentQueue() == queue)
+    if outputStream == nil {
+      return
+    }
+    if !outputStream!.hasSpaceAvailable {
+      return
+    }
+    if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
+      pendingSendBytes += messageSendQueue.removeAtIndex(0).data.UInt8Array()
+    }
+    if pendingSendBytes.count > 0 {
+      let bytesWritten = outputStream!.write(pendingSendBytes, maxLength:pendingSendBytes.count)
+      if bytesWritten > 0 {
+        pendingSendBytes.removeRange(0..<bytesWritten)
+      }
+      if messageSendQueue.count > 0 || pendingSendBytes.count > 0 {
+        queue.addOperationWithBlock() {
+          self.maybeSend()
+        }
+      }
     }
   }
 }

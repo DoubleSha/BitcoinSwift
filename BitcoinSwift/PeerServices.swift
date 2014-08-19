@@ -12,6 +12,22 @@ public func ==(lhs: PeerServices, rhs: PeerServices) -> Bool {
   return lhs.value == rhs.value
 }
 
+public func &(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
+  return PeerServices(lhs.value & rhs.value)
+}
+
+public func |(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
+  return PeerServices(lhs.value | rhs.value)
+}
+
+public func ^(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
+  return PeerServices(lhs.value ^ rhs.value)
+}
+
+public prefix func ~(other: PeerServices) -> PeerServices {
+  return PeerServices(~other.value)
+}
+
 // Bitfield of features to be enabled for this connection.
 public struct PeerServices : RawOptionSetType {
   private var value: UInt64 = 0
@@ -20,7 +36,8 @@ public struct PeerServices : RawOptionSetType {
   public func toRaw() -> UInt64 { return self.value }
   public static func fromRaw(raw: UInt64) -> PeerServices? { return PeerServices(raw) }
   public static func fromMask(raw: UInt64) -> PeerServices { return PeerServices(raw) }
-  public static func convertFromNilLiteral() -> PeerServices { return self(0) }
+  public static func convertFromNilLiteral() -> PeerServices { return PeerServices(0) }
+  public static var allZeros: PeerServices { return PeerServices(0) }
 
   public static var None: PeerServices { return PeerServices(0) }
   // This node can be asked for full blocks instead of just headers.
