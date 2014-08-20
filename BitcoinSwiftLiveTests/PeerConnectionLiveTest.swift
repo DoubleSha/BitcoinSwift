@@ -34,7 +34,7 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
                                         blockStartHeight:0,
                                         announceRelayedTransactions:true)
     conn.connectWithVersionMessage(versionMessage)
-    waitForExpectationsWithTimeout(30, handler:nil)
+    waitForExpectationsWithTimeout(10, handler:nil)
   }
 
   // MARK: - PeerConnectionDelegate

@@ -17,8 +17,11 @@ public class PeerConnection: NSObject, NSStreamDelegate {
 
   public var delegate: PeerConnectionDelegate?
   public enum Status { case NotConnected, Connecting, Connected }
+  public var status: Status { return _status }
+  private var _status: Status = .NotConnected
 
   private let queue = NSOperationQueue()
+//  private let runLoop =
 
   // Depending on the constructor used, either the hostname or the IP will be non-nil.
   private let peerHostname: String?
@@ -26,8 +29,8 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private let peerPort: UInt16
   private let networkMagicValue: Message.NetworkMagicValue
 
-  private var inputStream: NSInputStream?
-  private var outputStream: NSOutputStream?
+  private var inputStream: NSInputStream!
+  private var outputStream: NSOutputStream!
 
   // Messages that are queued to be sent to the connected peer.
   private var messageSendQueue = [Message]()
@@ -59,22 +62,33 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   }
 
   public func connectWithVersionMessage(versionMessage: VersionMessage) {
+    assert(status == .NotConnected)
+    setStatus(.Connecting)
+    println("Attempting to connect to peer \(peerHostname!):\(peerPort)")
     queue.addOperationWithBlock() {
       self.inputStream = nil
       self.outputStream = nil
-      NSStream.getStreamsToHostWithName(self.peerHostname!,
-                                        port:Int(self.peerPort),
-                                        inputStream:&self.inputStream,
-                                        outputStream:&self.outputStream)
-      assert(self.inputStream != nil)
-      assert(self.outputStream != nil)
-      self.inputStream!.delegate = self
-      self.outputStream!.delegate = self
+      var readStream: Unmanaged<CFReadStream>?
+      var writeStream: Unmanaged<CFWriteStream>?
+      CFStreamCreatePairWithSocketToHost(nil,
+                                         self.peerHostname! as NSString,
+                                         UInt32(self.peerPort),
+                                         &readStream,
+                                         &writeStream);
+      if readStream == nil || writeStream == nil {
+        println("Connection failed to peer \(self.peerHostname!):\(self.peerPort)")
+        self.setStatus(.NotConnected)
+        return
+      }
+      self.inputStream = readStream!.takeUnretainedValue()
+      self.outputStream = writeStream!.takeUnretainedValue()
+      self.inputStream.delegate = self
+      self.outputStream.delegate = self
       // TODO: Do we need to create a separate RunLoop for this to run in the background?
-      self.inputStream!.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-      self.outputStream!.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-      self.inputStream!.open()
-      self.outputStream!.open()
+      self.inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+      self.outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+      self.inputStream.open()
+      self.outputStream.open()
       self.sendMessageWithPayload(versionMessage)
     }
   }
@@ -82,10 +96,10 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   public func disconnect() {
     queue.cancelAllOperations()
     if self.inputStream != nil {
-      self.inputStream!.close()
+      self.inputStream.close()
     }
     if self.outputStream != nil {
-      self.outputStream!.close()
+      self.outputStream.close()
     }
   }
 
@@ -127,7 +141,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     if outputStream == nil {
       return
     }
-    if !outputStream!.hasSpaceAvailable {
+    if !outputStream.hasSpaceAvailable {
       return
     }
     if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
@@ -144,5 +158,9 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         }
       }
     }
+  }
+
+  private func setStatus(newStatus: Status) {
+    _status = newStatus
   }
 }
