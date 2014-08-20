@@ -10,7 +10,7 @@ import BitcoinSwift
 import XCTest
 
 class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
-  var connectedExpectation: XCTestExpectation?
+  var connectedExpectation: XCTestExpectation!
 
   override func setUp() {
     connectedExpectation = expectationWithDescription("connected")
@@ -21,19 +21,7 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
                               port:8333,
                               networkMagicValue:Message.NetworkMagicValue.MainNet,
                               delegate:self)
-    let emptyPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
-                                       IP:IPAddress.IPV4(0),
-                                       port: 8333)
-    let versionMessage = VersionMessage(protocolVersion:70002,
-                                        services:PeerServices.NodeNetwork,
-                                        date: NSDate(),
-                                        senderAddress:emptyPeerAddress,
-                                        receiverAddress:emptyPeerAddress,
-                                        nonce:0,
-                                        userAgent:"test",
-                                        blockStartHeight:0,
-                                        announceRelayedTransactions:true)
-    conn.connectWithVersionMessage(versionMessage)
+    conn.connectWithVersionMessage(dummyVersionMessage())
     waitForExpectationsWithTimeout(10, handler:nil)
   }
 
@@ -41,6 +29,23 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
 
   func peerConnectionDidConnect(peerConnection: PeerConnection) {
     NSLog("Did connect on run loop \(NSRunLoop.currentRunLoop())")
-    connectedExpectation!.fulfill()
+    connectedExpectation.fulfill()
+  }
+
+  // MARK: - Helper methods
+
+  func dummyVersionMessage() -> VersionMessage {
+    let emptyPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
+                                       IP:IPAddress.IPV4(0),
+                                       port:8333)
+    return VersionMessage(protocolVersion:70002,
+                          services:PeerServices.NodeNetwork,
+                          date: NSDate(),
+                          senderAddress:emptyPeerAddress,
+                          receiverAddress:emptyPeerAddress,
+                          nonce:0,
+                          userAgent:"test",
+                          blockStartHeight:0,
+                          announceRelayedTransactions:true)
   }
 }

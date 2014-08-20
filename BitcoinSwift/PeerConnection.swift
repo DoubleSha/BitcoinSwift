@@ -21,7 +21,6 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private var _status: Status = .NotConnected
 
   private let queue = NSOperationQueue()
-//  private let runLoop =
 
   // Depending on the constructor used, either the hostname or the IP will be non-nil.
   private let peerHostname: String?
@@ -66,8 +65,6 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     setStatus(.Connecting)
     println("Attempting to connect to peer \(peerHostname!):\(peerPort)")
     queue.addOperationWithBlock() {
-      self.inputStream = nil
-      self.outputStream = nil
       var readStream: Unmanaged<CFReadStream>?
       var writeStream: Unmanaged<CFWriteStream>?
       CFStreamCreatePairWithSocketToHost(nil,
