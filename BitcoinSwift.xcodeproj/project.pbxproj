@@ -263,9 +263,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		0A2D51C219777320009B6B25 /* BitcoinSwiftLiveTests */ = {
+		0A2D51C219777320009B6B25 /* BitcoinSwiftIOSLiveTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A2D51CC19777320009B6B25 /* Build configuration list for PBXNativeTarget "BitcoinSwiftLiveTests" */;
+			buildConfigurationList = 0A2D51CC19777320009B6B25 /* Build configuration list for PBXNativeTarget "BitcoinSwiftIOSLiveTests" */;
 			buildPhases = (
 				0A2D51BF19777320009B6B25 /* Sources */,
 				0A2D51C019777320009B6B25 /* Frameworks */,
@@ -276,14 +276,14 @@
 			dependencies = (
 				0A2D51CB19777320009B6B25 /* PBXTargetDependency */,
 			);
-			name = BitcoinSwiftLiveTests;
+			name = BitcoinSwiftIOSLiveTests;
 			productName = BitcoinSwiftLiveTests;
 			productReference = 0A2D51C319777320009B6B25 /* BitcoinSwiftLiveTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		0A52ACCA195397080041541B /* BitcoinSwift */ = {
+		0A52ACCA195397080041541B /* BitcoinSwiftIOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A52ACE1195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwift" */;
+			buildConfigurationList = 0A52ACE1195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwiftIOS" */;
 			buildPhases = (
 				0A52ACC6195397080041541B /* Sources */,
 				0A52ACC7195397080041541B /* Frameworks */,
@@ -294,14 +294,14 @@
 			);
 			dependencies = (
 			);
-			name = BitcoinSwift;
+			name = BitcoinSwiftIOS;
 			productName = BitcoinSwift;
 			productReference = 0A52ACCB195397080041541B /* BitcoinSwift.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		0A52ACD5195397080041541B /* BitcoinSwiftTests */ = {
+		0A52ACD5195397080041541B /* BitcoinSwiftIOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0A52ACE4195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwiftTests" */;
+			buildConfigurationList = 0A52ACE4195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwiftIOSTests" */;
 			buildPhases = (
 				0A52ACD2195397080041541B /* Sources */,
 				0A52ACD3195397080041541B /* Frameworks */,
@@ -312,7 +312,7 @@
 			dependencies = (
 				0A52ACD9195397080041541B /* PBXTargetDependency */,
 			);
-			name = BitcoinSwiftTests;
+			name = BitcoinSwiftIOSTests;
 			productName = BitcoinSwiftTests;
 			productReference = 0A52ACD6195397080041541B /* BitcoinSwiftTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -351,9 +351,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0A52ACCA195397080041541B /* BitcoinSwift */,
-				0A52ACD5195397080041541B /* BitcoinSwiftTests */,
-				0A2D51C219777320009B6B25 /* BitcoinSwiftLiveTests */,
+				0A52ACCA195397080041541B /* BitcoinSwiftIOS */,
+				0A52ACD5195397080041541B /* BitcoinSwiftIOSTests */,
+				0A2D51C219777320009B6B25 /* BitcoinSwiftIOSLiveTests */,
 			);
 		};
 /* End PBXProject section */
@@ -439,12 +439,12 @@
 /* Begin PBXTargetDependency section */
 		0A2D51CB19777320009B6B25 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0A52ACCA195397080041541B /* BitcoinSwift */;
+			target = 0A52ACCA195397080041541B /* BitcoinSwiftIOS */;
 			targetProxy = 0A2D51CA19777320009B6B25 /* PBXContainerItemProxy */;
 		};
 		0A52ACD9195397080041541B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0A52ACCA195397080041541B /* BitcoinSwift */;
+			target = 0A52ACCA195397080041541B /* BitcoinSwiftIOS */;
 			targetProxy = 0A52ACD8195397080041541B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -595,7 +595,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libraries",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BitcoinSwift;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -617,7 +617,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Libraries",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = BitcoinSwift;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -657,7 +657,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0A2D51CC19777320009B6B25 /* Build configuration list for PBXNativeTarget "BitcoinSwiftLiveTests" */ = {
+		0A2D51CC19777320009B6B25 /* Build configuration list for PBXNativeTarget "BitcoinSwiftIOSLiveTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A2D51CD19777320009B6B25 /* Debug */,
@@ -675,7 +675,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A52ACE1195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwift" */ = {
+		0A52ACE1195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwiftIOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A52ACE2195397080041541B /* Debug */,
@@ -684,7 +684,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0A52ACE4195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwiftTests" */ = {
+		0A52ACE4195397080041541B /* Build configuration list for PBXNativeTarget "BitcoinSwiftIOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A52ACE5195397080041541B /* Debug */,
