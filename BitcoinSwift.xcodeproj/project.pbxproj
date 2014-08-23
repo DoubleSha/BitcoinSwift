@@ -15,13 +15,11 @@
 		0A2D51BC196E52EA009B6B25 /* DNSPeerDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */; };
 		0A2D51BE19763819009B6B25 /* IPAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51BD19763819009B6B25 /* IPAddress.swift */; };
 		0A2D51C819777320009B6B25 /* DNSDiscoveryLiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51C719777320009B6B25 /* DNSDiscoveryLiveTests.swift */; };
-		0A2D51C919777320009B6B25 /* BitcoinSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A52ACCB195397080041541B /* BitcoinSwift.framework */; };
 		0A34DF63196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF62196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift */; };
 		0A34DF651961197D007BBC35 /* Endianness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF641961197D007BBC35 /* Endianness.swift */; };
 		0A34DF6719663B06007BBC35 /* VersionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF6619663B06007BBC35 /* VersionMessage.swift */; };
 		0A34DF6B19664041007BBC35 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF6A19664041007BBC35 /* MessageTests.swift */; };
 		0A52ACD1195397080041541B /* BitcoinSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACD0195397080041541B /* BitcoinSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0A52ACD7195397080041541B /* BitcoinSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A52ACCB195397080041541B /* BitcoinSwift.framework */; };
 		0A52ACEB1953979F0041541B /* ECKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACE71953979F0041541B /* ECKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A52ACEC1953979F0041541B /* ECKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACE81953979F0041541B /* ECKey.m */; };
 		0A52ACF0195398320041541B /* ECKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACEF195398320041541B /* ECKeyTests.swift */; };
@@ -154,7 +152,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A2D51C919777320009B6B25 /* BitcoinSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,7 +167,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A52ACD7195397080041541B /* BitcoinSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
