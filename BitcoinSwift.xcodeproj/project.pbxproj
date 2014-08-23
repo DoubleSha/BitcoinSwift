@@ -156,7 +156,7 @@
 		0A52ACC1195397080041541B = {
 			isa = PBXGroup;
 			children = (
-				0A52ACF1195399FA0041541B /* libcrypto.a */,
+				0AF075FC19A9293D00BEC64D /* Libraries */,
 				0A52ACCD195397080041541B /* BitcoinSwift */,
 				0A52ACDA195397080041541B /* BitcoinSwiftTests */,
 				0A2D51C419777320009B6B25 /* BitcoinSwiftLiveTests */,
@@ -236,6 +236,14 @@
 				0A52ACDC195397080041541B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0AF075FC19A9293D00BEC64D /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				0A52ACF1195399FA0041541B /* libcrypto.a */,
+			);
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
