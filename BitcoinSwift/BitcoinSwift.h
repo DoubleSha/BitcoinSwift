@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 //! Project version number for BitcoinSwift.
 FOUNDATION_EXPORT double BitcoinSwiftVersionNumber;
 
