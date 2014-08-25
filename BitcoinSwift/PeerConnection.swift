@@ -24,7 +24,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private let peerHostname: String?
   private let peerIP: IPAddress?
   private let peerPort: UInt16
-  private let networkMagicValue: Message.NetworkMagicValue
+  private let network: Message.Network
 
   private var inputStream: NSInputStream!
   private var outputStream: NSOutputStream!
@@ -35,29 +35,34 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   // happens, we must stash the remaining bytes and try again when we receive a
   // NSStreamEvent.HasBytesAvailable event from the outputStream.
   private var pendingSendBytes = [UInt8]()
+  // We receive a message in chunks. When we have received only part of a message, but not the
+  // whole thing, pendingReceiveBytes stores the pending bytes, and add onto it the next time
+  // we receive a NSStreamEvent.HasBytesAvailable event.
+  private var pendingReceiveBytes = [UInt8]()
+  private var readBuffer = [UInt8](count:1024, repeatedValue:0)
 
   private let networkThread = Thread()
 
   public init(hostname: String,
               port: UInt16,
-              networkMagicValue: Message.NetworkMagicValue,
+              network: Message.Network,
               delegate: PeerConnectionDelegate? = nil) {
     self.delegate = delegate
     self.peerIP = nil
     self.peerHostname = hostname
     self.peerPort = port
-    self.networkMagicValue = networkMagicValue
+    self.network = network
   }
 
   public init(IP: IPAddress,
               port: UInt16,
-              networkMagicValue: Message.NetworkMagicValue,
+              network: Message.Network,
               delegate: PeerConnectionDelegate? = nil) {
     self.delegate = delegate
     self.peerIP = IP
     self.peerHostname = nil
     self.peerPort = port
-    self.networkMagicValue = networkMagicValue
+    self.network = network
   }
 
   public func connectWithVersionMessage(versionMessage: VersionMessage,
@@ -85,7 +90,8 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         self.inputStream.delegate = self
         self.outputStream.delegate = self
         self.inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-        self.outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+        self.outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(),
+                                            forMode:NSDefaultRunLoopMode)
         self.inputStream.open()
         self.outputStream.open()
         self.sendMessageWithPayload(versionMessage)
@@ -105,10 +111,10 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   }
 
   public func sendMessageWithPayload(payload: MessagePayload) {
-    let message = Message(networkMagicValue:networkMagicValue, payload:payload)
+    let message = Message(network:network, payload:payload)
     networkThread.addOperationWithBlock() {
       self.messageSendQueue.append(message)
-      self.maybeSend()
+      self.send()
     }
   }
 
@@ -126,7 +132,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       case NSStreamEvent.HasSpaceAvailable:
         println("has space available")
         networkThread.addOperationWithBlock() {
-          self.maybeSend()
+          self.send()
         }
       case NSStreamEvent.ErrorOccurred:
         println("error occurred")
@@ -138,7 +144,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     }
   }
 
-  private func maybeSend() {
+  private func send() {
     assert(NSThread.currentThread() == networkThread)
     if outputStream == nil {
       return
@@ -156,10 +162,30 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       }
       if messageSendQueue.count > 0 || pendingSendBytes.count > 0 {
         networkThread.addOperationWithBlock() {
-          self.maybeSend()
+          self.send()
         }
       }
     }
+  }
+
+  private func receive() {
+    assert(NSThread.currentThread() == networkThread)
+    if inputStream == nil {
+      return
+    }
+    if !inputStream.hasBytesAvailable {
+      return
+    }
+    let bytesRead = inputStream.read(&readBuffer, maxLength:readBuffer.count)
+    if bytesRead > 0 {
+      pendingReceiveBytes += readBuffer[0..<bytesRead]
+      processPendingReceiveBytes()
+    }
+  }
+
+  private func processPendingReceiveBytes() {
+    // TODO: Implement this.
+    pendingReceiveBytes.removeAll()
   }
 
   private func setStatus(newStatus: Status) {

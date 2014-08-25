@@ -18,11 +18,12 @@ public struct Message {
 
   // Magic value indicating message origin network, and used to seek to next message when stream
   // state is unknown.
-  public enum NetworkMagicValue: UInt32 {
+  public enum Network: UInt32 {
     case MainNet = 0xd9b4Bef9, TestNet = 0xdab5bffa, TestNet3 = 0x0709110b
   }
 
   public enum Command: String {
+
     case Version = "version", VersionAck = "verack", Addr = "addr"
 
     public static let encodedLength = 12
@@ -37,23 +38,38 @@ public struct Message {
     }
   }
 
-  public let networkMagicValue: NetworkMagicValue
-  public let command: Command
+  public let header: Header
   public let payload: NSData
-  public let payloadChecksum: UInt32
 
-  public init(networkMagicValue: NetworkMagicValue, command: Command, payloadData: NSData) {
-    self.networkMagicValue = networkMagicValue
-    self.command = command
-    self.payload = payloadData
-    self.payloadChecksum = Message.checksumForPayload(payload)
+  public var network: Network {
+    return header.network
+  }
+  public var command: Command {
+    return header.command
+  }
+  public var payloadChecksum: UInt32 {
+    return header.payloadChecksum
   }
 
-  public init(networkMagicValue: NetworkMagicValue, payload: MessagePayload) {
-    self.networkMagicValue = networkMagicValue
-    command = payload.command
+  public init(network: Network, command: Command, payloadData: NSData) {
+    self.header = Header(network:network,
+                         command:command,
+                         payloadLength:UInt32(payloadData.length),
+                         payloadChecksum:Message.checksumForPayload(payloadData))
+    self.payload = payloadData
+  }
+
+  public init(network: Network, payload: MessagePayload) {
+    self.header = Header(network:network,
+                         command:payload.command,
+                         payloadLength:UInt32(payload.data.length),
+                         payloadChecksum:Message.checksumForPayload(payload.data))
     self.payload = payload.data
-    self.payloadChecksum = Message.checksumForPayload(self.payload)
+  }
+
+  public init(header: Header, payloadData: NSData) {
+    self.header = header
+    self.payload = payloadData
   }
 
   public static func fromData(data: NSData) -> Message? {
@@ -62,53 +78,22 @@ public struct Message {
     }
     let stream = NSInputStream(data:data)
     stream.open()
-    let networkMagicValueRaw = stream.readUInt32()
-    if networkMagicValueRaw == nil {
-      println("WARN: Failed to parse network magic value")
-      return nil
-    }
-    let networkMagicValue = NetworkMagicValue.fromRaw(networkMagicValueRaw!)
-    if networkMagicValue == nil {
-      println("WARN: Unsupported networkMagicValue \(networkMagicValueRaw)")
-      return nil
-    }
-    let commandRaw = stream.readASCIIStringWithLength(Command.encodedLength)
-    if commandRaw == nil {
-      println("WARN: Failed to parse command")
-      return nil
-    }
-    let command = Command.fromRaw(commandRaw!)
-    if command == nil {
-      println("WARN: Unsupported command \(commandRaw!)")
-      return nil
-    }
-    let length = stream.readUInt32()
-    if length == nil {
-      println("WARN: Failed to parse length")
-      return nil
-    }
-    let checksum = stream.readUInt32()
-    if checksum == nil {
-      println("WARN: Failed to parse checksum")
+    let header = Header.fromStream(stream)
+    if header == nil {
+      // Header.fromData() has already logged a warning for us.
       return nil
     }
     let payloadData = stream.readData()
     if payloadData == nil || payloadData!.length == 0 {
-      println("WARN: Failed to parse payload")
+      println("WARN: Failed to parse payload in message")
       return nil
     }
     stream.close()
-    return Message(networkMagicValue:networkMagicValue!,
-                   command:command!,
-                   payloadData:payloadData!)
+    return Message(header:header!, payloadData:payloadData!)
   }
 
   public var data: NSData {
-    var bytes = NSMutableData()
-    bytes.appendUInt32(networkMagicValue.toRaw())
-    bytes.appendData(command.data)
-    bytes.appendUInt32(UInt32(payload.length))
-    bytes.appendUInt32(payloadChecksum)
+    var bytes = NSMutableData(data:header.data)
     bytes.appendData(payload)
     return bytes
   }

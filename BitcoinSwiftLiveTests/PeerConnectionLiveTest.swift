@@ -19,7 +19,7 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
   func testConnect() {
     let conn = PeerConnection(hostname:"localhost",
                               port:8333,
-                              networkMagicValue:Message.NetworkMagicValue.MainNet,
+                              network:Message.Network.MainNet,
                               delegate:self)
     conn.connectWithVersionMessage(dummyVersionMessage())
     waitForExpectationsWithTimeout(10, handler:nil)
