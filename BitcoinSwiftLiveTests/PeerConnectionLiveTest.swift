@@ -11,8 +11,8 @@ import XCTest
 
 class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
   var connectedExpectation: XCTestExpectation!
-  let mainNetPort:UInt16 = 8333
-  let testNetPort:UInt16 = 18333
+  let mainNetPort: UInt16 = 8333
+  let testNetPort: UInt16 = 18333
 
   override func setUp() {
     connectedExpectation = expectationWithDescription("connected")
