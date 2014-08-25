@@ -11,19 +11,28 @@ import XCTest
 
 class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
   var connectedExpectation: XCTestExpectation!
+  let mainNetPort:UInt16 = 8333
+  let testNetPort:UInt16 = 18333
 
   override func setUp() {
     connectedExpectation = expectationWithDescription("connected")
   }
 
   func testConnect() {
-    let conn = PeerConnection(hostname:"localhost",
-                              port:8333,
-                              networkMagicValue:Message.NetworkMagicValue.MainNet,
-                              delegate:self)
-    conn.connectWithVersionMessage(dummyVersionMessage())
+    // Try to connect to either MainNet or TestNet on localhost. If either succeeds, we're golden.
+    let connMainNet = PeerConnection(hostname:"localhost",
+                                     port:mainNetPort,
+                                     networkMagicValue:Message.NetworkMagicValue.MainNet,
+                                     delegate:self)
+    connMainNet.connectWithVersionMessage(dummyVersionMessage(mainNetPort))
+    let connTestNet = PeerConnection(hostname:"localhost",
+                                     port:testNetPort,
+                                     networkMagicValue:Message.NetworkMagicValue.TestNet3,
+                                     delegate:self)
+    connTestNet.connectWithVersionMessage(dummyVersionMessage(testNetPort))
     waitForExpectationsWithTimeout(10, handler:nil)
-    conn.disconnect()
+    connMainNet.disconnect()
+    connTestNet.disconnect()
   }
 
   // MARK: - PeerConnectionDelegate
@@ -35,10 +44,10 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
 
   // MARK: - Helper methods
 
-  func dummyVersionMessage() -> VersionMessage {
+  func dummyVersionMessage(port: UInt16) -> VersionMessage {
     let emptyPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
                                        IP:IPAddress.IPV4(0),
-                                       port:8333)
+                                       port:port)
     return VersionMessage(protocolVersion:70002,
                           services:PeerServices.NodeNetwork,
                           date: NSDate(),
@@ -49,4 +58,5 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
                           blockStartHeight:0,
                           announceRelayedTransactions:true)
   }
+
 }
