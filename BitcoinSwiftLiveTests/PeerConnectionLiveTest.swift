@@ -17,19 +17,20 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
   }
 
   func testConnect() {
-    let conn = PeerConnection(hostname:"173.8.166.106",
+    let conn = PeerConnection(hostname:"localhost",
                               port:8333,
                               networkMagicValue:Message.NetworkMagicValue.MainNet,
                               delegate:self)
     conn.connectWithVersionMessage(dummyVersionMessage())
     waitForExpectationsWithTimeout(10, handler:nil)
+    conn.disconnect()
   }
 
   // MARK: - PeerConnectionDelegate
 
   func peerConnectionDidConnect(peerConnection: PeerConnection) {
-    NSLog("Did connect on run loop \(NSRunLoop.currentRunLoop())")
-    connectedExpectation.fulfill()
+    connectedExpectation?.fulfill()
+    connectedExpectation = nil
   }
 
   // MARK: - Helper methods

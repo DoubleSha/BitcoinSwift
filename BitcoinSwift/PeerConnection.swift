@@ -20,8 +20,6 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   public var status: Status { return _status }
   private var _status: Status = .NotConnected
 
-  private let queue = NSOperationQueue()
-
   // Depending on the constructor used, either the hostname or the IP will be non-nil.
   private let peerHostname: String?
   private let peerIP: IPAddress?
@@ -37,6 +35,8 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   // happens, we must stash the remaining bytes and try again when we receive a
   // NSStreamEvent.HasBytesAvailable event from the outputStream.
   private var pendingSendBytes = [UInt8]()
+
+  private let networkThread = Thread()
 
   public init(hostname: String,
               port: UInt16,
@@ -60,38 +60,42 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     self.networkMagicValue = networkMagicValue
   }
 
-  public func connectWithVersionMessage(versionMessage: VersionMessage) {
+  public func connectWithVersionMessage(versionMessage: VersionMessage,
+                                        completion: (() -> Void)? = nil) {
     assert(status == .NotConnected)
+    assert(!networkThread.executing)
     setStatus(.Connecting)
     println("Attempting to connect to peer \(peerHostname!):\(peerPort)")
-    queue.addOperationWithBlock() {
-      var readStream: Unmanaged<CFReadStream>?
-      var writeStream: Unmanaged<CFWriteStream>?
-      CFStreamCreatePairWithSocketToHost(nil,
-                                         self.peerHostname! as NSString,
-                                         UInt32(self.peerPort),
-                                         &readStream,
-                                         &writeStream);
-      if readStream == nil || writeStream == nil {
-        println("Connection failed to peer \(self.peerHostname!):\(self.peerPort)")
-        self.setStatus(.NotConnected)
-        return
+    networkThread.startWithCompletion() {
+      self.networkThread.addOperationWithBlock() {
+        var readStream: Unmanaged<CFReadStream>?
+        var writeStream: Unmanaged<CFWriteStream>?
+        CFStreamCreatePairWithSocketToHost(nil,
+                                           self.peerHostname! as NSString,
+                                           UInt32(self.peerPort),
+                                           &readStream,
+                                           &writeStream);
+        if readStream == nil || writeStream == nil {
+          println("Connection failed to peer \(self.peerHostname!):\(self.peerPort)")
+          self.setStatus(.NotConnected)
+          return
+        }
+        self.inputStream = readStream!.takeUnretainedValue()
+        self.outputStream = writeStream!.takeUnretainedValue()
+        self.inputStream.delegate = self
+        self.outputStream.delegate = self
+        self.inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+        self.outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+        self.inputStream.open()
+        self.outputStream.open()
+        self.sendMessageWithPayload(versionMessage)
       }
-      self.inputStream = readStream!.takeUnretainedValue()
-      self.outputStream = writeStream!.takeUnretainedValue()
-      self.inputStream.delegate = self
-      self.outputStream.delegate = self
-      // TODO: Do we need to create a separate RunLoop for this to run in the background?
-      self.inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-      self.outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-      self.inputStream.open()
-      self.outputStream.open()
-      self.sendMessageWithPayload(versionMessage)
+      completion?()
     }
   }
 
   public func disconnect() {
-    queue.cancelAllOperations()
+    networkThread.cancel()
     if self.inputStream != nil {
       self.inputStream.close()
     }
@@ -102,7 +106,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
 
   public func sendMessageWithPayload(payload: MessagePayload) {
     let message = Message(networkMagicValue:networkMagicValue, payload:payload)
-    queue.addOperationWithBlock() {
+    networkThread.addOperationWithBlock() {
       self.messageSendQueue.append(message)
       self.maybeSend()
     }
@@ -116,11 +120,12 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         println("none")
       case NSStreamEvent.OpenCompleted:
         println("open completed")
+        delegate?.peerConnectionDidConnect?(self)
       case NSStreamEvent.HasBytesAvailable:
         println("has bytes available")
       case NSStreamEvent.HasSpaceAvailable:
         println("has space available")
-        queue.addOperationWithBlock() {
+        networkThread.addOperationWithBlock() {
           self.maybeSend()
         }
       case NSStreamEvent.ErrorOccurred:
@@ -134,7 +139,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   }
 
   private func maybeSend() {
-    assert(NSOperationQueue.currentQueue() == queue)
+    assert(NSThread.currentThread() == networkThread)
     if outputStream == nil {
       return
     }
@@ -150,7 +155,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         pendingSendBytes.removeRange(0..<bytesWritten)
       }
       if messageSendQueue.count > 0 || pendingSendBytes.count > 0 {
-        queue.addOperationWithBlock() {
+        networkThread.addOperationWithBlock() {
           self.maybeSend()
         }
       }
@@ -159,5 +164,28 @@ public class PeerConnection: NSObject, NSStreamDelegate {
 
   private func setStatus(newStatus: Status) {
     _status = newStatus
+  }
+
+  class Thread: NSThread {
+
+    var runLoop: NSRunLoop!
+    var completionBlock: (() -> Void)?
+
+    override func main() {
+      runLoop = NSRunLoop.currentRunLoop()
+      completionBlock?()
+      completionBlock = nil
+      runLoop.run()
+    }
+
+    func startWithCompletion(completionBlock: () -> Void) {
+      self.completionBlock = completionBlock
+      start()
+    }
+
+    func addOperationWithBlock(block: () -> Void) {
+      assert(runLoop != nil, "Cannot add operation to thread before it is started")
+      CFRunLoopPerformBlock(runLoop.getCFRunLoop(), kCFRunLoopDefaultMode, block)
+    }
   }
 }
