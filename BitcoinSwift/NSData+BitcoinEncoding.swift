@@ -30,7 +30,7 @@ public extension NSMutableData {
   }
 
   public func appendUInt16(value: UInt16, endianness: Endianness = .LittleEndian) {
-    var bytes = [UInt8]()
+    var bytes: [UInt8] = []
     for i in 0..<sizeof(UInt16) {
       switch endianness {
         case .LittleEndian:
@@ -43,7 +43,7 @@ public extension NSMutableData {
   }
 
   public func appendUInt32(value: UInt32, endianness: Endianness = .LittleEndian) {
-    var bytes = [UInt8]()
+    var bytes: [UInt8] = []
     for i in 0..<sizeof(UInt32) {
       switch endianness {
         case .LittleEndian:
@@ -56,7 +56,7 @@ public extension NSMutableData {
   }
 
   public func appendUInt64(value: UInt64, endianness: Endianness = .LittleEndian) {
-    var bytes = [UInt8]()
+    var bytes: [UInt8] = []
     for i in 0..<sizeof(UInt64) {
       switch endianness {
         case .LittleEndian:
@@ -69,7 +69,7 @@ public extension NSMutableData {
   }
 
   public func appendInt16(value: Int16, endianness: Endianness = .LittleEndian) {
-    var bytes = [UInt8]()
+    var bytes: [UInt8] = []
     for i in 0..<sizeof(Int16) {
       switch endianness {
         case .LittleEndian:
@@ -82,7 +82,7 @@ public extension NSMutableData {
   }
 
   public func appendInt32(value: Int32, endianness: Endianness = .LittleEndian) {
-    var bytes = [UInt8]()
+    var bytes: [UInt8] = []
     for i in 0..<sizeof(Int32) {
       switch endianness {
         case .LittleEndian:
@@ -95,7 +95,7 @@ public extension NSMutableData {
   }
 
   public func appendInt64(value: Int64, endianness: Endianness = .LittleEndian) {
-    var bytes = [UInt8]()
+    var bytes: [UInt8] = []
     for i in 0..<sizeof(Int64) {
       switch endianness {
         case .LittleEndian:

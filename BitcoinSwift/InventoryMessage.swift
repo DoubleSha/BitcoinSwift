@@ -51,7 +51,7 @@ public struct InventoryMessage: MessagePayload {
       println("WARN: Failed to parse InventoryMessage. Count is greater than 50000 \(data)")
       return nil
     }
-    var inventoryVectors = [InventoryVector]()
+    var inventoryVectors: [InventoryVector] = []
     for _ in 0..<inventoryCount! {
       let inventoryVector = stream.readInventoryVector()
       if inventoryVector == nil {

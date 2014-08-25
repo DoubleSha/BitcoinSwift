@@ -22,7 +22,7 @@ public class DNSPeerDiscovery: PeerDiscovery {
 //    let hostRef = CFHostCreateWithName(kCFAllocatorDefault, "google.com").takeRetainedValue()
 //    var resolved = CFHostStartInfoResolution(hostRef, CFHostInfoType.Addresses, nil)
 //    let sockAddrs = CFHostGetAddressing(hostRef, &resolved).takeRetainedValue() as NSArray
-//    var IPAddresses = [IPAddress]()
+//    var IPAddresses: [IPAddress] = []
 //    for sockAddrData in sockAddrs as [NSData] {
 //      let sockAddrP = UnsafePointer<sockaddr_storage>.alloc(1)
 //      sockAddrData.getBytes(sockAddrP, length:sizeof(sockaddr_storage))

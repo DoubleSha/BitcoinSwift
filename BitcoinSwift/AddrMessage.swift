@@ -51,7 +51,7 @@ public struct AddrMessage: MessagePayload {
       println("WARN: Failed to parse AddrMessage. count is greater than 1000 \(data)")
       return nil
     }
-    var peerAddresses = [PeerAddress]()
+    var peerAddresses: [PeerAddress] = []
     for _ in 0..<count! {
       let peerAddress = stream.readPeerAddress()
       if peerAddress == nil {

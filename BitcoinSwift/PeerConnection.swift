@@ -30,15 +30,15 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private var outputStream: NSOutputStream!
 
   // Messages that are queued to be sent to the connected peer.
-  private var messageSendQueue = [Message]()
+  private var messageSendQueue: [Message] = []
   // Sometimes we aren't able to send the whole message because the buffer is full. When that
   // happens, we must stash the remaining bytes and try again when we receive a
   // NSStreamEvent.HasBytesAvailable event from the outputStream.
-  private var pendingSendBytes = [UInt8]()
+  private var pendingSendBytes: [UInt8] = []
   // We receive a message in chunks. When we have received only part of a message, but not the
   // whole thing, pendingReceiveBytes stores the pending bytes, and add onto it the next time
   // we receive a NSStreamEvent.HasBytesAvailable event.
-  private var pendingReceiveBytes = [UInt8]()
+  private var pendingReceiveBytes: [UInt8] = []
   private var readBuffer = [UInt8](count:1024, repeatedValue:0)
 
   private let networkThread = Thread()
