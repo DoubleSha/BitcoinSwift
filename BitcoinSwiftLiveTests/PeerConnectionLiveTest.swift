@@ -24,12 +24,12 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
                                      port:mainNetPort,
                                      networkMagicValue:Message.NetworkMagicValue.MainNet,
                                      delegate:self)
-    connMainNet.connectWithVersionMessage(dummyVersionMessage(mainNetPort))
+    connMainNet.connectWithVersionMessage(dummyVersionMessageWithPort(mainNetPort))
     let connTestNet = PeerConnection(hostname:"localhost",
                                      port:testNetPort,
                                      networkMagicValue:Message.NetworkMagicValue.TestNet3,
                                      delegate:self)
-    connTestNet.connectWithVersionMessage(dummyVersionMessage(testNetPort))
+    connTestNet.connectWithVersionMessage(dummyVersionMessageWithPort(testNetPort))
     waitForExpectationsWithTimeout(10, handler:nil)
     connMainNet.disconnect()
     connTestNet.disconnect()
@@ -44,7 +44,7 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
 
   // MARK: - Helper methods
 
-  func dummyVersionMessage(port: UInt16) -> VersionMessage {
+  func dummyVersionMessageWithPort(port: UInt16) -> VersionMessage {
     let emptyPeerAddress = PeerAddress(services:PeerServices.NodeNetwork,
                                        IP:IPAddress.IPV4(0),
                                        port:port)
@@ -58,5 +58,4 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
                           blockStartHeight:0,
                           announceRelayedTransactions:true)
   }
-
 }
