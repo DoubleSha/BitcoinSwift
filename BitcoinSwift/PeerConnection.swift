@@ -165,27 +165,4 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private func setStatus(newStatus: Status) {
     _status = newStatus
   }
-
-  class Thread: NSThread {
-
-    var runLoop: NSRunLoop!
-    var completionBlock: (() -> Void)?
-
-    override func main() {
-      runLoop = NSRunLoop.currentRunLoop()
-      completionBlock?()
-      completionBlock = nil
-      runLoop.run()
-    }
-
-    func startWithCompletion(completionBlock: () -> Void) {
-      self.completionBlock = completionBlock
-      start()
-    }
-
-    func addOperationWithBlock(block: () -> Void) {
-      assert(runLoop != nil, "Cannot add operation to thread before it is started")
-      CFRunLoopPerformBlock(runLoop.getCFRunLoop(), kCFRunLoopDefaultMode, block)
-    }
-  }
 }
