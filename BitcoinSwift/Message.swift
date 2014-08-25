@@ -23,7 +23,30 @@ public struct Message {
   }
 
   public enum Command: String {
-    case Version = "version", VersionAck = "verack", Addr = "addr", Inventory = "inv", GetData = "getdata"
+    case Version = "version"
+    case VersionAck = "verack"
+    case Addr = "addr"
+    case Inventory = "inv"
+    // TODO: Define message structs for each of these message types.
+    // In progress.
+    case GetData = "getdata"
+    // Not started.
+    case NotFound = "notfound"
+    case GetBlocks = "getblocks"
+    case GetHeaders = "getheaders"
+    case Transaction = "tx"
+    case Block = "block"
+    case Headers = "headers"
+    case GetAddr = "getaddr"
+    case MemPool = "mempool"
+    case Ping = "ping"
+    case Pong = "pong"
+    case Reject = "reject"
+    case FilterLoad = "filterload"
+    case FilterAdd = "filteradd"
+    case FilterClear = "filterclear"
+    case MerkleBlock = "merkleblock"
+    case Alert = "alert"
 
     public static let encodedLength = 12
 
