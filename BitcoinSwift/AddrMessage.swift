@@ -33,7 +33,6 @@ public struct AddrMessage: MessagePayload {
   }
 
   public static func fromData(data: NSData) -> AddrMessage? {
-    
     if data.length == 0 {
       return nil
     }
