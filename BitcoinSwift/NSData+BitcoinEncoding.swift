@@ -170,4 +170,9 @@ public extension NSMutableData {
         appendUInt32(word3, endianness:.BigEndian)
     }
   }
+
+  public func appendInventoryVector(inventoryVector: InventoryVector) {
+    appendUInt32(inventoryVector.type.toRaw(), endianness:.BigEndian)
+    self.appendData(inventoryVector.hash)
+  }
 }

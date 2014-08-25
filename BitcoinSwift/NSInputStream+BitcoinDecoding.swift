@@ -255,4 +255,20 @@ public extension NSInputStream {
     }
     return IPAddress.IPV6(word0!, word1!, word2!, word3!)
   }
+
+  public func readInventoryVector() -> InventoryVector? {
+    let rawType = readUInt32(endianness:.BigEndian)
+    if rawType == nil {
+      return nil
+    }
+    let hash = readData(length: 32)
+    if hash == nil {
+      return nil
+    }
+    let type = InventoryVector.VectorType.fromRaw(rawType!)
+    if type == nil {
+      return nil
+    }
+    return InventoryVector(type:type!, hash:hash!)
+  }
 }
