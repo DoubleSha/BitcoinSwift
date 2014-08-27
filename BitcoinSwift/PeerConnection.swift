@@ -132,10 +132,8 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         println("open completed")
         delegate?.peerConnectionDidConnect?(self)
       case NSStreamEvent.HasBytesAvailable:
-        println("has bytes available")
         self.receive()
       case NSStreamEvent.HasSpaceAvailable:
-        println("has space available")
         self.send()
       case NSStreamEvent.ErrorOccurred:
         println("error occurred")
@@ -193,66 +191,57 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     }
   }
 
-  // TODO: receivedBytes could theoretically get very large if we are receiving a lot of data very
-  // very fast. Block the run loop until the data is fully exhausted.
   private func processReceivedBytes() {
-    if receivedHeader == nil {
-      if receivedBytes.count < Message.Header.length {
-        // We're expecting a header, but there aren't enough bytes yet to parse one.
-        // Wait for more bytes to be received.
-        return
-      }
-      let headerStartIndex = headerStartIndexInBytes(receivedBytes)
-      if headerStartIndex < 0 {
-        // We did not find the message start, so we must wait for more bytes.
-        // Throw away the bytes we have since we couldn't figure out how to handle them.
-        // We might have all but the last byte of the networkMagicBytes for the next message,
-        // so keep the last 3 bytes.
-        let end = receivedBytes.count - network.magicBytes.count + 1
-        receivedBytes.removeRange(0..<end)
-        return
-      }
-      // Remove the bytes before startIndex since we don't know what they are.
-      receivedBytes.removeRange(0..<headerStartIndex)
-      let data = NSData(bytes:receivedBytes, length:receivedBytes.count)
-      receivedHeader = Message.Header.fromData(data)
+    while true {
       if receivedHeader == nil {
-        // Failed to parse the header for some reason. It's possible that the networkMagicBytes
-        // coincidentally appeared in the byte data, or the header was invalid for some reason.
-        // Strip the networkMagicBytes so we can advance and try to parse again.
-        receivedBytes.removeRange(0..<network.magicBytes.count)
-        networkThread.addOperationWithBlock() {
-          self.processReceivedBytes()
+        if receivedBytes.count < Message.Header.length {
+          // We're expecting a header, but there aren't enough bytes yet to parse one.
+          // Wait for more bytes to be received.
+          return
         }
+        let headerStartIndex = headerStartIndexInBytes(receivedBytes)
+        if headerStartIndex < 0 {
+          // We did not find the message start, so we must wait for more bytes.
+          // Throw away the bytes we have since we couldn't figure out how to handle them.
+          // We might have all but the last byte of the networkMagicBytes for the next message,
+          // so keep the last 3 bytes.
+          let end = receivedBytes.count - network.magicBytes.count + 1
+          receivedBytes.removeRange(0..<end)
+          return
+        }
+        // Remove the bytes before startIndex since we don't know what they are.
+        receivedBytes.removeRange(0..<headerStartIndex)
+        let data = NSData(bytes:receivedBytes, length:receivedBytes.count)
+        receivedHeader = Message.Header.fromData(data)
+        if receivedHeader == nil {
+          // Failed to parse the header for some reason. It's possible that the networkMagicBytes
+          // coincidentally appeared in the byte data, or the header was invalid for some reason.
+          // Strip the networkMagicBytes so we can advance and try to parse again.
+          receivedBytes.removeRange(0..<network.magicBytes.count)
+          continue
+        }
+        // receivedHeader is guaranteed to be non-nil at this point.
+        // We successfully parsed the header from receivedBytes, so remove those bytes.
+        receivedBytes.removeRange(0..<Message.Header.length)
+      }
+      let payloadLength = Int(receivedHeader!.payloadLength)
+      // TODO: Need to figure out a maximum length to allow here, or somebody could DOS us by
+      // providing a huge value for payloadLength.
+      if receivedBytes.count < payloadLength {
+        // Haven't received the whole message yet. Wait for more bytes.
         return
       }
-      // receivedHeader is guaranteed to be non-nil at this point.
-      // We successfully parsed the header from receivedBytes, so remove those bytes.
-      receivedBytes.removeRange(0..<Message.Header.length)
-    }
-    let payloadLength = Int(receivedHeader!.payloadLength)
-    // TODO: Need to figure out a maximum length to allow here, or somebody could DOS us by
-    // providing a huge value for payloadLength.
-    if receivedBytes.count < payloadLength {
-      // Haven't received the whole message yet. Wait for more bytes.
-      return
-    }
-    let payloadData = NSData(bytes:receivedBytes, length:payloadLength)
-    switch receivedHeader!.command {
-      case .Version:
-        println("Received version message!!!")
-      case .VersionAck:
-        println("Received versionack message!!!")
-      default:
-        println("Received unknown command \(receivedHeader!.command.toRaw())")
-    }
-    receivedBytes.removeRange(0..<payloadLength)
-    receivedHeader = nil
-    if receivedBytes.count >= Message.Header.length {
-      // There is still more data to parse.
-      networkThread.addOperationWithBlock() {
-        self.processReceivedBytes()
+      let payloadData = NSData(bytes:receivedBytes, length:payloadLength)
+      switch receivedHeader!.command {
+        case .Version:
+          println("Received version message")
+        case .VersionAck:
+          println("Received versionack message")
+        default:
+          println("Received unknown command \(receivedHeader!.command.toRaw())")
       }
+      receivedBytes.removeRange(0..<payloadLength)
+      receivedHeader = nil
     }
   }
 
