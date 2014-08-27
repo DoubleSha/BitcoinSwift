@@ -45,7 +45,7 @@ extension Message {
       }
       let network = Network.fromRaw(networkRaw!)
       if network == nil {
-        println("WARN: Unsupported network \(networkRaw) in message header")
+        println("WARN: Unsupported network \(networkRaw!) in message header")
         return nil
       }
       let commandRaw = stream.readASCIIStringWithLength(Command.encodedLength)

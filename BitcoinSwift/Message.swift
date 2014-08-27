@@ -20,6 +20,12 @@ public struct Message {
   // state is unknown.
   public enum Network: UInt32 {
     case MainNet = 0xd9b4Bef9, TestNet = 0xdab5bffa, TestNet3 = 0x0709110b
+
+    public var magicBytes: [UInt8] {
+      let data = NSMutableData()
+      data.appendUInt32(self.toRaw())
+      return data.UInt8Array()
+    }
   }
 
   public enum Command: String {

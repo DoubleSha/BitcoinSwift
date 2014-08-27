@@ -36,9 +36,12 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   // NSStreamEvent.HasBytesAvailable event from the outputStream.
   private var pendingSendBytes: [UInt8] = []
   // We receive a message in chunks. When we have received only part of a message, but not the
-  // whole thing, pendingReceiveBytes stores the pending bytes, and add onto it the next time
+  // whole thing, receivedBytes stores the pending bytes, and add onto it the next time
   // we receive a NSStreamEvent.HasBytesAvailable event.
-  private var pendingReceiveBytes: [UInt8] = []
+  private var receivedBytes: [UInt8] = []
+  // The header for the message we are about to receive. This is non-nil when we have received
+  // enough bytes to parse the header, but haven't received the full message yet.
+  private var receivedHeader: Message.Header? = nil
   private var readBuffer = [UInt8](count:1024, repeatedValue:0)
 
   private let networkThread = Thread()
@@ -101,12 +104,12 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   }
 
   public func disconnect() {
-    networkThread.cancel()
-    if self.inputStream != nil {
-      self.inputStream.close()
-    }
-    if self.outputStream != nil {
-      self.outputStream.close()
+    networkThread.addOperationWithBlock() {
+      self.inputStream?.close()
+      self.outputStream?.close()
+      self.inputStream?.removeFromRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+      self.outputStream?.removeFromRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+      NSThread.exit()
     }
   }
 
@@ -121,6 +124,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   // MARK: - NSStreamDelegate
 
   public func stream(stream: NSStream!, handleEvent event: NSStreamEvent) {
+    assert(NSThread.currentThread() == networkThread)
     switch event {
       case NSStreamEvent.None:
         println("none")
@@ -129,11 +133,10 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         delegate?.peerConnectionDidConnect?(self)
       case NSStreamEvent.HasBytesAvailable:
         println("has bytes available")
+        self.receive()
       case NSStreamEvent.HasSpaceAvailable:
         println("has space available")
-        networkThread.addOperationWithBlock() {
-          self.send()
-        }
+        self.send()
       case NSStreamEvent.ErrorOccurred:
         println("error occurred")
       case NSStreamEvent.EndEncountered:
@@ -153,7 +156,9 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       return
     }
     if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
-      pendingSendBytes += messageSendQueue.removeAtIndex(0).data.UInt8Array()
+      let message = messageSendQueue.removeAtIndex(0)
+      println("Sending \(message.header.command.toRaw()) message")
+      pendingSendBytes += message.data.UInt8Array()
     }
     if pendingSendBytes.count > 0 {
       let bytesWritten = outputStream!.write(pendingSendBytes, maxLength:pendingSendBytes.count)
@@ -178,14 +183,97 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     }
     let bytesRead = inputStream.read(&readBuffer, maxLength:readBuffer.count)
     if bytesRead > 0 {
-      pendingReceiveBytes += readBuffer[0..<bytesRead]
-      processPendingReceiveBytes()
+      receivedBytes += readBuffer[0..<bytesRead]
+      processReceivedBytes()
+      if inputStream.hasBytesAvailable {
+        networkThread.addOperationWithBlock() {
+          self.receive()
+        }
+      }
     }
   }
 
-  private func processPendingReceiveBytes() {
-    // TODO: Implement this.
-    pendingReceiveBytes.removeAll()
+  // TODO: receivedBytes could theoretically get very large if we are receiving a lot of data very
+  // very fast. Block the run loop until the data is fully exhausted.
+  private func processReceivedBytes() {
+    if receivedHeader == nil {
+      if receivedBytes.count < Message.Header.length {
+        // We're expecting a header, but there aren't enough bytes yet to parse one.
+        // Wait for more bytes to be received.
+        return
+      }
+      let headerStartIndex = headerStartIndexInBytes(receivedBytes)
+      if headerStartIndex < 0 {
+        // We did not find the message start, so we must wait for more bytes.
+        // Throw away the bytes we have since we couldn't figure out how to handle them.
+        // We might have all but the last byte of the networkMagicBytes for the next message,
+        // so keep the last 3 bytes.
+        let end = receivedBytes.count - network.magicBytes.count + 1
+        receivedBytes.removeRange(0..<end)
+        return
+      }
+      // Remove the bytes before startIndex since we don't know what they are.
+      receivedBytes.removeRange(0..<headerStartIndex)
+      let data = NSData(bytes:receivedBytes, length:receivedBytes.count)
+      receivedHeader = Message.Header.fromData(data)
+      if receivedHeader == nil {
+        // Failed to parse the header for some reason. It's possible that the networkMagicBytes
+        // coincidentally appeared in the byte data, or the header was invalid for some reason.
+        // Strip the networkMagicBytes so we can advance and try to parse again.
+        receivedBytes.removeRange(0..<network.magicBytes.count)
+        networkThread.addOperationWithBlock() {
+          self.processReceivedBytes()
+        }
+        return
+      }
+      // receivedHeader is guaranteed to be non-nil at this point.
+      // We successfully parsed the header from receivedBytes, so remove those bytes.
+      receivedBytes.removeRange(0..<Message.Header.length)
+    }
+    let payloadLength = Int(receivedHeader!.payloadLength)
+    // TODO: Need to figure out a maximum length to allow here, or somebody could DOS us by
+    // providing a huge value for payloadLength.
+    if receivedBytes.count < payloadLength {
+      // Haven't received the whole message yet. Wait for more bytes.
+      return
+    }
+    let payloadData = NSData(bytes:receivedBytes, length:payloadLength)
+    switch receivedHeader!.command {
+      case .Version:
+        println("Received version message!!!")
+      case .VersionAck:
+        println("Received versionack message!!!")
+      default:
+        println("Received unknown command \(receivedHeader!.command.toRaw())")
+    }
+    receivedBytes.removeRange(0..<payloadLength)
+    receivedHeader = nil
+    if receivedBytes.count >= Message.Header.length {
+      // There is still more data to parse.
+      networkThread.addOperationWithBlock() {
+        self.processReceivedBytes()
+      }
+    }
+  }
+
+  // Returns -1 if the header start was not found. Otherwise returns the index in the bytes.
+  // TODO: This is O(n^2). Is it worth optimizing? Is there a built-in swift util for finding
+  // a subarray in an array?
+  private func headerStartIndexInBytes(bytes: [UInt8]) -> Int {
+    let networkMagicBytes = network.magicBytes
+    for i in 0..<(bytes.count - networkMagicBytes.count) {
+      var found = true
+      for j in 0..<networkMagicBytes.count {
+        if bytes[i + j] != networkMagicBytes[j] {
+          found = false
+          break
+        }
+      }
+      if found {
+        return i
+      }
+    }
+    return -1
   }
 
   private func setStatus(newStatus: Status) {
