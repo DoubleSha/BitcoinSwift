@@ -33,7 +33,7 @@ public struct Message {
     case VersionAck = "verack"
     case Addr = "addr"
     case Inventory = "inv"
-    // TODO: Define message structs for each of these message types.
+    // TODO: Define message structs for each of the message types below.
     // In progress.
     case GetData = "getdata"
     // Not started.
@@ -129,6 +129,10 @@ public struct Message {
   // MARK: - Private Methods
 
   private static func checksumForPayload(payload: NSData) -> UInt32 {
+    if payload.length == 0 {
+      // payload length can be 0 for some message types, e.g. VersionAck.
+      return 0
+    }
     return payload.SHA256Hash().SHA256Hash().UInt32AtIndex(0)!
   }
 }

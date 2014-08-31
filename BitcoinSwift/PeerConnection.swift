@@ -9,14 +9,16 @@
 import Foundation
 
 // Delegate methods may be called from a background thread.
-@objc public protocol PeerConnectionDelegate : class {
-  optional func peerConnectionDidConnect(peerConnection: PeerConnection)
+public protocol PeerConnectionDelegate : class {
+  func peerConnection(peerConnection: PeerConnection,
+                      didConnectWithPeerVersion peerVersion: VersionMessage)
+  func peerConnection(peerConnection: PeerConnection, didDisconnectWithError error: NSError?)
 }
 
 public class PeerConnection: NSObject, NSStreamDelegate {
 
   public var delegate: PeerConnectionDelegate?
-  public enum Status { case NotConnected, Connecting, Connected }
+  public enum Status { case NotConnected, Connecting, Connected, Disconnecting }
   public var status: Status { return _status }
   private var _status: Status = .NotConnected
 
@@ -46,6 +48,11 @@ public class PeerConnection: NSObject, NSStreamDelegate {
 
   private let networkThread = Thread()
 
+  // The version message received by the peer in response to our version message.
+  private var peerVersion: VersionMessage? = nil
+  // Indicates if the peer has ack'd our version message yet.
+  private var receivedVersionAck = false
+
   public init(hostname: String,
               port: UInt16,
               network: Message.Network,
@@ -68,14 +75,14 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     self.network = network
   }
 
-  public func connectWithVersionMessage(versionMessage: VersionMessage,
-                                        completion: (() -> Void)? = nil) {
+  public func connectWithVersionMessage(versionMessage: VersionMessage) {
     assert(status == .NotConnected)
     assert(!networkThread.executing)
+    assert(!receivedVersionAck)
     setStatus(.Connecting)
     println("Attempting to connect to peer \(peerHostname!):\(peerPort)")
-    networkThread.startWithCompletion() {
-      self.networkThread.addOperationWithBlock() {
+    networkThread.startWithCompletion {
+      self.networkThread.addOperationWithBlock {
         var readStream: Unmanaged<CFReadStream>?
         var writeStream: Unmanaged<CFWriteStream>?
         CFStreamCreatePairWithSocketToHost(nil,
@@ -99,23 +106,16 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         self.outputStream.open()
         self.sendMessageWithPayload(versionMessage)
       }
-      completion?()
     }
   }
 
   public func disconnect() {
-    networkThread.addOperationWithBlock() {
-      self.inputStream?.close()
-      self.outputStream?.close()
-      self.inputStream?.removeFromRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-      self.outputStream?.removeFromRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-      NSThread.exit()
-    }
+    disconnectWithError(nil)
   }
 
   public func sendMessageWithPayload(payload: MessagePayload) {
     let message = Message(network:network, payload:payload)
-    networkThread.addOperationWithBlock() {
+    networkThread.addOperationWithBlock {
       self.messageSendQueue.append(message)
       self.send()
     }
@@ -130,7 +130,6 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         println("none")
       case NSStreamEvent.OpenCompleted:
         println("open completed")
-        delegate?.peerConnectionDidConnect?(self)
       case NSStreamEvent.HasBytesAvailable:
         self.receive()
       case NSStreamEvent.HasSpaceAvailable:
@@ -144,6 +143,8 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         assert(false, "Invalid NSStreamEvent")
     }
   }
+
+  // MARK: - Private Methods
 
   private func send() {
     assert(NSThread.currentThread() == networkThread)
@@ -164,7 +165,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         pendingSendBytes.removeRange(0..<bytesWritten)
       }
       if messageSendQueue.count > 0 || pendingSendBytes.count > 0 {
-        networkThread.addOperationWithBlock() {
+        networkThread.addOperationWithBlock {
           self.send()
         }
       }
@@ -184,7 +185,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       receivedBytes += readBuffer[0..<bytesRead]
       processReceivedBytes()
       if inputStream.hasBytesAvailable {
-        networkThread.addOperationWithBlock() {
+        networkThread.addOperationWithBlock {
           self.receive()
         }
       }
@@ -194,11 +195,6 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private func processReceivedBytes() {
     while true {
       if receivedHeader == nil {
-        if receivedBytes.count < Message.Header.length {
-          // We're expecting a header, but there aren't enough bytes yet to parse one.
-          // Wait for more bytes to be received.
-          return
-        }
         let headerStartIndex = headerStartIndexInBytes(receivedBytes)
         if headerStartIndex < 0 {
           // We did not find the message start, so we must wait for more bytes.
@@ -206,11 +202,18 @@ public class PeerConnection: NSObject, NSStreamDelegate {
           // We might have all but the last byte of the networkMagicBytes for the next message,
           // so keep the last 3 bytes.
           let end = receivedBytes.count - network.magicBytes.count + 1
-          receivedBytes.removeRange(0..<end)
+          if end > 0 {
+            receivedBytes.removeRange(0..<end)
+          }
           return
         }
         // Remove the bytes before startIndex since we don't know what they are.
         receivedBytes.removeRange(0..<headerStartIndex)
+        if receivedBytes.count < Message.Header.length {
+          // We're expecting a header, but there aren't enough bytes yet to parse one.
+          // Wait for more bytes to be received.
+          return
+        }
         let data = NSData(bytes:receivedBytes, length:receivedBytes.count)
         receivedHeader = Message.Header.fromData(data)
         if receivedHeader == nil {
@@ -224,6 +227,8 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         // We successfully parsed the header from receivedBytes, so remove those bytes.
         receivedBytes.removeRange(0..<Message.Header.length)
       }
+      assert(Message.Header.length == 24)
+      // NOTE: payloadLength can be 0 for some message types, e.g. VersionAck.
       let payloadLength = Int(receivedHeader!.payloadLength)
       // TODO: Need to figure out a maximum length to allow here, or somebody could DOS us by
       // providing a huge value for payloadLength.
@@ -232,25 +237,73 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         return
       }
       let payloadData = NSData(bytes:receivedBytes, length:payloadLength)
-      switch receivedHeader!.command {
-        case .Version:
-          println("Received version message")
-        case .VersionAck:
-          println("Received versionack message")
-        default:
-          println("Received unknown command \(receivedHeader!.command.toRaw())")
-      }
+      processMessageWithHeader(receivedHeader!, payloadData:payloadData)
       receivedBytes.removeRange(0..<payloadLength)
       receivedHeader = nil
     }
   }
 
+  private func processMessageWithHeader(header: Message.Header, payloadData: NSData) {
+    println("Received \(header.command.toRaw()) message")
+    switch header.command {
+      case .Version:
+        if peerVersion != nil {
+          println("WARN: Received extraneous VersionMessage. Ignoring")
+          break
+        }
+        assert(status == .Connecting)
+        let versionMessage = VersionMessage.fromData(payloadData)
+        if versionMessage == nil {
+          disconnectWithError(errorWithCode(ErrorCode.ConnectionFailed))
+          break
+        }
+        if !isPeerVersionSupported(versionMessage!) {
+          disconnectWithError(errorWithCode(ErrorCode.UnsupportedPeerVersion))
+          break
+        }
+        peerVersion = versionMessage!
+        sendVersionAck()
+        if receivedVersionAck {
+          didConnect()
+        }
+      case .VersionAck:
+        if status != .Connecting {
+          // The connection might have been cancelled, or it might have failed. For example,
+          // the connection can fail if we received an invalid VersionMessage from the peer.
+          println("WARN: Ignoring VersionAck message because not in Connecting state")
+          return
+        }
+        receivedVersionAck = true
+        if peerVersion != nil {
+          didConnect()
+        }
+      default:
+        println("WARN: Unknown command \(header.command.toRaw())")
+    }
+  }
+
+  private func disconnectWithError(error: NSError?) {
+    setStatus(.Disconnecting)
+    networkThread.addOperationWithBlock {
+      self.inputStream?.close()
+      self.outputStream?.close()
+      self.inputStream?.removeFromRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+      self.outputStream?.removeFromRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+      self.peerVersion = nil
+      self.receivedVersionAck = false
+      self.setStatus(.NotConnected)
+      self.delegate?.peerConnection(self, didDisconnectWithError:error)
+      NSThread.exit()
+    }
+  }
+
   // Returns -1 if the header start was not found. Otherwise returns the index in the bytes.
-  // TODO: This is O(n^2). Is it worth optimizing? Is there a built-in swift util for finding
-  // a subarray in an array?
   private func headerStartIndexInBytes(bytes: [UInt8]) -> Int {
     let networkMagicBytes = network.magicBytes
-    for i in 0..<(bytes.count - networkMagicBytes.count) {
+    if bytes.count < networkMagicBytes.count {
+      return -1
+    }
+    for i in 0...(bytes.count - networkMagicBytes.count) {
       var found = true
       for j in 0..<networkMagicBytes.count {
         if bytes[i + j] != networkMagicBytes[j] {
@@ -265,7 +318,35 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     return -1
   }
 
+  private func didConnect() {
+    assert(status == .Connecting && peerVersion != nil && receivedVersionAck)
+    _status = .Connected
+    delegate?.peerConnection(self, didConnectWithPeerVersion:peerVersion!)
+  }
+
+  private func sendVersionAck() {
+    sendMessageWithPayload(VersionAckMessage())
+  }
+
+  private func errorWithCode(code: ErrorCode) -> NSError {
+    return NSError(domain:ErrorDomain, code:ErrorCode.ConnectionFailed.toRaw(), userInfo:nil)
+  }
+
+  private func isPeerVersionSupported(versionMessage: VersionMessage) -> Bool {
+    // TODO: Make this a real check.
+    return true
+  }
+
   private func setStatus(newStatus: Status) {
     _status = newStatus
+  }
+}
+
+extension PeerConnection {
+
+  public var ErrorDomain: String { return "BitcoinSwift.PeerConnection" }
+
+  public enum ErrorCode: Int {
+    case Unknown = 0, ConnectionFailed, UnsupportedPeerVersion, StreamError, StreamEnded
   }
 }

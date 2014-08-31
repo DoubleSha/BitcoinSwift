@@ -28,9 +28,15 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
 
   // MARK: - PeerConnectionDelegate
 
-  func peerConnectionDidConnect(peerConnection: PeerConnection) {
+  func peerConnection(peerConnection: PeerConnection, didConnectWithPeerVersion: VersionMessage) {
     connectedExpectation?.fulfill()
     connectedExpectation = nil
+  }
+
+  func peerConnection(peerConnection: PeerConnection, didDisconnectWithError error: NSError?) {
+    if error != nil {
+      XCTFail("Disconnected with error \(error!)")
+    }
   }
 
   // MARK: - Helper methods

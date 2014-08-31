@@ -17,8 +17,8 @@ extension Message {
     public let payloadLength: UInt32
     public let payloadChecksum: UInt32
 
-    public static let length = sizeof(Network) + Command.encodedLength +
-        sizeof(UInt32) + sizeof(UInt32)
+    // Network (4 bytes) + Command (12 bytes) + payloadLength (4 bytes) + payloadChecksum (4 bytes).
+    public static let length = 24
 
     public init(network: Network,
                 command: Command,
