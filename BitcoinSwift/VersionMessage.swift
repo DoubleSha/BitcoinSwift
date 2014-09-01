@@ -5,12 +5,6 @@
 //  Created by Kevin Greene on 7/3/14.
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
-//  When a node creates an outgoing connection, it will immediately advertise its version. The 
-//  remote node will respond with its version. No further communication is possible until both 
-//  peers have exchanged their version.
-//
-//  https://en.bitcoin.it/wiki/Protocol_specification#version
-//
 
 import Foundation
 
