@@ -5,6 +5,10 @@
 //  Created by Kevin Greene on 8/14/14.
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
+//  Provides information on known nodes of the network.
+//
+//  https://en.bitcoin.it/wiki/Protocol_specification#addr
+//
 
 import Foundation
 

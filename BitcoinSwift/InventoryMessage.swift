@@ -5,6 +5,11 @@
 //  Created by James MacWhyte on 14/23/8.
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
+//  Allows a node to advertise its knowledge of one or more objects. It can be received unsolicited,
+//  or in reply to getblocks.
+//
+//  https://en.bitcoin.it/wiki/Protocol_specification#inv
+//
 
 import Foundation
 

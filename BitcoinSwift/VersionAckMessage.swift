@@ -5,6 +5,11 @@
 //  Created by Kevin Greene on 8/31/14.
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
+//  The verack message is sent in reply to version. This message consists of only a message header 
+//  with the command string "verack".
+//
+//  https://en.bitcoin.it/wiki/Protocol_specification#verack
+//
 
 import Foundation
 
