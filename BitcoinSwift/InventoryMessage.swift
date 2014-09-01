@@ -13,6 +13,8 @@
 
 import Foundation
 
+/// Message of type 'inv' (Inventory). Allows a node to advertise its knowledge of one or more
+/// objects. It can be received unsolicited, or in reply to getblocks.
 public struct InventoryMessage: MessagePayload {
 
   public let inventoryVectors: [InventoryVector]

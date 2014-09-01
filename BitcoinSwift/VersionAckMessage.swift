@@ -13,6 +13,8 @@
 
 import Foundation
 
+/// Message of type 'verack' (VersionAck). This message is sent in reply to 'version' (Version).
+/// This message consists of only a message header with the command string "verack".
 public struct VersionAckMessage: MessagePayload {
 
   // MARK: - MessagePayload
