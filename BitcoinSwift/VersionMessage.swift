@@ -8,6 +8,9 @@
 
 import Foundation
 
+/// Message of type 'version' (Version). When a node creates an outgoing connection, it will
+/// immediately advertise its version with this message and the remote node will respond with its 
+/// version. No further communication is possible until both peers have exchanged their version.
 public struct VersionMessage: MessagePayload {
 
   public let protocolVersion: Int32
