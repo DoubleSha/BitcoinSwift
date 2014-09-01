@@ -8,19 +8,40 @@
 
 import Foundation
 
-// Delegate methods may be called from a background thread.
+/// Conform to this protocol if you want to be notified of the low-level P2P messages received from
+/// the connected peer.
 public protocol PeerConnectionDelegate : class {
+
+  /// Called when a connection is successfully established with the remote peer.
+  /// peerVersion is the version message received from the peer during the version handshake.
   func peerConnection(peerConnection: PeerConnection,
                       didConnectWithPeerVersion peerVersion: VersionMessage)
+
+  /// Called when the connection to the remote peer is closed for any reason.
+  /// If the connection was closed due to an error, then error will be non-nil.
   func peerConnection(peerConnection: PeerConnection, didDisconnectWithError error: NSError?)
 }
 
+/// A PeerConnection handles the low-level socket connection to a peer and serializing/deserializing
+/// messages to/from the Bitcoin p2p wire format.
+///
+/// Use PeerConnection to send messages and receive notifications when new messages are received.
+/// For higher-level peer state management, such as downloading the blockchain, managing bloom
+/// filters, etc, use the PeerController class.
+///
+/// All message sending, receiving, and serialization is done on a dedicated background thread.
+/// By default, delegate methods are dispatched on the main queue. A different queue may be used by
+/// passing a delegateQueue to the constructor.
 public class PeerConnection: NSObject, NSStreamDelegate {
 
-  public var delegate: PeerConnectionDelegate?
   public enum Status { case NotConnected, Connecting, Connected, Disconnecting }
+
+  /// The current status of the connection.
   public var status: Status { return _status }
   private var _status: Status = .NotConnected
+
+  private var delegate: PeerConnectionDelegate?
+  private var delegateQueue: dispatch_queue_t
 
   // Depending on the constructor used, either the hostname or the IP will be non-nil.
   private let peerHostname: String?
@@ -28,6 +49,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private let peerPort: UInt16
   private let network: Message.Network
 
+  // Streams used to read & write data from the connected peer.
   private var inputStream: NSInputStream!
   private var outputStream: NSOutputStream!
 
@@ -38,7 +60,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   // NSStreamEvent.HasBytesAvailable event from the outputStream.
   private var pendingSendBytes: [UInt8] = []
   // We receive a message in chunks. When we have received only part of a message, but not the
-  // whole thing, receivedBytes stores the pending bytes, and add onto it the next time
+  // whole thing, receivedBytes stores the pending bytes, and adds onto it the next time
   // we receive a NSStreamEvent.HasBytesAvailable event.
   private var receivedBytes: [UInt8] = []
   // The header for the message we are about to receive. This is non-nil when we have received
@@ -56,25 +78,33 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   public init(hostname: String,
               port: UInt16,
               network: Message.Network,
-              delegate: PeerConnectionDelegate? = nil) {
+              delegate: PeerConnectionDelegate? = nil,
+              delegateQueue: dispatch_queue_t = dispatch_get_main_queue()) {
     self.delegate = delegate
     self.peerIP = nil
     self.peerHostname = hostname
     self.peerPort = port
     self.network = network
+    self.delegateQueue = delegateQueue
   }
 
   public init(IP: IPAddress,
               port: UInt16,
               network: Message.Network,
-              delegate: PeerConnectionDelegate? = nil) {
+              delegate: PeerConnectionDelegate? = nil,
+              delegateQueue: dispatch_queue_t = dispatch_get_main_queue()) {
     self.delegate = delegate
     self.peerIP = IP
     self.peerHostname = nil
     self.peerPort = port
     self.network = network
+    self.delegateQueue = delegateQueue
   }
 
+  /// Attempts to open a connection to the remote peer.
+  /// Once the socket is successfully opened, versionMessage is sent to the remote peer.
+  /// The connection is considered "open" after the peer responds to the versionMessage with its
+  /// own VersionMessage and a VersionAck confirming it is compatible.
   public func connectWithVersionMessage(versionMessage: VersionMessage) {
     assert(status == .NotConnected)
     assert(!networkThread.executing)
@@ -85,6 +115,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       self.networkThread.addOperationWithBlock {
         var readStream: Unmanaged<CFReadStream>?
         var writeStream: Unmanaged<CFWriteStream>?
+        // TODO: Support peerIP here instead of just peerHostname.
         CFStreamCreatePairWithSocketToHost(nil,
                                            self.peerHostname! as NSString,
                                            UInt32(self.peerPort),
@@ -109,10 +140,16 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     }
   }
 
+  /// Closes the connection with the remote peer. Should only be called if status is .Connected.
   public func disconnect() {
     disconnectWithError(nil)
   }
 
+  /// Queues the provided message to be sent to the connected peer.
+  /// If status is not yet Connected, the message will be queued and sent once the connection is
+  /// established.
+  /// This method is thread-safe. It can be called from any thread. Messages are sent on a
+  /// dedicated background thread.
   public func sendMessageWithPayload(payload: MessagePayload) {
     let message = Message(network:network, payload:payload)
     networkThread.addOperationWithBlock {
@@ -123,35 +160,35 @@ public class PeerConnection: NSObject, NSStreamDelegate {
 
   // MARK: - NSStreamDelegate
 
-  public func stream(stream: NSStream!, handleEvent event: NSStreamEvent) {
+  func stream(stream: NSStream!, handleEvent event: NSStreamEvent) {
     assert(NSThread.currentThread() == networkThread)
     switch event {
       case NSStreamEvent.None:
-        println("none")
+        break
       case NSStreamEvent.OpenCompleted:
-        println("open completed")
+        break
       case NSStreamEvent.HasBytesAvailable:
         self.receive()
       case NSStreamEvent.HasSpaceAvailable:
         self.send()
       case NSStreamEvent.ErrorOccurred:
-        println("error occurred")
+        disconnectWithError(errorWithCode(.StreamError))
       case NSStreamEvent.EndEncountered:
-        println("end encountered")
+        disconnectWithError(errorWithCode(.StreamEndEncountered))
       default:
-        println("ERROR Invalid NSStreamEvent \(event)")
+        println("ERROR: Invalid NSStreamEvent \(event)")
         assert(false, "Invalid NSStreamEvent")
     }
   }
 
   // MARK: - Private Methods
 
+  // Dequeues a message from the messageSendQueue and tries to send it. This should be called
+  // whenever a new message is added to messageSendQueue, or while there are still bytes left
+  // to send in pendingSendBytes.
   private func send() {
     assert(NSThread.currentThread() == networkThread)
-    if outputStream == nil {
-      return
-    }
-    if !outputStream.hasSpaceAvailable {
+    if outputStream == nil || !outputStream.hasSpaceAvailable {
       return
     }
     if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
@@ -172,12 +209,12 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     }
   }
 
+  // Reads from the inputStream until it no longer has bytes available and parses as much as it can.
+  // This should be called whenever inputStream has new bytes available.
+  // Notifies the delegate for messages that are parsed.
   private func receive() {
     assert(NSThread.currentThread() == networkThread)
-    if inputStream == nil {
-      return
-    }
-    if !inputStream.hasBytesAvailable {
+    if inputStream == nil || !inputStream.hasBytesAvailable {
       return
     }
     let bytesRead = inputStream.read(&readBuffer, maxLength:readBuffer.count)
@@ -192,6 +229,10 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     }
   }
 
+  // Helper method for receive().
+  // Consumes the data in receivedBytes by parsing it into Messages, or discarding invalid data.
+  // Doesn't return until all data in receivedBytes has been consumed, or until more data must be
+  // received to parse a valid message.
   private func processReceivedBytes() {
     while true {
       if receivedHeader == nil {
@@ -243,7 +284,11 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     }
   }
 
+  // Parses the payload from payloadData given the provided header, and notifies the delegate if
+  // parsing was successful. For some message types (e.g. VersionAck), payloadData is expected to
+  // have a length of 0.
   private func processMessageWithHeader(header: Message.Header, payloadData: NSData) {
+    // TODO: Add the rest of the messages.
     println("Received \(header.command.toRaw()) message")
     switch header.command {
       case .Version:
@@ -254,11 +299,11 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         assert(status == .Connecting)
         let versionMessage = VersionMessage.fromData(payloadData)
         if versionMessage == nil {
-          disconnectWithError(errorWithCode(ErrorCode.ConnectionFailed))
+          disconnectWithError(errorWithCode(.ConnectionFailed))
           break
         }
         if !isPeerVersionSupported(versionMessage!) {
-          disconnectWithError(errorWithCode(ErrorCode.UnsupportedPeerVersion))
+          disconnectWithError(errorWithCode(.UnsupportedPeerVersion))
           break
         }
         peerVersion = versionMessage!
@@ -278,12 +323,13 @@ public class PeerConnection: NSObject, NSStreamDelegate {
           didConnect()
         }
       default:
-        println("WARN: Unknown command \(header.command.toRaw())")
+        println("WARN: Received unknown command \(header.command.toRaw()). Ignoring")
     }
   }
 
   private func disconnectWithError(error: NSError?) {
     setStatus(.Disconnecting)
+    let peerConnection: PeerConnection = self
     networkThread.addOperationWithBlock {
       self.inputStream?.close()
       self.outputStream?.close()
@@ -292,12 +338,18 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       self.peerVersion = nil
       self.receivedVersionAck = false
       self.setStatus(.NotConnected)
-      self.delegate?.peerConnection(self, didDisconnectWithError:error)
+      dispatch_async(self.delegateQueue) {
+        // For some reason, using self.delegate? within a block doesn't compile... Xcode bug?
+        if let delegate = self.delegate {
+          delegate.peerConnection(self, didDisconnectWithError:error)
+        }
+      }
       NSThread.exit()
     }
   }
 
-  // Returns -1 if the header start was not found. Otherwise returns the index in the bytes.
+  // Returns -1 if the header start (the position of network.magicBytes) was not found.
+  // Otherwise returns the position where the message header begins.
   private func headerStartIndexInBytes(bytes: [UInt8]) -> Int {
     let networkMagicBytes = network.magicBytes
     if bytes.count < networkMagicBytes.count {
@@ -319,9 +371,15 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   }
 
   private func didConnect() {
-    assert(status == .Connecting && peerVersion != nil && receivedVersionAck)
+    assert(status == .Connecting && self.peerVersion != nil && receivedVersionAck)
     _status = .Connected
-    delegate?.peerConnection(self, didConnectWithPeerVersion:peerVersion!)
+    let peerVersion = self.peerVersion!
+    dispatch_async(delegateQueue) {
+      // For some reason, using self.delegate? within a block doesn't compile... Xcode bug?
+      if let delegate = self.delegate {
+        delegate.peerConnection(self, didConnectWithPeerVersion:peerVersion)
+      }
+    }
   }
 
   private func sendVersionAck() {
@@ -347,6 +405,6 @@ extension PeerConnection {
   public var ErrorDomain: String { return "BitcoinSwift.PeerConnection" }
 
   public enum ErrorCode: Int {
-    case Unknown = 0, ConnectionFailed, UnsupportedPeerVersion, StreamError, StreamEnded
+    case Unknown = 0, ConnectionFailed, UnsupportedPeerVersion, StreamError, StreamEndEncountered
   }
 }
