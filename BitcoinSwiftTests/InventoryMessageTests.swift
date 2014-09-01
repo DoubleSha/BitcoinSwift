@@ -5,14 +5,11 @@
 //  Created by James MacWhyte on 14/23/8.
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
+//
 
 import BitcoinSwift
 import XCTest
 
-/// Uses test data for each type of inventory vector:
-/// 1. Transaction: Transaction hash from genesis block
-/// 2. Block: Block has from genesis block
-/// 3. Error: 8 bytes each of 0x66,77,88,99 (random)
 class InventoryMessageTests: XCTestCase {
 
   func testInventoryMessageDecoding() {
