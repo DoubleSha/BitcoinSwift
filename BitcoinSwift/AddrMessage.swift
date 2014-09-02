@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Message of type 'addr' (Addr). Provides information on known nodes of the network.
 public struct AddrMessage: MessagePayload {
 
   public let peerAddresses: [PeerAddress]
