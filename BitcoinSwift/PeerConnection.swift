@@ -113,31 +113,41 @@ public class PeerConnection: NSObject, NSStreamDelegate {
     println("Attempting to connect to peer \(peerHostname!):\(peerPort)")
     networkThread.startWithCompletion {
       self.networkThread.addOperationWithBlock {
-        var readStream: Unmanaged<CFReadStream>?
-        var writeStream: Unmanaged<CFWriteStream>?
         // TODO: Support peerIP here instead of just peerHostname.
-        CFStreamCreatePairWithSocketToHost(nil,
-                                           self.peerHostname! as NSString,
-                                           UInt32(self.peerPort),
-                                           &readStream,
-                                           &writeStream);
-        if readStream == nil || writeStream == nil {
-          println("Connection failed to peer \(self.peerHostname!):\(self.peerPort)")
-          self.setStatus(.NotConnected)
-          return
+        if let (inputStream, outputStream) =
+            self.streamsToPeerWithHostname(self.peerHostname!, port:self.peerPort) {
+          self.inputStream = inputStream
+          self.outputStream = outputStream
+          self.inputStream.delegate = self
+          self.outputStream.delegate = self
+          self.inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(),
+                                             forMode:NSDefaultRunLoopMode)
+          self.outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(),
+                                              forMode:NSDefaultRunLoopMode)
+          self.inputStream.open()
+          self.outputStream.open()
+          self.sendMessageWithPayload(versionMessage)
         }
-        self.inputStream = readStream!.takeUnretainedValue()
-        self.outputStream = writeStream!.takeUnretainedValue()
-        self.inputStream.delegate = self
-        self.outputStream.delegate = self
-        self.inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-        self.outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(),
-                                            forMode:NSDefaultRunLoopMode)
-        self.inputStream.open()
-        self.outputStream.open()
-        self.sendMessageWithPayload(versionMessage)
       }
     }
+  }
+
+  // Exposed for testing.
+  public func streamsToPeerWithHostname(hostname: String, port: UInt16) ->
+      (inputStream: NSInputStream, outputStream: NSOutputStream)? {
+    var readStream: Unmanaged<CFReadStream>?
+    var writeStream: Unmanaged<CFWriteStream>?
+    CFStreamCreatePairWithSocketToHost(nil,
+                                       hostname as NSString,
+                                       UInt32(port),
+                                       &readStream,
+                                       &writeStream);
+    if readStream == nil || writeStream == nil {
+      println("Connection failed to peer \(self.peerHostname!):\(self.peerPort)")
+      self.setStatus(.NotConnected)
+      return nil
+    }
+    return (readStream!.takeUnretainedValue(), writeStream!.takeUnretainedValue())
   }
 
   /// Closes the connection with the remote peer. Should only be called if status is .Connected.
@@ -188,7 +198,14 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   // to send in pendingSendBytes.
   private func send() {
     assert(NSThread.currentThread() == networkThread)
-    if outputStream == nil || !outputStream.hasSpaceAvailable {
+    if let outputStream = outputStream {
+      sendWithStream(outputStream)
+    }
+  }
+
+  // Helper method for send(). Do not call directly.
+  private func sendWithStream(outputStream: NSOutputStream) {
+    if !outputStream.hasSpaceAvailable {
       return
     }
     if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
@@ -197,7 +214,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       pendingSendBytes += message.data.UInt8Array()
     }
     if pendingSendBytes.count > 0 {
-      let bytesWritten = outputStream!.write(pendingSendBytes, maxLength:pendingSendBytes.count)
+      let bytesWritten = outputStream.write(pendingSendBytes, maxLength:pendingSendBytes.count)
       if bytesWritten > 0 {
         pendingSendBytes.removeRange(0..<bytesWritten)
       }
@@ -214,7 +231,14 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   // Notifies the delegate for messages that are parsed.
   private func receive() {
     assert(NSThread.currentThread() == networkThread)
-    if inputStream == nil || !inputStream.hasBytesAvailable {
+    if let inputStream = inputStream {
+      receiveWithStream(inputStream)
+    }
+  }
+
+  // Helper method for receive(). Do not call directly.
+  private func receiveWithStream(inputStream: NSInputStream) {
+    if !inputStream.hasBytesAvailable {
       return
     }
     let bytesRead = inputStream.read(&readBuffer, maxLength:readBuffer.count)

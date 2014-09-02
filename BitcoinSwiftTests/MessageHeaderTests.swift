@@ -7,7 +7,6 @@
 //
 
 import BitcoinSwift
-import Foundation
 import XCTest
 
 class MessageHeaderTests: XCTestCase {
