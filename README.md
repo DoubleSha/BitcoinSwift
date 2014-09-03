@@ -1,13 +1,11 @@
 BitcoinSwift
 ============
 
-A library for working with Bitcoin for iOS and OSX.
+BitcoinSwift is an implementation of the Bitcoin protocol written (almost) entirely in swift.
 
 Mailing list: https://groups.google.com/forum/#!forum/bitcoinswift
 
 IRC (freenode): #bitcoinswift
-
-BitcoinSwift is an implementation of the Bitcoin protocol written (almost) entirely in swift.
 
 It is a framework that can be linked into any iOS or OSX project. The code is modular, well-documented and very well-tested. I expect all pull requests to include unit tests. We don't take shortcuts around here.
 
