@@ -37,6 +37,7 @@ class PeerConnectionTests: XCTestCase {
   private var inputStream: NSInputStream!
   private var outputStream: NSOutputStream!
   private var peerConnection: MockPeerConnection!
+  private var inputStreamDelegate: TestInputStreamDelegate!
 
   override func setUp() {
     let (inputStream, connOutputStream) = NSStream.boundStreamsWithBufferSize(1024)
@@ -45,20 +46,20 @@ class PeerConnectionTests: XCTestCase {
     self.outputStream = outputStream
     inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
     outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+    inputStreamDelegate = TestInputStreamDelegate()
+    inputStream.delegate = inputStreamDelegate
     peerConnection = MockPeerConnection(inputStream:connInputStream,
                                         outputStream:connOutputStream)
+    inputStream.open()
+    outputStream.open()
   }
 
   func testSendVersionMessageOnConnect() {
-    let versionMessageExpectation = expectationWithDescription("version")
-    let streamDelegate =
-        TestInputStreamDelegate(expectation:versionMessageExpectation,
-                                expectedBytes:dummyVersionMessageBytes())
-    inputStream.delegate = streamDelegate
-    inputStream.open()
-    outputStream.open()
     peerConnection.connectWithVersionMessage(dummyVersionMessage())
-    waitForExpectationsWithTimeout(10, handler:nil)
+    let expectation = expectationWithDescription("version")
+    inputStreamDelegate.expectToReceiveBytes(dummyVersionMessageBytes(),
+                                             withExpectation:expectation)
+    waitForExpectationsWithTimeout(5, handler:nil)
   }
 
   // MARK: - Helper methods
