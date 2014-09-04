@@ -12,7 +12,7 @@ import XCTest
 /// Set this as the delegate for an input stream for unit testing.
 class TestInputStreamDelegate: NSObject, NSStreamDelegate {
 
-  private var expectation: XCTestExpectation!
+  private var expectation: XCTestExpectation?
   private var expectedBytes: [UInt8] = []
   private var receivedBytes: [UInt8] = []
   private var readBuffer = [UInt8](count:1024, repeatedValue:0)
@@ -51,12 +51,12 @@ class TestInputStreamDelegate: NSObject, NSStreamDelegate {
             receivedBytes += readBuffer[0..<bytesRead]
           }
         }
-        if receivedBytes.count >= expectedBytes.count {
+        if expectedBytes.count > 0 && receivedBytes.count >= expectedBytes.count {
           // Use XCTAssertEqual so we can see what is wrong with the bytes we received if they
           // are not equal.
           XCTAssertEqual(receivedBytes, expectedBytes)
           receivedBytes.removeAll()
-          expectation.fulfill()
+          expectation?.fulfill()
         }
       default:
         XCTFail("Invalid NSStreamEvent \(event)")

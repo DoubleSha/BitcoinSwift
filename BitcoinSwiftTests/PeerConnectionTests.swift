@@ -14,7 +14,7 @@ private let hostname = "mock_hostname"
 private let port: UInt16 = 8333
 private let network = Message.Network.MainNet
 
-class PeerConnectionTests: XCTestCase {
+class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
 
   class MockPeerConnection: PeerConnection {
 
@@ -39,6 +39,9 @@ class PeerConnectionTests: XCTestCase {
   private var peerConnection: MockPeerConnection!
   private var inputStreamDelegate: TestInputStreamDelegate!
 
+  // If non-nil, fulfilled when peerConnection(:didFailWithError:) is invoked.
+  private var connectionDidFailExpectation: XCTestExpectation?
+
   override func setUp() {
     let (inputStream, connOutputStream) = NSStream.boundStreamsWithBufferSize(1024)
     self.inputStream = inputStream
@@ -50,16 +53,34 @@ class PeerConnectionTests: XCTestCase {
     inputStream.delegate = inputStreamDelegate
     peerConnection = MockPeerConnection(inputStream:connInputStream,
                                         outputStream:connOutputStream)
+    peerConnection.delegate = self
     inputStream.open()
     outputStream.open()
   }
 
   func testSendVersionMessageOnConnect() {
-    peerConnection.connectWithVersionMessage(dummyVersionMessage())
+    peerConnection.connectWithVersionMessage(dummyVersionMessage(), timeout:5)
     let expectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(dummyVersionMessageBytes(),
                                              withExpectation:expectation)
     waitForExpectationsWithTimeout(5, handler:nil)
+  }
+
+  func testConnectionTimeout() {
+    connectionDidFailExpectation = expectationWithDescription("timeout")
+    peerConnection.connectWithVersionMessage(dummyVersionMessage(), timeout:1)
+    waitForExpectationsWithTimeout(3, handler:nil)
+  }
+
+  // MARK: - PeerConnectionDelegate
+
+  func peerConnection(peerConnection: PeerConnection,
+                      didConnectWithPeerVersion peerVersion: VersionMessage) {
+    // TODO: Add tests for this.
+  }
+
+  func peerConnection(peerConnection: PeerConnection, didFailWithError error: NSError?) {
+    connectionDidFailExpectation?.fulfill()
   }
 
   // MARK: - Helper methods

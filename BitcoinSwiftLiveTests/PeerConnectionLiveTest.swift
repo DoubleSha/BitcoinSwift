@@ -21,7 +21,7 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
                               port:8333,
                               network:Message.Network.MainNet,
                               delegate:self)
-    conn.connectWithVersionMessage(dummyVersionMessage())
+    conn.connectWithVersionMessage(dummyVersionMessage(), timeout:10)
     waitForExpectationsWithTimeout(10, handler:nil)
     conn.disconnect()
   }
@@ -33,7 +33,7 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
     connectedExpectation = nil
   }
 
-  func peerConnection(peerConnection: PeerConnection, didDisconnectWithError error: NSError?) {
+  func peerConnection(peerConnection: PeerConnection, didFailWithError error: NSError?) {
     if error != nil {
       XCTFail("Disconnected with error \(error!)")
     }

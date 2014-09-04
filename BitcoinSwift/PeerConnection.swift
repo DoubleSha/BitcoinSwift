@@ -19,7 +19,7 @@ public protocol PeerConnectionDelegate : class {
 
   /// Called when the connection to the remote peer is closed for any reason.
   /// If the connection was closed due to an error, then error will be non-nil.
-  func peerConnection(peerConnection: PeerConnection, didDisconnectWithError error: NSError?)
+  func peerConnection(peerConnection: PeerConnection, didFailWithError error: NSError?)
 }
 
 /// A PeerConnection handles the low-level socket connection to a peer and serializing/deserializing
@@ -40,7 +40,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   public var status: Status { return _status }
   private var _status: Status = .NotConnected
 
-  private var delegate: PeerConnectionDelegate?
+  public weak var delegate: PeerConnectionDelegate?
   private var delegateQueue: dispatch_queue_t
 
   // Depending on the constructor used, either the hostname or the IP will be non-nil.
@@ -69,6 +69,8 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private var readBuffer = [UInt8](count:1024, repeatedValue:0)
 
   private let networkThread = Thread()
+
+  private var connectionTimeoutTimer: NSTimer? = nil
 
   // The version message received by the peer in response to our version message.
   private var peerVersion: VersionMessage? = nil
@@ -105,12 +107,19 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   /// Once the socket is successfully opened, versionMessage is sent to the remote peer.
   /// The connection is considered "open" after the peer responds to the versionMessage with its
   /// own VersionMessage and a VersionAck confirming it is compatible.
-  public func connectWithVersionMessage(versionMessage: VersionMessage) {
+  public func connectWithVersionMessage(versionMessage: VersionMessage, timeout: NSTimeInterval) {
     assert(status == .NotConnected)
     assert(!networkThread.executing)
     assert(!receivedVersionAck)
+    assert(connectionTimeoutTimer == nil)
     setStatus(.Connecting)
     println("Attempting to connect to peer \(peerHostname!):\(peerPort)")
+    connectionTimeoutTimer =
+        NSTimer.scheduledTimerWithTimeInterval(timeout,
+                                               target:self,
+                                               selector:"connectionTimerDidTimeout:",
+                                               userInfo:nil,
+                                               repeats:false)
     networkThread.startWithCompletion {
       self.networkThread.addOperationWithBlock {
         // TODO: Support peerIP here instead of just peerHostname.
@@ -323,7 +332,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
         assert(status == .Connecting)
         let versionMessage = VersionMessage.fromData(payloadData)
         if versionMessage == nil {
-          disconnectWithError(errorWithCode(.ConnectionFailed))
+          disconnectWithError(errorWithCode(.Unknown))
           break
         }
         if !isPeerVersionSupported(versionMessage!) {
@@ -365,7 +374,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
       dispatch_async(self.delegateQueue) {
         // For some reason, using self.delegate? within a block doesn't compile... Xcode bug?
         if let delegate = self.delegate {
-          delegate.peerConnection(self, didDisconnectWithError:error)
+          delegate.peerConnection(self, didFailWithError:error)
         }
       }
       NSThread.exit()
@@ -395,7 +404,11 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   }
 
   private func didConnect() {
-    assert(status == .Connecting && self.peerVersion != nil && receivedVersionAck)
+    assert(status == .Connecting)
+    assert(self.peerVersion != nil)
+    assert(receivedVersionAck)
+    connectionTimeoutTimer?.invalidate()
+    connectionTimeoutTimer = nil
     _status = .Connected
     let peerVersion = self.peerVersion!
     dispatch_async(delegateQueue) {
@@ -411,7 +424,7 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   }
 
   private func errorWithCode(code: ErrorCode) -> NSError {
-    return NSError(domain:ErrorDomain, code:ErrorCode.ConnectionFailed.toRaw(), userInfo:nil)
+    return NSError(domain:ErrorDomain, code:code.toRaw(), userInfo:nil)
   }
 
   private func isPeerVersionSupported(versionMessage: VersionMessage) -> Bool {
@@ -422,6 +435,12 @@ public class PeerConnection: NSObject, NSStreamDelegate {
   private func setStatus(newStatus: Status) {
     _status = newStatus
   }
+
+  func connectionTimerDidTimeout(timer: NSTimer) {
+    connectionTimeoutTimer?.invalidate()
+    connectionTimeoutTimer = nil
+    delegate?.peerConnection(self, didFailWithError:errorWithCode(.ConnectionTimeout))
+  }
 }
 
 extension PeerConnection {
@@ -429,6 +448,10 @@ extension PeerConnection {
   public var ErrorDomain: String { return "BitcoinSwift.PeerConnection" }
 
   public enum ErrorCode: Int {
-    case Unknown = 0, ConnectionFailed, UnsupportedPeerVersion, StreamError, StreamEndEncountered
+    case Unknown = 0,
+        ConnectionTimeout,
+        UnsupportedPeerVersion,
+        StreamError,
+        StreamEndEncountered
   }
 }
