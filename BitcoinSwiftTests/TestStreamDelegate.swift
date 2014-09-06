@@ -57,6 +57,7 @@ class TestInputStreamDelegate: NSObject, NSStreamDelegate {
           XCTAssertEqual(receivedBytes, expectedBytes)
           receivedBytes.removeAll()
           expectation?.fulfill()
+          expectation = nil
         }
       default:
         XCTFail("Invalid NSStreamEvent \(event)")

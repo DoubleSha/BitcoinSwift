@@ -143,10 +143,6 @@ public struct Message {
   // MARK: - Private Methods
 
   private static func checksumForPayload(payload: NSData) -> UInt32 {
-    if payload.length == 0 {
-      // payload length can be 0 for some message types, e.g. VersionAck.
-      return 0
-    }
     return payload.SHA256Hash().SHA256Hash().UInt32AtIndex(0)!
   }
 }

@@ -16,9 +16,6 @@
 - (NSData *)SHA256Hash {
   SHA256_CTX ctx;
   unsigned char hash[32];
-  if (![self length]) {
-    return nil;
-  }
   SHA256_Init(&ctx);
   SHA256_Update(&ctx, [self bytes], [self length]);
   SHA256_Final(hash, &ctx);
@@ -28,9 +25,6 @@
 - (NSData *)RIPEMD160Hash {
   RIPEMD160_CTX ctx;
   unsigned char hash[20];
-  if (![self length]) {
-    return nil;
-  }
   RIPEMD160_Init(&ctx);
   RIPEMD160_Update(&ctx, [self bytes], [self length]);
   RIPEMD160_Final(hash, &ctx);

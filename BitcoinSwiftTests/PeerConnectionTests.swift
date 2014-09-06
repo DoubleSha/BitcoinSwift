@@ -38,9 +38,11 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
   private var outputStream: NSOutputStream!
   private var peerConnection: MockPeerConnection!
   private var inputStreamDelegate: TestInputStreamDelegate!
+  private var outputStreamDelegate: TestOutputStreamDelegate!
 
   // If non-nil, fulfilled when peerConnection(:didFailWithError:) is invoked.
   private var connectionDidFailExpectation: XCTestExpectation?
+  private var connectionDidConnectExpectation: XCTestExpectation?
 
   override func setUp() {
     let (inputStream, connOutputStream) = NSStream.boundStreamsWithBufferSize(1024)
@@ -51,6 +53,8 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
     outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
     inputStreamDelegate = TestInputStreamDelegate()
     inputStream.delegate = inputStreamDelegate
+    outputStreamDelegate = TestOutputStreamDelegate()
+    outputStream.delegate = outputStreamDelegate
     peerConnection = MockPeerConnection(inputStream:connInputStream,
                                         outputStream:connOutputStream)
     peerConnection.delegate = self
@@ -60,9 +64,9 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
 
   func testSendVersionMessageOnConnect() {
     peerConnection.connectWithVersionMessage(dummyVersionMessage(), timeout:5)
-    let expectation = expectationWithDescription("version")
+    let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(dummyVersionMessageBytes(),
-                                             withExpectation:expectation)
+                                             withExpectation:versionExpectation)
     waitForExpectationsWithTimeout(5, handler:nil)
   }
 
@@ -72,11 +76,26 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
     waitForExpectationsWithTimeout(3, handler:nil)
   }
 
+  func testSuccessfulVersionExchange() {
+    peerConnection.connectWithVersionMessage(dummyVersionMessage(), timeout:5)
+    let versionExpectation = expectationWithDescription("version")
+    inputStreamDelegate.expectToReceiveBytes(dummyVersionMessageBytes(),
+                                             withExpectation:versionExpectation)
+    waitForExpectationsWithTimeout(5, handler:nil)
+    connectionDidConnectExpectation = expectationWithDescription("connect")
+    let versionAckExpectation = expectationWithDescription("versionack")
+    inputStreamDelegate.expectToReceiveBytes(dummyVersionAckMessageBytes(),
+                                             withExpectation:versionAckExpectation)
+    outputStreamDelegate.sendBytes(dummyVersionAckMessageBytes(), outputStream:outputStream)
+    outputStreamDelegate.sendBytes(dummyVersionMessageBytes(), outputStream:outputStream)
+    waitForExpectationsWithTimeout(5, handler:nil)
+  }
+
   // MARK: - PeerConnectionDelegate
 
   func peerConnection(peerConnection: PeerConnection,
                       didConnectWithPeerVersion peerVersion: VersionMessage) {
-    // TODO: Add tests for this.
+    connectionDidConnectExpectation?.fulfill()
   }
 
   func peerConnection(peerConnection: PeerConnection, didFailWithError error: NSError?) {
@@ -123,5 +142,14 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
       0x69, 0x3a, 0x30, 0x2e, 0x39, 0x2e, 0x31, 0x2f,   // sub-version string "/Satoshi:0.9.1/"
       0x79, 0xa0, 0x02, 0x00,                           // Last block #172153
       0x01]                                             // Relay transactions
+  }
+
+  func dummyVersionAckMessageBytes() -> [UInt8] {
+    return [
+        0xf9, 0xbe, 0xb4, 0xd9,                         // Main network magic bytes
+        0x76, 0x65, 0x72, 0x61, 0x63, 0x6b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // "versionack" cmd
+        0x00, 0x00, 0x00, 0x00,                         // Payload is 0 bytes long
+        0x5d, 0xf6, 0xe0, 0xe2,                         // Payload checksum
+    ]
   }
 }
