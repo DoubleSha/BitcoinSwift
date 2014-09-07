@@ -52,15 +52,13 @@ class InventoryMessageTests: XCTestCase {
           0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
           0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99] // Error data
       let expectedInventoryVectors = [
-          InventoryVector(type:InventoryVector.VectorType.fromRaw(UInt32(1))!,
+          InventoryVector(type:.Transaction,
                           hash:NSData(bytes:vector1Hash, length:vector1Hash.count)),
-          InventoryVector(type:InventoryVector.VectorType.fromRaw(UInt32(2))!,
+          InventoryVector(type:.Block,
                           hash:NSData(bytes:vector2Hash, length:vector2Hash.count)),
-          InventoryVector(type:InventoryVector.VectorType.fromRaw(UInt32(0))!,
+          InventoryVector(type:.Error,
                           hash:NSData(bytes:vector3Hash, length:vector3Hash.count))]
-      XCTAssertEqual(inventoryMessage.inventoryVectors[0], expectedInventoryVectors[0])
-      XCTAssertEqual(inventoryMessage.inventoryVectors[1], expectedInventoryVectors[1])
-      XCTAssertEqual(inventoryMessage.inventoryVectors[2], expectedInventoryVectors[2])
+      XCTAssertEqual(inventoryMessage.inventoryVectors, expectedInventoryVectors)
     } else {
       XCTFail("\n[FAIL] Failed to parse InventoryMessage")
     }
@@ -83,11 +81,11 @@ class InventoryMessageTests: XCTestCase {
         0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
         0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99, 0x99] // Error data
     let inventoryVectors = [
-        InventoryVector(type:InventoryVector.VectorType.fromRaw(UInt32(1))!,
+        InventoryVector(type:.Transaction,
                         hash:NSData(bytes:vector1Hash, length:vector1Hash.count)),
-        InventoryVector(type:InventoryVector.VectorType.fromRaw(UInt32(2))!,
+        InventoryVector(type:.Block,
                         hash:NSData(bytes:vector2Hash, length:vector2Hash.count)),
-        InventoryVector(type:InventoryVector.VectorType.fromRaw(UInt32(0))!,
+        InventoryVector(type:.Error,
                         hash:NSData(bytes:vector3Hash, length:vector3Hash.count))]
     let inventoryMessage = InventoryMessage(inventoryVectors:inventoryVectors)
     let expectedBytes: [UInt8] = [
