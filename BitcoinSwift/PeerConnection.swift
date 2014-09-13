@@ -206,17 +206,17 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   // Parses the payload from payloadData given the provided header, and notifies the delegate if
   // parsing was successful. For some message types (e.g. VersionAck), payloadData is expected to
   // have a length of 0.
-  public func didParseMessageWithHeader(header: Message.Header, payloadData: NSData) {
+  public func didParseMessage(message: Message) {
     // TODO: Add the rest of the messages.
-    println("Received \(header.command.toRaw()) message")
-    switch header.command {
+    println("Received \(message.header.command.toRaw()) message")
+    switch message.header.command {
       case .Version:
         if peerVersion != nil {
           println("WARN: Received extraneous VersionMessage. Ignoring")
           break
         }
         assert(status == .Connecting)
-        let versionMessage = VersionMessage.fromData(payloadData)
+        let versionMessage = VersionMessage.fromData(message.payload)
         if versionMessage == nil {
           disconnectWithError(errorWithCode(.Unknown))
           break
@@ -242,7 +242,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           didConnect()
         }
       default:
-        println("WARN: Received unknown command \(header.command.toRaw()). Ignoring")
+        println("WARN: Received unknown command \(message.header.command.toRaw()). Ignoring")
     }
   }
 

@@ -110,6 +110,10 @@ public struct Message {
     self.payload = payloadData
   }
 
+  public func isChecksumValid() -> Bool {
+    return payloadChecksum == Message.checksumForPayload(payload)
+  }
+
   /// Parses the message from an NSData object. Returns nil if the message is invalid.
   /// Does not parse the payload data into its corresponding payload type. Use the corresponding
   /// struct that conforms to the MessagePayload protocol to parse the payload.

@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol MessageParserDelegate : class {
-  func didParseMessageWithHeader(header: Message.Header, payloadData: NSData)
+  func didParseMessage(message: Message)
 }
 
 /// Parses Messages from raw data received from the wire. Handles framing and ensuring message
@@ -33,9 +33,9 @@ public class MessageParser {
     self.network = network
   }
 
-  // Consumes the data in bytes by parsing it into Messages, or discarding invalid data.
-  // Doesn't return until all data in receivedBytes has been consumed, or until more data must be
-  // received to parse a valid message.
+  /// Consumes the data in bytes by parsing it into Messages, or discarding invalid data.
+  /// Doesn't return until all data in receivedBytes has been consumed, or until more data must be
+  /// received to parse a valid message.
   public func parseBytes(bytes: [UInt8]) {
     receivedBytes += bytes
     while true {
@@ -82,7 +82,10 @@ public class MessageParser {
         return
       }
       let payloadData = NSData(bytes:receivedBytes, length:payloadLength)
-      delegate?.didParseMessageWithHeader(receivedHeader!, payloadData:payloadData)
+      let message = Message(header:receivedHeader!, payloadData:payloadData)
+      if message.isChecksumValid() {
+        delegate?.didParseMessage(message)
+      }
       receivedBytes.removeRange(0..<payloadLength)
       receivedHeader = nil
     }
