@@ -8,9 +8,16 @@
 
 import Foundation
 
+public func ==(lhs: Message.Header, rhs: Message.Header) -> Bool {
+  return lhs.network == rhs.network &&
+      lhs.command == rhs.command &&
+      lhs.payloadLength == rhs.payloadLength &&
+      lhs.payloadChecksum == rhs.payloadChecksum
+}
+
 extension Message {
 
-  public struct Header {
+  public struct Header: Equatable {
 
     public let network: Network
     public let command: Command

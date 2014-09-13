@@ -17,9 +17,14 @@ public protocol MessagePayload {
   class func fromData(data: NSData) -> Self?
 }
 
+public func ==(lhs: Message, rhs: Message) -> Bool {
+  return lhs.header == rhs.header &&
+      lhs.payload == rhs.payload
+}
+
 /// Wrapper struct that contains the header and payload for sending a message.
 /// Use this to serialize/deserialize messages to/from the Bitcoin P2P wire format.
-public struct Message {
+public struct Message: Equatable {
 
   /// Magic value indicating message origin network, and used to seek to next message when stream
   /// state is unknown.
