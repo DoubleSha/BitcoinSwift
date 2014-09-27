@@ -49,9 +49,10 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   private let peerPort: UInt16
   private let network: Message.Network
 
+  // Parses raw data received off the wire into Message objects.
   private let messageParser: MessageParser
 
-  // Streams used to read & write data from the connected peer.
+  // Streams used to read and write data from the connected peer.
   private var inputStream: NSInputStream!
   private var outputStream: NSOutputStream!
 
@@ -142,24 +143,6 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     }
   }
 
-  // Exposed for testing.
-  public func streamsToPeerWithHostname(hostname: String, port: UInt16) ->
-      (inputStream: NSInputStream, outputStream: NSOutputStream)? {
-    var readStream: Unmanaged<CFReadStream>?
-    var writeStream: Unmanaged<CFWriteStream>?
-    CFStreamCreatePairWithSocketToHost(nil,
-                                       hostname as NSString,
-                                       UInt32(port),
-                                       &readStream,
-                                       &writeStream);
-    if readStream == nil || writeStream == nil {
-      println("Connection failed to peer \(self.peerHostname!):\(self.peerPort)")
-      self.setStatus(.NotConnected)
-      return nil
-    }
-    return (readStream!.takeUnretainedValue(), writeStream!.takeUnretainedValue())
-  }
-
   /// Closes the connection with the remote peer. Should only be called if status is .Connected.
   public func disconnect() {
     disconnectWithError(nil)
@@ -248,6 +231,26 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
 
   // MARK: - Private Methods
 
+  // Exposed for testing. Override this method to mock out the streams.
+  // Initializes the socket connection and returns an NSInputStream and NSOutputStream for
+  // sending and receiving raw data.
+  public func streamsToPeerWithHostname(hostname: String, port: UInt16) ->
+      (inputStream: NSInputStream, outputStream: NSOutputStream)? {
+    var readStream: Unmanaged<CFReadStream>?
+    var writeStream: Unmanaged<CFWriteStream>?
+    CFStreamCreatePairWithSocketToHost(nil,
+                                       hostname as NSString,
+                                       UInt32(port),
+                                       &readStream,
+                                       &writeStream);
+    if readStream == nil || writeStream == nil {
+      println("Connection failed to peer \(self.peerHostname!):\(self.peerPort)")
+      self.setStatus(.NotConnected)
+      return nil
+    }
+    return (readStream!.takeUnretainedValue(), writeStream!.takeUnretainedValue())
+  }
+
   // Dequeues a message from the messageSendQueue and tries to send it. This should be called
   // whenever a new message is added to messageSendQueue, or while there are still bytes left
   // to send in pendingSendBytes.
@@ -308,8 +311,12 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   }
 
   private func disconnectWithError(error: NSError?) {
+    if status == .Disconnecting || status == .NotConnected {
+      return
+    }
     setStatus(.Disconnecting)
-    let peerConnection: PeerConnection = self
+    connectionTimeoutTimer?.invalidate()
+    connectionTimeoutTimer = nil
     networkThread.addOperationWithBlock {
       self.inputStream?.close()
       self.outputStream?.close()
@@ -334,7 +341,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     assert(receivedVersionAck)
     connectionTimeoutTimer?.invalidate()
     connectionTimeoutTimer = nil
-    _status = .Connected
+    setStatus(.Connected)
     let peerVersion = self.peerVersion!
     dispatch_async(delegateQueue) {
       // For some reason, using self.delegate? within a block doesn't compile... Xcode bug?
@@ -364,7 +371,9 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   func connectionTimerDidTimeout(timer: NSTimer) {
     connectionTimeoutTimer?.invalidate()
     connectionTimeoutTimer = nil
-    delegate?.peerConnection(self, didFailWithError:errorWithCode(.ConnectionTimeout))
+    if status == .Connecting {
+      disconnectWithError(errorWithCode(.ConnectionTimeout))
+    }
   }
 }
 
