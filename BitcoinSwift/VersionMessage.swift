@@ -8,9 +8,11 @@
 
 import Foundation
 
-/// Message of type 'version' (Version). When a node creates an outgoing connection, it will
-/// immediately advertise its version with this message and the remote node will respond with its 
-/// version. No further communication is possible until both peers have exchanged their version.
+/// Message payload object corresponding to the Message.Command.Version command. When a node creates
+/// an outgoing connection, it will immediately advertise its version with this message and the
+/// remote node will respond with its version. No further communication is possible until both peers
+/// have exchanged their version.
+/// https://en.bitcoin.it/wiki/Protocol_specification#version
 public struct VersionMessage: MessagePayload {
 
   public let protocolVersion: Int32

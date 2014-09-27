@@ -8,7 +8,9 @@
 
 import Foundation
 
-/// Message of type 'addr' (Addr). Provides information on known nodes of the network.
+/// Message payload object corresponding to the Message.Command.Addr command. Provides information
+/// on known nodes of the network.
+/// https://en.bitcoin.it/wiki/Protocol_specification#addr
 public struct AddrMessage: MessagePayload {
 
   public let peerAddresses: [PeerAddress]

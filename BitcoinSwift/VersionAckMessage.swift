@@ -8,8 +8,10 @@
 
 import Foundation
 
-/// Message of type 'verack' (VersionAck). This message is sent in reply to 'version' (Version).
-/// This message consists of only a message header with the command string "verack".
+/// Message payload object corresponding to the Message.Command.VersionAck command. This message is
+/// sent in reply to the Version message. This message consists of only a message header with the
+/// command string "verack".
+/// https://en.bitcoin.it/wiki/Protocol_specification#verack
 public struct VersionAckMessage: MessagePayload {
 
   // MARK: - MessagePayload
