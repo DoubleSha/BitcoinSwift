@@ -13,7 +13,7 @@ import Foundation
 /// version. No further communication is possible until both peers have exchanged their version.
 public struct VersionMessage: MessagePayload {
 
-  public let protocolVersion: Int32
+  public let protocolVersion: UInt32
   public let services: PeerServices
   public let date: NSDate
   public let senderAddress: PeerAddress
@@ -23,7 +23,7 @@ public struct VersionMessage: MessagePayload {
   public let blockStartHeight: Int32
   public let announceRelayedTransactions: Bool
 
-  public init(protocolVersion: Int32,
+  public init(protocolVersion: UInt32,
               services: PeerServices,
               date: NSDate,
               senderAddress: PeerAddress,
@@ -51,7 +51,7 @@ public struct VersionMessage: MessagePayload {
 
   public var data: NSData {
     var data = NSMutableData()
-    data.appendInt32(protocolVersion)
+    data.appendUInt32(protocolVersion)
     data.appendUInt64(services.toRaw())
     data.appendInt64(Int64(date.timeIntervalSince1970))
     data.appendPeerAddress(receiverAddress, includeTimestamp:false)
@@ -69,7 +69,7 @@ public struct VersionMessage: MessagePayload {
     }
     let stream = NSInputStream(data:data)
     stream.open()
-    let protocolVersion = stream.readInt32()
+    let protocolVersion = stream.readUInt32()
     if protocolVersion == nil {
       println("WARN: Failed to parse protocolVersion from VersionMessage \(data)")
       return nil

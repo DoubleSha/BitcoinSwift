@@ -15,7 +15,7 @@ public struct InventoryMessage: MessagePayload {
   public let inventoryVectors: [InventoryVector]
 
   public init(inventoryVectors: [InventoryVector]) {
-    assert(inventoryVectors.count > 0 && inventoryVectors.count <= 50000)
+    precondition(inventoryVectors.count > 0 && inventoryVectors.count <= 50000)
     self.inventoryVectors = inventoryVectors
   }
 

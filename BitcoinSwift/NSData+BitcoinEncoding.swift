@@ -11,7 +11,7 @@ import Foundation
 public extension NSData {
 
   public func UInt32AtIndex(index: Int, endianness: Endianness = .LittleEndian) -> UInt32? {
-    assert(index + sizeof(UInt32) <= self.length)
+    precondition(index + sizeof(UInt32) <= self.length)
     let subdata = self.subdataWithRange(NSRange(location:index, length:sizeof(UInt32)))
     let stream = NSInputStream(data:subdata)
     stream.open()
@@ -124,7 +124,7 @@ public extension NSMutableData {
   }
 
   public func appendVarInt(value: Int, endianness: Endianness = .LittleEndian) {
-    assert(value >= 0)
+    precondition(value >= 0)
     appendVarInt(UInt64(value), endianness:endianness)
   }
 

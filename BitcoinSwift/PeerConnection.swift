@@ -110,10 +110,10 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   /// The connection is considered "open" after the peer responds to the versionMessage with its
   /// own VersionMessage and a VersionAck confirming it is compatible.
   public func connectWithVersionMessage(versionMessage: VersionMessage, timeout: NSTimeInterval) {
-    assert(status == .NotConnected)
-    assert(!networkThread.executing)
-    assert(!receivedVersionAck)
-    assert(connectionTimeoutTimer == nil)
+    precondition(status == .NotConnected)
+    precondition(!networkThread.executing)
+    precondition(!receivedVersionAck)
+    precondition(connectionTimeoutTimer == nil)
     setStatus(.Connecting)
     println("Attempting to connect to peer \(peerHostname!):\(peerPort)")
     connectionTimeoutTimer =
@@ -164,7 +164,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   // MARK: - NSStreamDelegate
 
   func stream(stream: NSStream!, handleEvent event: NSStreamEvent) {
-    assert(NSThread.currentThread() == networkThread)
+    precondition(NSThread.currentThread() == networkThread)
     switch event {
       case NSStreamEvent.None:
         break
@@ -255,7 +255,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   // whenever a new message is added to messageSendQueue, or while there are still bytes left
   // to send in pendingSendBytes.
   private func send() {
-    assert(NSThread.currentThread() == networkThread)
+    precondition(NSThread.currentThread() == networkThread)
     if let outputStream = outputStream {
       sendWithStream(outputStream)
     }
@@ -288,7 +288,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   // This should be called whenever inputStream has new bytes available.
   // Notifies the delegate for messages that are parsed.
   private func receive() {
-    assert(NSThread.currentThread() == networkThread)
+    precondition(NSThread.currentThread() == networkThread)
     if let inputStream = inputStream {
       receiveWithStream(inputStream)
     }
@@ -336,9 +336,9 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   }
 
   private func didConnect() {
-    assert(status == .Connecting)
-    assert(self.peerVersion != nil)
-    assert(receivedVersionAck)
+    precondition(status == .Connecting)
+    precondition(self.peerVersion != nil)
+    precondition(receivedVersionAck)
     connectionTimeoutTimer?.invalidate()
     connectionTimeoutTimer = nil
     setStatus(.Connected)

@@ -28,7 +28,7 @@ class Thread: NSThread {
   }
 
   func addOperationWithBlock(block: () -> Void) {
-    assert(runLoop != nil, "Cannot add operation to thread before it is started")
+    precondition(runLoop != nil, "Cannot add operation to thread before it is started")
     CFRunLoopPerformBlock(runLoop.getCFRunLoop(), kCFRunLoopDefaultMode, block)
   }
 }
