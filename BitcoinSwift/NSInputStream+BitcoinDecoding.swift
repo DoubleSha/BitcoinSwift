@@ -257,7 +257,7 @@ public extension NSInputStream {
   }
 
   public func readInventoryVector() -> InventoryVector? {
-    let rawType = readUInt32(endianness:.BigEndian)
+    let rawType = readUInt32()
     if rawType == nil {
       return nil
     }

@@ -172,7 +172,7 @@ public extension NSMutableData {
   }
 
   public func appendInventoryVector(inventoryVector: InventoryVector) {
-    appendUInt32(inventoryVector.type.toRaw(), endianness:.BigEndian)
+    appendUInt32(inventoryVector.type.toRaw())
     self.appendData(inventoryVector.hash)
   }
 }
