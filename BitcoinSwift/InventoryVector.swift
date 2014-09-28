@@ -21,7 +21,7 @@ public struct InventoryVector: Equatable {
   public let type: VectorType
   public let hash: NSData
 
-  public init(type: VectorType, hash: NSData){
+  public init(type: VectorType, hash: NSData) {
     self.type = type
     self.hash = hash
   }
