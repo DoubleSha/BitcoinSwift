@@ -2,7 +2,7 @@
 //  GetDataMessage.swift
 //  BitcoinSwift
 //
-//  Created by James MacWhyte on 14/31/8.
+//  Created by James MacWhyte on 8/31/14.
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
