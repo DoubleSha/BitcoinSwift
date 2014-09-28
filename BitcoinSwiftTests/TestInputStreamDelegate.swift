@@ -15,7 +15,7 @@ class TestInputStreamDelegate: NSObject, NSStreamDelegate {
   private var expectation: XCTestExpectation?
   private var expectedBytes: [UInt8] = []
   private var receivedBytes: [UInt8] = []
-  private var readBuffer = [UInt8](count:1024, repeatedValue:0)
+  private var readBuffer = [UInt8](count: 1024, repeatedValue: 0)
 
   /// Waits until it receives expectedReceivedBytes or times out if not enough bytes are received
   /// before timeout expires.
@@ -37,16 +37,16 @@ class TestInputStreamDelegate: NSObject, NSStreamDelegate {
 
   func stream(stream: NSStream, handleEvent event: NSStreamEvent) {
     switch event {
-      case NSStreamEvent.None:
+      case NSStreamEvent.None: 
         break
-      case NSStreamEvent.OpenCompleted:
+      case NSStreamEvent.OpenCompleted: 
         break
-      case NSStreamEvent.HasSpaceAvailable:
+      case NSStreamEvent.HasSpaceAvailable: 
         break
-      case NSStreamEvent.HasBytesAvailable:
+      case NSStreamEvent.HasBytesAvailable: 
         let inputStream = stream as NSInputStream
         while inputStream.hasBytesAvailable {
-          let bytesRead = inputStream.read(&readBuffer, maxLength:readBuffer.count)
+          let bytesRead = inputStream.read(&readBuffer, maxLength: readBuffer.count)
           if bytesRead > 0 {
             receivedBytes += readBuffer[0..<bytesRead]
           }
@@ -59,7 +59,7 @@ class TestInputStreamDelegate: NSObject, NSStreamDelegate {
           expectation?.fulfill()
           expectation = nil
         }
-      default:
+      default: 
         XCTFail("Invalid NSStreamEvent \(event)")
     }
   }

@@ -8,11 +8,15 @@
 
 import Foundation
 
+public func ==(lhs: NotFoundMessage, rhs: NotFoundMessage) -> Bool {
+  return lhs.inventoryVectors == rhs.inventoryVectors
+}
+
 /// Message payload object corresponding to the Message.Command.NotFound command. Is a response to 
 /// getdata, sent if any requested data items could not be relayed. For example, the requested
 /// transaction may not be in the memory pool or relay set.
 /// https://en.bitcoin.it/wiki/Protocol_specification#notfound
-public struct NotFoundMessage: MessagePayload {
+public struct NotFoundMessage: MessagePayload, Equatable {
 
   public let inventoryVectors: [InventoryVector]
 
@@ -40,7 +44,7 @@ public struct NotFoundMessage: MessagePayload {
     if data.length == 0 {
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let inventoryCount = stream.readVarInt()
     if inventoryCount == nil {
@@ -68,6 +72,6 @@ public struct NotFoundMessage: MessagePayload {
       println("WARN: Failed to parse NotFoundMessage. Too many vectors \(data)")
       return nil
     }
-    return NotFoundMessage(inventoryVectors:inventoryVectors)
+    return NotFoundMessage(inventoryVectors: inventoryVectors)
   }
 }

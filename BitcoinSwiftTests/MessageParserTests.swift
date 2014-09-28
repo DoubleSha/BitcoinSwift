@@ -18,7 +18,7 @@ class MessageParserTests: XCTestCase, MessageParserDelegate {
   private let junkBytes: [UInt8] = [0x87, 0x64, 0x12, 0x67, 0x32]
 
   override func setUp() {
-    messageParser = MessageParser(network:.MainNet)
+    messageParser = MessageParser(network: .MainNet)
     messageParser.delegate = self
   }
 

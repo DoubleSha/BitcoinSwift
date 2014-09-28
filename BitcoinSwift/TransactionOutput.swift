@@ -45,7 +45,7 @@ public extension Transaction.Output {
   }
 
   public static func fromData(data: NSData) -> Transaction.Output? {
-    return Transaction.Output.fromStream(NSInputStream(data:data))
+    return Transaction.Output.fromStream(NSInputStream(data: data))
   }
 
   public static func fromStream(stream: NSInputStream) -> Transaction.Output? {
@@ -62,12 +62,12 @@ public extension Transaction.Output {
       println("WARN: Failed to parse scriptLength from Transaction.Output")
       return nil
     }
-    let script = stream.readData(length:Int(scriptLength!))
+    let script = stream.readData(length: Int(scriptLength!))
     if script == nil {
       println("WARN: Failed to parse script from Transaction.Output")
       return nil
     }
     // TODO: Validate script.
-    return Transaction.Output(value:value!, script:script!)
+    return Transaction.Output(value: value!, script: script!)
   }
 }

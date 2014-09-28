@@ -38,7 +38,7 @@ extension Message {
     }
 
     public static func fromData(data: NSData) -> Header? {
-      return Header.fromStream(NSInputStream(data:data))
+      return Header.fromStream(NSInputStream(data: data))
     }
 
     public static func fromStream(stream: NSInputStream) -> Header? {
@@ -75,10 +75,10 @@ extension Message {
         println("WARN: Failed to parse payload checksum in message header")
         return nil
       }
-      return Header(network:network!,
-                    command:command!,
-                    payloadLength:payloadLength!,
-                    payloadChecksum:payloadChecksum!)
+      return Header(network: network!,
+                    command: command!,
+                    payloadLength: payloadLength!,
+                    payloadChecksum: payloadChecksum!)
     }
 
     public var data: NSData {

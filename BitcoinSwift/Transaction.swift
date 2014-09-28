@@ -58,7 +58,7 @@ public struct Transaction: MessagePayload, Equatable {
     if data.length == 0 {
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let version = stream.readUInt32()
     if version == nil {
@@ -103,6 +103,6 @@ public struct Transaction: MessagePayload, Equatable {
       println("WARN: Invalid LockTime \(lockTimeRaw) in Transaction \(data)")
       return nil
     }
-    return Transaction(version:version!, inputs:inputs, outputs:outputs, lockTime:lockTime!)
+    return Transaction(version: version!, inputs: inputs, outputs: outputs, lockTime: lockTime!)
   }
 }

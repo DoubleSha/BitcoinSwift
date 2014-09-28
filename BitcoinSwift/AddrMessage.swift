@@ -39,7 +39,7 @@ public struct AddrMessage: MessagePayload {
     if data.length == 0 {
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let count = stream.readVarInt()
     if count == nil {
@@ -67,6 +67,6 @@ public struct AddrMessage: MessagePayload {
       println("WARN: Failed to parse AddrMessage. Too many addresses \(data)")
       return nil
     }
-    return AddrMessage(peerAddresses:peerAddresses)
+    return AddrMessage(peerAddresses: peerAddresses)
   }
 }

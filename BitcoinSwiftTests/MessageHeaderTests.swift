@@ -19,24 +19,24 @@ class MessageHeaderTests: XCTestCase {
       0x02, 0x00, 0x00, 0x00, // payload size (little-endian)
       0xf1, 0x58, 0x13, 0xfa] // payload checksum
 
+  var headerData: NSData!
+  var header: Message.Header!
+
+  override func setUp() {
+    headerData = NSData(bytes: headerBytes, length: headerBytes.count)
+    header = Message.Header(network: network,
+                            command: command,
+                            payloadLength: 2,
+                            payloadChecksum: 0xfa1358f1)
+  }
+
   func testMessageHeaderEncoding() {
-    let header = Message.Header(network:network,
-                                command:command,
-                                payloadLength:2,
-                                payloadChecksum:0xfa1358f1)
-    let expectedHeaderData = NSData(bytes:headerBytes, length:headerBytes.count)
-    let actualHeaderData = header.data
-    XCTAssertEqual(actualHeaderData, expectedHeaderData,
-                   "\n[FAIL] Invalid encoded header \(header.data)")
+    XCTAssertEqual(header.data, headerData)
   }
 
   func testMessageHeaderDecoding() {
-    let headerData = NSData(bytes:headerBytes, length:headerBytes.count)
-    if let header = Message.Header.fromData(headerData) {
-      XCTAssertEqual(header.network, network,
-                     "\n[FAIL] Invalid network \(header.network)")
-      XCTAssertEqual(header.command, command,
-                     "\n[FAIL] Invalid command \(header.command)")
+    if let testHeader = Message.Header.fromData(headerData) {
+      XCTAssertEqual(testHeader, header)
     } else {
       XCTFail("\n[FAIL] Failed to parse message header")
     }

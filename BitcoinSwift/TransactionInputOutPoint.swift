@@ -42,14 +42,14 @@ public extension Transaction.OutPoint {
   }
 
   public static func fromData(data: NSData) -> Transaction.OutPoint? {
-    return Transaction.OutPoint.fromStream(NSInputStream(data:data))
+    return Transaction.OutPoint.fromStream(NSInputStream(data: data))
   }
 
   public static func fromStream(stream: NSInputStream) -> Transaction.OutPoint? {
     if stream.streamStatus != .Open {
       stream.open()
     }
-    let transactionHash = stream.readData(length:32)
+    let transactionHash = stream.readData(length: 32)
     if transactionHash == nil {
       println("WARN: Failed to parse transactionHash in Transaction.Input.Outpoint")
       return nil
@@ -59,6 +59,6 @@ public extension Transaction.OutPoint {
       println("WARN: Failed to parse index in Transaction.Input.Outpoint")
       return nil
     }
-    return Transaction.OutPoint(transactionHash:transactionHash!, index:index!)
+    return Transaction.OutPoint(transactionHash: transactionHash!, index: index!)
   }
 }

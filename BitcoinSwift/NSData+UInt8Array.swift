@@ -11,8 +11,8 @@ import Foundation
 public extension NSData {
 
   public func UInt8Array() -> [UInt8] {
-    var UInt8Array = [UInt8](count:self.length, repeatedValue:0)
-    getBytes(&UInt8Array, length:self.length)
+    var UInt8Array = [UInt8](count: self.length, repeatedValue: 0)
+    getBytes(&UInt8Array, length: self.length)
     return UInt8Array
   }
 }

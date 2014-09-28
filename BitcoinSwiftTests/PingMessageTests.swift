@@ -19,20 +19,17 @@ class PingMessageTests: XCTestCase {
     nonceData = NSData(bytes: pingMessageBytes, length: pingMessageBytes.count)
   }
 
-  /// Test to check the random nonce generation if no nonce is supplied.
   func testPingMessageNoNonce() {
     let ping1 = PingMessage()
     let ping2 = PingMessage()
     XCTAssert(ping1.nonce != ping2.nonce)
   }
 
-  /// Test Ping encoding
   func testPingMessageEncoding() {
     let pingMessage = PingMessage(nonce: pingMessageNonce)
     XCTAssertEqual(pingMessage.data, nonceData)
   }
 
-  /// Test Ping decoding
   func testPingMessageDecoding() {
     if let ping1 = PingMessage.fromData(nonceData) {
       XCTAssertEqual(ping1.nonce, pingMessageNonce)

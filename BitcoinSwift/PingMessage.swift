@@ -41,7 +41,7 @@ public struct PingMessage: MessagePayload {
       println("WARN: No data passed to PingMessage \(data)")
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let nonce = stream.readUInt64()
     if nonce == nil {
@@ -52,6 +52,6 @@ public struct PingMessage: MessagePayload {
       println("WARN: Failed to parse PingMessage. Too much data \(data)")
       return nil
     }
-    return PingMessage(nonce:nonce)
+    return PingMessage(nonce: nonce)
   }
 }

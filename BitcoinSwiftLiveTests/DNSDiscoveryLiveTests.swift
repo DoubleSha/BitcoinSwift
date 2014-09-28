@@ -12,14 +12,14 @@ import XCTest
 class BitcoinSwiftLiveTests: XCTestCase {
     
   func testDNSAddressResolution() {
-    let peerDiscovery = DNSPeerDiscovery(seeds:["google.com"])
+    let peerDiscovery = DNSPeerDiscovery(seeds: ["google.com"])
     peerDiscovery.peersWithCompletion() { peerAddresses in
       for peerAddress in peerAddresses {
         switch peerAddress {
-          case .IPV4(let word0):
-            println(NSString(format:"%x", word0))
-          case .IPV6(let word0, let word1, let word2, let word3):
-            println(NSString(format:"%x%x%x%x", word0, word1, word2, word3))
+          case .IPV4(let word0): 
+            println(NSString(format: "%x", word0))
+          case .IPV6(let word0, let word1, let word2, let word3): 
+            println(NSString(format: "%x%x%x%x", word0, word1, word2, word3))
         }
       }
     }

@@ -19,10 +19,10 @@ public struct BitcoinAddress {
   public let address: String
 
   public init(versionHeader: UInt8, payload: NSData) {
-    var addressBytes = NSMutableData(bytes:[versionHeader] as [UInt8], length:1)
+    var addressBytes = NSMutableData(bytes: [versionHeader] as [UInt8], length: 1)
     addressBytes.appendData(payload.SHA256Hash().RIPEMD160Hash())
     var checksum = addressBytes.SHA256Hash().SHA256Hash()
-        .subdataWithRange(NSRange(location:0, length:4))
+        .subdataWithRange(NSRange(location: 0, length: 4))
     addressBytes.appendData(checksum)
     address = addressBytes.base58String()
   }

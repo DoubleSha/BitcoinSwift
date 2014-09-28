@@ -21,7 +21,7 @@ class GetDataMessageTests: XCTestCase {
         0x35, 0x86, 0x4f, 0x74, 0x91, 0x76, 0xab, 0x7f,
         0xa3, 0xa2, 0x51, 0xc2, 0x13, 0x40, 0x21, 0x1e,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-    let data = NSData(bytes:bytes, length:bytes.count)
+    let data = NSData(bytes: bytes, length: bytes.count)
     if let getDataMessage = GetDataMessage.fromData(data) {
       XCTAssertEqual(getDataMessage.inventoryVectors.count, 1)
       let vector1Hash: [UInt8] = [
@@ -30,8 +30,8 @@ class GetDataMessageTests: XCTestCase {
           0xa3, 0xa2, 0x51, 0xc2, 0x13, 0x40, 0x21, 0x1e,
           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
       let expectedGetDataVectors = [
-          InventoryVector(type:InventoryVector.VectorType.Block,
-                          hash:NSData(bytes:vector1Hash, length:vector1Hash.count))]
+          InventoryVector(type: InventoryVector.VectorType.Block,
+                          hash: NSData(bytes: vector1Hash, length: vector1Hash.count))]
       XCTAssertEqual(getDataMessage.inventoryVectors, expectedGetDataVectors)
     } else {
       XCTFail("\n[FAIL] Failed to parse GetDataMessage")
@@ -45,9 +45,9 @@ class GetDataMessageTests: XCTestCase {
         0xa3, 0xa2, 0x51, 0xc2, 0x13, 0x40, 0x21, 0x1e,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
     let inventoryVectors = [
-        InventoryVector(type:InventoryVector.VectorType.Block,
-                        hash:NSData(bytes:vector1Hash, length:vector1Hash.count))]
-    let getDataMessage = GetDataMessage(inventoryVectors:inventoryVectors)
+        InventoryVector(type: InventoryVector.VectorType.Block,
+                        hash: NSData(bytes: vector1Hash, length: vector1Hash.count))]
+    let getDataMessage = GetDataMessage(inventoryVectors: inventoryVectors)
     let expectedBytes: [UInt8] = [
         0x01,                                           // Number of inventory vectors (1)
         0x02, 0x00, 0x00, 0x00,                         // First vector type (2: Block)
@@ -55,7 +55,7 @@ class GetDataMessageTests: XCTestCase {
         0x35, 0x86, 0x4f, 0x74, 0x91, 0x76, 0xab, 0x7f,
         0xa3, 0xa2, 0x51, 0xc2, 0x13, 0x40, 0x21, 0x1e,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-    let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
+    let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
     XCTAssertEqual(getDataMessage.data, expectedData)
   }
 }

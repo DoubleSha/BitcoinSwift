@@ -32,11 +32,11 @@ class GetHeadersMessageTests: XCTestCase {
   var blockHashStop: NSData!
 
   override func setUp() {
-    blockLocatorHash0 = NSData(bytes:blockLocatorHash0Bytes,
-                               length:blockLocatorHash0Bytes.count)
-    blockLocatorHash1 = NSData(bytes:blockLocatorHash1Bytes,
-                               length:blockLocatorHash1Bytes.count)
-    blockHashStop = NSData(bytes:blockHashStopBytes, length:blockHashStopBytes.count)
+    blockLocatorHash0 = NSData(bytes: blockLocatorHash0Bytes,
+                               length: blockLocatorHash0Bytes.count)
+    blockLocatorHash1 = NSData(bytes: blockLocatorHash1Bytes,
+                               length: blockLocatorHash1Bytes.count)
+    blockHashStop = NSData(bytes: blockHashStopBytes, length: blockHashStopBytes.count)
   }
 
   func testGetHeadersMessageDecoding() {
@@ -55,7 +55,7 @@ class GetHeadersMessageTests: XCTestCase {
         0x0a, 0x72, 0xd2, 0xe6, 0x63, 0x4a, 0x71, 0x6f,
         0x3c, 0x51, 0x92, 0x1e, 0xe4, 0x47, 0x4c, 0x25,
         0x33, 0x48, 0x0b, 0xa7, 0x44, 0xd8, 0xf7, 0x24]   // blockHashStop
-    let data = NSData(bytes:bytes, length:bytes.count)
+    let data = NSData(bytes: bytes, length: bytes.count)
     if let getHeadersMessage = GetHeadersMessage.fromData(data) {
       XCTAssertEqual(getHeadersMessage.protocolVersion, 70001)
       XCTAssertEqual(getHeadersMessage.blockLocatorHashes, [blockLocatorHash0, blockLocatorHash1])
@@ -82,7 +82,7 @@ class GetHeadersMessageTests: XCTestCase {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]   // blockHashStop
-    let data = NSData(bytes:bytes, length:bytes.count)
+    let data = NSData(bytes: bytes, length: bytes.count)
     if let getHeadersMessage = GetHeadersMessage.fromData(data) {
       XCTAssertEqual(getHeadersMessage.protocolVersion, 70001)
       XCTAssertEqual(getHeadersMessage.blockLocatorHashes, [blockLocatorHash0, blockLocatorHash1])
@@ -94,9 +94,9 @@ class GetHeadersMessageTests: XCTestCase {
 
   func testGetHeadersMessageEncoding() {
     let getHeadersMessage =
-        GetHeadersMessage(protocolVersion:70001,
-                          blockLocatorHashes:[blockLocatorHash0, blockLocatorHash1],
-                          blockHashStop:blockHashStop)
+        GetHeadersMessage(protocolVersion: 70001,
+                          blockLocatorHashes: [blockLocatorHash0, blockLocatorHash1],
+                          blockHashStop: blockHashStop)
     let expectedBytes: [UInt8] = [
         0x71, 0x11, 0x01, 0x00,                           // 70001 (protocol version 70001)
         0x02,                                             // Number of block locator hashes (2)
@@ -112,14 +112,14 @@ class GetHeadersMessageTests: XCTestCase {
         0x0a, 0x72, 0xd2, 0xe6, 0x63, 0x4a, 0x71, 0x6f,
         0x3c, 0x51, 0x92, 0x1e, 0xe4, 0x47, 0x4c, 0x25,
         0x33, 0x48, 0x0b, 0xa7, 0x44, 0xd8, 0xf7, 0x24]   // blockHashStop
-    let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
+    let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
     XCTAssertEqual(getHeadersMessage.data, expectedData)
   }
 
   func testGetHeadersMessageWithNoBlockHashStopEncoding() {
     let getHeadersMessage =
-        GetHeadersMessage(protocolVersion:70001,
-                          blockLocatorHashes:[blockLocatorHash0, blockLocatorHash1])
+        GetHeadersMessage(protocolVersion: 70001,
+                          blockLocatorHashes: [blockLocatorHash0, blockLocatorHash1])
     let expectedBytes: [UInt8] = [
         0x71, 0x11, 0x01, 0x00,                           // 70001 (protocol version 70001)
         0x02,                                             // Number of block locator hashes (2)
@@ -135,7 +135,7 @@ class GetHeadersMessageTests: XCTestCase {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]   // blockHashStop
-    let expectedData = NSData(bytes:expectedBytes, length:expectedBytes.count)
+    let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
     XCTAssertEqual(getHeadersMessage.data, expectedData)
   }
 }

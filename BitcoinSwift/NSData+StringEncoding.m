@@ -19,7 +19,7 @@ static const char base58Chars[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkm
     return @"";
   }
   // May as well use openssl's big number implementation since we already have it as a dependency.
-  // TODO: Write a BigInteger implementation for swift :)
+  // TODO: Write a BigInteger implementation for swift : )
   BN_CTX *ctx = BN_CTX_new();
   BN_CTX_start(ctx);
   BIGNUM *value = BN_CTX_get(ctx);
@@ -48,11 +48,11 @@ static const char base58Chars[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkm
   BN_CTX_free(ctx);
   // Reverse the string because we have been building it backwards. It's more efficient to reverse
   // the string after we are finished, rather than appending to the front as we go.
-  return [self reversedStringWithString:base58String];
+  return [self reversedStringWithString: base58String];
 }
 
 - (NSString *)hexString {
-  const unsigned char *dataBuffer = (const unsigned char *)[self bytes];
+  const unsigned char *dataBuffer = (const unsigned char *)self.bytes;
   if (!dataBuffer) {
     return [NSString string];
   }
@@ -66,9 +66,9 @@ static const char base58Chars[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkm
 
 #pragma mark Private Methods
 
-- (NSString *)reversedStringWithString:(NSString *)string {
+- (NSString *)reversedStringWithString: (NSString *)string {
   NSMutableString *reversedString = [NSMutableString string];
-  NSInteger charIndex = [string length];
+  NSInteger charIndex = string.length;
   while (charIndex > 0) {
     charIndex--;
     NSRange subStrRange = NSMakeRange(charIndex, 1);

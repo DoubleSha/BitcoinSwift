@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol MessageParserDelegate : class {
+public protocol MessageParserDelegate: class {
   func didParseMessage(message: Message)
 }
 
@@ -59,7 +59,7 @@ public class MessageParser {
           // Wait for more bytes to be received.
           return
         }
-        let data = NSData(bytes:receivedBytes, length:receivedBytes.count)
+        let data = NSData(bytes: receivedBytes, length: receivedBytes.count)
         receivedHeader = Message.Header.fromData(data)
         if receivedHeader == nil {
           // Failed to parse the header for some reason. It's possible that the networkMagicBytes
@@ -81,8 +81,8 @@ public class MessageParser {
         // Haven't received the whole message yet. Wait for more bytes.
         return
       }
-      let payloadData = NSData(bytes:receivedBytes, length:payloadLength)
-      let message = Message(header:receivedHeader!, payloadData:payloadData)
+      let payloadData = NSData(bytes: receivedBytes, length: payloadLength)
+      let message = Message(header: receivedHeader!, payloadData: payloadData)
       if message.isChecksumValid() {
         delegate?.didParseMessage(message)
       } else {

@@ -8,11 +8,15 @@
 
 import Foundation
 
+public func ==(lhs: InventoryMessage, rhs: InventoryMessage) -> Bool {
+  return lhs.inventoryVectors == rhs.inventoryVectors
+}
+
 /// Message payload object corresponding to the Message.Command.Inventory command. Allows a node to
 /// advertise its knowledge of one or more objects. It can be received unsolicited, or in reply to
 /// getblocks.
 /// https://en.bitcoin.it/wiki/Protocol_specification#inv
-public struct InventoryMessage: MessagePayload {
+public struct InventoryMessage: MessagePayload, Equatable {
 
   public let inventoryVectors: [InventoryVector]
 
@@ -40,7 +44,7 @@ public struct InventoryMessage: MessagePayload {
     if data.length == 0 {
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let inventoryCount = stream.readVarInt()
     if inventoryCount == nil {
@@ -68,6 +72,6 @@ public struct InventoryMessage: MessagePayload {
       println("WARN: Failed to parse InventoryMessage. Too many vectors \(data)")
       return nil
     }
-    return InventoryMessage(inventoryVectors:inventoryVectors)
+    return InventoryMessage(inventoryVectors: inventoryVectors)
   }
 }

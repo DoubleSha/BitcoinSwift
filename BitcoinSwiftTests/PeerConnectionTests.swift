@@ -24,7 +24,7 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
     init(inputStream: NSInputStream, outputStream: NSOutputStream) {
       self.inputStream = inputStream
       self.outputStream = outputStream
-      super.init(hostname:hostname, port:port, network:network)
+      super.init(hostname: hostname, port: port, network: network)
     }
 
     override func streamsToPeerWithHostname(hostname: String, port: UInt16) ->
@@ -40,7 +40,7 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
   private var inputStreamDelegate: TestInputStreamDelegate!
   private var outputStreamDelegate: TestOutputStreamDelegate!
 
-  // If non-nil, fulfilled when peerConnection(:didFailWithError:) is invoked.
+  // If non-nil, fulfilled when peerConnection(: didFailWithError: ) is invoked.
   private var connectionDidFailExpectation: XCTestExpectation?
   private var connectionDidConnectExpectation: XCTestExpectation?
 
@@ -49,14 +49,14 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
     self.inputStream = inputStream
     let (connInputStream, outputStream) = NSStream.boundStreamsWithBufferSize(1024)
     self.outputStream = outputStream
-    inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
-    outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode:NSDefaultRunLoopMode)
+    inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+    outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
     inputStreamDelegate = TestInputStreamDelegate()
     inputStream.delegate = inputStreamDelegate
     outputStreamDelegate = TestOutputStreamDelegate()
     outputStream.delegate = outputStreamDelegate
-    peerConnection = MockPeerConnection(inputStream:connInputStream,
-                                        outputStream:connOutputStream)
+    peerConnection = MockPeerConnection(inputStream: connInputStream,
+                                        outputStream: connOutputStream)
     peerConnection.delegate = self
     inputStream.open()
     outputStream.open()
@@ -65,61 +65,61 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
   func testSendVersionMessageOnConnect() {
     let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionMessageBytes,
-                                                 withExpectation:versionExpectation)
-    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout:5)
-    waitForExpectationsWithTimeout(5, handler:nil)
+                                                 withExpectation: versionExpectation)
+    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 5)
+    waitForExpectationsWithTimeout(5, handler: nil)
   }
 
   func testSuccessfulVersionExchange() {
     let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionMessageBytes,
-                                                 withExpectation:versionExpectation)
-    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout:5)
-    waitForExpectationsWithTimeout(5, handler:nil)
+                                                 withExpectation: versionExpectation)
+    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 5)
+    waitForExpectationsWithTimeout(5, handler: nil)
 
     connectionDidConnectExpectation = expectationWithDescription("connect")
     let versionAckExpectation = expectationWithDescription("versionack")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionAckMessageBytes,
-                                             withExpectation:versionAckExpectation)
+                                             withExpectation: versionAckExpectation)
     outputStreamDelegate.sendBytes(DummyMessage.versionAckMessageBytes,
-                                   outputStream:outputStream)
+                                   outputStream: outputStream)
     outputStreamDelegate.sendBytes(DummyMessage.versionMessageBytes,
-                                   outputStream:outputStream)
-    waitForExpectationsWithTimeout(5, handler:nil)
+                                   outputStream: outputStream)
+    waitForExpectationsWithTimeout(5, handler: nil)
   }
 
   func testConnectionTimeout() {
     connectionDidFailExpectation = expectationWithDescription("timeout")
-    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout:1)
-    waitForExpectationsWithTimeout(3, handler:nil)
+    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 1)
+    waitForExpectationsWithTimeout(3, handler: nil)
   }
 
   func testVersionButNoVersionAckTimeout() {
     let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionMessageBytes,
-                                             withExpectation:versionExpectation)
-    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout:1)
-    waitForExpectationsWithTimeout(5, handler:nil)
+                                             withExpectation: versionExpectation)
+    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 1)
+    waitForExpectationsWithTimeout(5, handler: nil)
 
     connectionDidFailExpectation = expectationWithDescription("timeout")
     let versionAckExpectation = expectationWithDescription("versionack")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionAckMessageBytes,
-                                             withExpectation:versionAckExpectation)
-    outputStreamDelegate.sendBytes(DummyMessage.versionMessageBytes, outputStream:outputStream)
-    waitForExpectationsWithTimeout(2, handler:nil)
+                                             withExpectation: versionAckExpectation)
+    outputStreamDelegate.sendBytes(DummyMessage.versionMessageBytes, outputStream: outputStream)
+    waitForExpectationsWithTimeout(2, handler: nil)
   }
 
   func testVersionAckButNoVersionTimeout() {
     let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionMessageBytes,
-                                             withExpectation:versionExpectation)
-    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout:1)
-    waitForExpectationsWithTimeout(5, handler:nil)
+                                             withExpectation: versionExpectation)
+    peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 1)
+    waitForExpectationsWithTimeout(5, handler: nil)
 
     connectionDidFailExpectation = expectationWithDescription("timeout")
     outputStreamDelegate.sendBytes(DummyMessage.versionAckMessageBytes,
-                                   outputStream:outputStream)
-    waitForExpectationsWithTimeout(2, handler:nil)
+                                   outputStream: outputStream)
+    waitForExpectationsWithTimeout(2, handler: nil)
   }
 
   // MARK: - PeerConnectionDelegate

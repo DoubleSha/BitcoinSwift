@@ -56,8 +56,8 @@ public struct VersionMessage: MessagePayload {
     data.appendUInt32(protocolVersion)
     data.appendUInt64(services.toRaw())
     data.appendInt64(Int64(date.timeIntervalSince1970))
-    data.appendPeerAddress(receiverAddress, includeTimestamp:false)
-    data.appendPeerAddress(senderAddress, includeTimestamp:false)
+    data.appendPeerAddress(receiverAddress, includeTimestamp: false)
+    data.appendPeerAddress(senderAddress, includeTimestamp: false)
     data.appendUInt64(nonce)
     data.appendVarString(userAgent)
     data.appendInt32(blockStartHeight)
@@ -69,7 +69,7 @@ public struct VersionMessage: MessagePayload {
     if data.length == 0 {
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let protocolVersion = stream.readUInt32()
     if protocolVersion == nil {
@@ -87,13 +87,13 @@ public struct VersionMessage: MessagePayload {
       println("WARN: Failed to parse timestamp from VersionMessage \(data)")
       return nil
     }
-    let date = NSDate(timeIntervalSince1970:NSTimeInterval(timestamp!))
-    let receiverAddress = stream.readPeerAddress(includeTimestamp:false)
+    let date = NSDate(timeIntervalSince1970: NSTimeInterval(timestamp!))
+    let receiverAddress = stream.readPeerAddress(includeTimestamp: false)
     if receiverAddress == nil {
       println("WARN: Failed to parse receiverAddress from VersionMessage \(data)")
       return nil
     }
-    let senderAddress = stream.readPeerAddress(includeTimestamp:false)
+    let senderAddress = stream.readPeerAddress(includeTimestamp: false)
     if senderAddress == nil {
       println("WARN: Failed to parse senderAddress from VersionMessage \(data)")
       return nil
@@ -118,14 +118,14 @@ public struct VersionMessage: MessagePayload {
       println("WARN: Failed to parse announceRelayedTransactions from VersionMessage \(data)")
       return nil
     }
-    return VersionMessage(protocolVersion:protocolVersion!,
-                          services:services,
-                          date:date,
-                          senderAddress:senderAddress!,
-                          receiverAddress:receiverAddress!,
-                          nonce:nonce!,
-                          userAgent:userAgent!,
-                          blockStartHeight:blockStartHeight!,
-                          announceRelayedTransactions:announceRelayedTransactions!)
+    return VersionMessage(protocolVersion: protocolVersion!,
+                          services: services,
+                          date: date,
+                          senderAddress: senderAddress!,
+                          receiverAddress: receiverAddress!,
+                          nonce: nonce!,
+                          userAgent: userAgent!,
+                          blockStartHeight: blockStartHeight!,
+                          announceRelayedTransactions: announceRelayedTransactions!)
   }
 }

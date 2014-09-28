@@ -41,7 +41,7 @@ public struct GetDataMessage: MessagePayload {
     if data.length == 0 {
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let inventoryCount = stream.readVarInt()
     if inventoryCount == nil {

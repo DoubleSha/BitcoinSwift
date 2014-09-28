@@ -105,7 +105,7 @@
 }
 
 - (BOOL)verifySignature:(NSData *)signature forHash:(NSData *)hash {
-  NSAssert([hash length] == 32, @"verifySignature:forHash: only supports 256-bit hashes");
+  NSAssert([hash length] == 32, @"verifySignature: forHash: only supports 256-bit hashes");
   int result = ECDSA_verify(0,
                             [hash bytes],
                             (int)[hash length],

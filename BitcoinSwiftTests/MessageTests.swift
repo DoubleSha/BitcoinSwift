@@ -13,6 +13,7 @@ class MessageTests: XCTestCase {
 
   let network = Message.Network.MainNet
   let command = Message.Command.Version
+
   let payloadBytes: [UInt8] = [
       0x72, 0x11, 0x01, 0x00,                           // 70002 (protocol version 70002)
       0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,   // 1 (NODE_NETWORK services)
@@ -48,20 +49,23 @@ class MessageTests: XCTestCase {
       0x79, 0xa0, 0x02, 0x00,                           // Last block
       0x01]                                             // Relay transactions
 
+  var payloadData: NSData!
+  var messageData: NSData!
+  var message: Message!
+
+  override func setUp() {
+    payloadData = NSData(bytes: payloadBytes, length: payloadBytes.count)
+    messageData = NSData(bytes: messageBytes, length: messageBytes.count)
+    message = Message(network: network, command: command, payloadData: payloadData)
+  }
+
   func testMessageEncoding() {
-    let payloadData = NSData(bytes:payloadBytes, length:payloadBytes.count)
-    let message = Message(network:network, command:command, payloadData:payloadData)
-    let messageData = NSData(bytes:messageBytes, length:messageBytes.count)
     XCTAssertEqual(message.data, messageData)
   }
 
   func testMessageDecoding() {
-    let payloadData = NSData(bytes:payloadBytes, length:payloadBytes.count)
-    let messageData = NSData(bytes:messageBytes, length:messageBytes.count)
-    if let message = Message.fromData(messageData) {
-      XCTAssertEqual(message.network, network)
-      XCTAssertEqual(message.command, command)
-      XCTAssertEqual(message.payload, payloadData)
+    if let testMessage = Message.fromData(messageData) {
+      XCTAssertEqual(testMessage, message)
     } else {
       XCTFail("\n[FAIL] Failed to parse message")
     }

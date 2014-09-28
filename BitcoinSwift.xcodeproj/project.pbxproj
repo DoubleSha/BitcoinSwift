@@ -55,6 +55,8 @@
 		0A5314F119D7918C0090F82F /* TransactionInputOutPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5314EF19D7918C0090F82F /* TransactionInputOutPoint.swift */; };
 		0A5314F319D794620090F82F /* TransactionLockTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5314F219D794620090F82F /* TransactionLockTime.swift */; };
 		0A5314F419D794620090F82F /* TransactionLockTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5314F219D794620090F82F /* TransactionLockTime.swift */; };
+		0A5314F519D8A1130090F82F /* NotFoundMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BA343E19D74E0E00A1232F /* NotFoundMessageTests.swift */; };
+		0A5314F619D8A1410090F82F /* NotFoundMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BA343C19D74C3C00A1232F /* NotFoundMessage.swift */; };
 		0A78124D19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78124E19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78125019C4D41300187B9A /* MessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124F19C4D41300187B9A /* MessageParser.swift */; };
@@ -785,6 +787,7 @@
 				0A5314F119D7918C0090F82F /* TransactionInputOutPoint.swift in Sources */,
 				0AC8CF3919A9369F00D93585 /* Message.swift in Sources */,
 				0A5314EE19D78F3B0090F82F /* TransactionInput.swift in Sources */,
+				0A5314F619D8A1410090F82F /* NotFoundMessage.swift in Sources */,
 				D862845119AA7C0700CFCE80 /* PeerConnection.swift in Sources */,
 				0AC8CF4619A9369F00D93585 /* NSData+UInt8Array.swift in Sources */,
 				0AC8CF3C19A9369F00D93585 /* NSInputStream+BitcoinDecoding.swift in Sources */,
@@ -817,6 +820,7 @@
 				D862845619AA7C1000CFCE80 /* VersionMessageTests.swift in Sources */,
 				0A5314E819D77E730090F82F /* TransactionTests.swift in Sources */,
 				0A1AFF4A19B4283F0032F488 /* PeerConnectionTests.swift in Sources */,
+				0A5314F519D8A1130090F82F /* NotFoundMessageTests.swift in Sources */,
 				0A78125819C4E4B700187B9A /* DummyMessage.swift in Sources */,
 				0AC8CF5A19A9376B00D93585 /* AddrMessageTests.swift in Sources */,
 				0A78125419C4E45500187B9A /* MessageParserTests.swift in Sources */,

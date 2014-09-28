@@ -53,7 +53,7 @@ public extension Transaction.Input {
   }
 
   public static func fromData(data: NSData) -> Transaction.Input? {
-    return Transaction.Input.fromStream(NSInputStream(data:data))
+    return Transaction.Input.fromStream(NSInputStream(data: data))
   }
 
   public static func fromStream(stream: NSInputStream) -> Transaction.Input? {
@@ -70,7 +70,7 @@ public extension Transaction.Input {
       println("WARN: Failed to parse scriptSignatureLength in Transaction.Input")
       return nil
     }
-    let scriptSignature = stream.readData(length:Int(scriptSignatureLength!))
+    let scriptSignature = stream.readData(length: Int(scriptSignatureLength!))
     if scriptSignature == nil {
       println("WARN: Failed to parse scriptSignature in Transaction.Input")
       return nil
@@ -80,8 +80,8 @@ public extension Transaction.Input {
       println("WARN: Failed to parse sequence in Transaction.Input")
       return nil
     }
-    return Transaction.Input(outPoint:outPoint!,
-                             scriptSignature:scriptSignature!,
-                             sequence:sequence!)
+    return Transaction.Input(outPoint: outPoint!,
+                             scriptSignature: scriptSignature!,
+                             sequence: sequence!)
   }
 }

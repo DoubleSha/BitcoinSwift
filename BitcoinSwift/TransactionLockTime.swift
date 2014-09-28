@@ -10,13 +10,13 @@ import Foundation
 
 public func ==(lhs: Transaction.LockTime, rhs: Transaction.LockTime) -> Bool {
   switch (lhs, rhs) {
-    case (.AlwaysLocked, .AlwaysLocked):
+    case (.AlwaysLocked, .AlwaysLocked): 
       return true
-    case (.BlockHeight(let lhsBlockHeight), .BlockHeight(let rhsBlockHeight)):
+    case (.BlockHeight(let lhsBlockHeight), .BlockHeight(let rhsBlockHeight)): 
       return lhsBlockHeight == rhsBlockHeight
-    case (.Date(let lhsDate), .Date(let rhsDate)):
+    case (.Date(let lhsDate), .Date(let rhsDate)): 
       return lhsDate.isEqualToDate(rhsDate)
-    default:
+    default: 
       return false
   }
 }
@@ -40,22 +40,22 @@ public extension Transaction {
 
     public static func fromRaw(raw: UInt32) -> LockTime? {
       switch raw {
-        case 0:
+        case 0: 
           return .AlwaysLocked
-        case 1..<500000000:
+        case 1..<500000000: 
           return .BlockHeight(raw)
-        default:
-          return .Date(NSDate(timeIntervalSince1970:NSTimeInterval(raw)))
+        default: 
+          return .Date(NSDate(timeIntervalSince1970: NSTimeInterval(raw)))
       }
     }
 
     public func toRaw() -> UInt32 {
       switch self {
-        case .AlwaysLocked:
+        case .AlwaysLocked: 
           return 0
-        case .BlockHeight(let blockHeight):
+        case .BlockHeight(let blockHeight): 
           return blockHeight
-        case .Date(let date):
+        case .Date(let date): 
           return UInt32(date.timeIntervalSince1970)
       }
     }

@@ -39,7 +39,7 @@ public struct Message: Equatable {
   }
 
   /// Indicates what command this message corresponds to.
-  /// Available commands are defined in the spec here:
+  /// Available commands are defined in the spec here: 
   /// https://en.bitcoin.it/wiki/Protocol_specification#Message_types
   public enum Command: String {
     case Version = "version"
@@ -73,10 +73,10 @@ public struct Message: Equatable {
 
     /// The command string encoded into 12 bytes, null padded.
     public var data: NSData {
-      var data = NSMutableData(length:Command.encodedLength)
+      var data = NSMutableData(length: Command.encodedLength)
       let ASCIIStringData = self.toRaw().dataUsingEncoding(NSASCIIStringEncoding)!
-      data.replaceBytesInRange(NSRange(location:0, length:ASCIIStringData.length),
-                               withBytes:ASCIIStringData.bytes)
+      data.replaceBytesInRange(NSRange(location: 0, length: ASCIIStringData.length),
+                               withBytes: ASCIIStringData.bytes)
       return data
     }
   }
@@ -95,18 +95,18 @@ public struct Message: Equatable {
   }
 
   public init(network: Network, command: Command, payloadData: NSData) {
-    self.header = Header(network:network,
-                         command:command,
-                         payloadLength:UInt32(payloadData.length),
-                         payloadChecksum:Message.checksumForPayload(payloadData))
+    self.header = Header(network: network,
+                         command: command,
+                         payloadLength: UInt32(payloadData.length),
+                         payloadChecksum: Message.checksumForPayload(payloadData))
     self.payload = payloadData
   }
 
   public init(network: Network, payload: MessagePayload) {
-    self.header = Header(network:network,
-                         command:payload.command,
-                         payloadLength:UInt32(payload.data.length),
-                         payloadChecksum:Message.checksumForPayload(payload.data))
+    self.header = Header(network: network,
+                         command: payload.command,
+                         payloadLength: UInt32(payload.data.length),
+                         payloadChecksum: Message.checksumForPayload(payload.data))
     self.payload = payload.data
   }
 
@@ -126,7 +126,7 @@ public struct Message: Equatable {
     if data.length == 0 {
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let header = Header.fromStream(stream)
     if header == nil {
@@ -139,12 +139,12 @@ public struct Message: Equatable {
       return nil
     }
     stream.close()
-    return Message(header:header!, payloadData:payloadData!)
+    return Message(header: header!, payloadData: payloadData!)
   }
 
   /// Encodes the message into an NSData object for wire transmission.
   public var data: NSData {
-    var bytes = NSMutableData(data:header.data)
+    var bytes = NSMutableData(data: header.data)
     bytes.appendData(payload)
     return bytes
   }

@@ -20,22 +20,22 @@ class TestOutputStreamDelegate: NSObject, NSStreamDelegate {
 
   func stream(stream: NSStream, handleEvent event: NSStreamEvent) {
     switch event {
-      case NSStreamEvent.None:
+      case NSStreamEvent.None: 
         break
-      case NSStreamEvent.OpenCompleted:
+      case NSStreamEvent.OpenCompleted: 
         break
-      case NSStreamEvent.HasSpaceAvailable:
+      case NSStreamEvent.HasSpaceAvailable: 
         send(stream as NSOutputStream)
-      case NSStreamEvent.HasBytesAvailable:
+      case NSStreamEvent.HasBytesAvailable: 
         break
-      default:
+      default: 
         XCTFail("Invalid NSStreamEvent \(event)")
     }
   }
 
   private func send(outputStream: NSOutputStream) {
     if pendingSendBytes.count > 0 {
-      let bytesWritten = outputStream.write(pendingSendBytes, maxLength:pendingSendBytes.count)
+      let bytesWritten = outputStream.write(pendingSendBytes, maxLength: pendingSendBytes.count)
       if bytesWritten > 0 {
         pendingSendBytes.removeRange(0..<bytesWritten)
       }

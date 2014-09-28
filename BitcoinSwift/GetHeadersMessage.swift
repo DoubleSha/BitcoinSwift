@@ -41,7 +41,7 @@ public struct GetHeadersMessage: MessagePayload {
     if let hashStop = blockHashStop {
       data.appendData(hashStop)
     } else {
-      data.appendData(NSMutableData(length:32))
+      data.appendData(NSMutableData(length: 32))
     }
     return data
   }
@@ -50,7 +50,7 @@ public struct GetHeadersMessage: MessagePayload {
     if data.length == 0 {
       return nil
     }
-    let stream = NSInputStream(data:data)
+    let stream = NSInputStream(data: data)
     stream.open()
     let protocolVersion = stream.readUInt32()
     if protocolVersion == nil {
@@ -64,25 +64,25 @@ public struct GetHeadersMessage: MessagePayload {
     }
     var blockLocatorHashes: [NSData] = []
     for _ in 0..<hashCount! {
-      let blockLocatorHash = stream.readData(length:32)
+      let blockLocatorHash = stream.readData(length: 32)
       if blockLocatorHash == nil {
         println("WARN: Failed to parse blockLocatorHash from GetHeadersMessage \(data)")
         return nil
       }
       blockLocatorHashes.append(blockLocatorHash!)
     }
-    var blockHashStop = stream.readData(length:32)
+    var blockHashStop = stream.readData(length: 32)
     if blockHashStop == nil {
       println("WARN: Failed to parse blockHashStop from GetHeadersMessage \(data)")
       return nil
     }
-    let zeroHash = NSMutableData(length:32)
+    let zeroHash = NSMutableData(length: 32)
     if blockHashStop == zeroHash {
       // blockHashStop will be 0 to get as many blocks as possible (max 2000 blocks).
       blockHashStop = nil
     }
-    return GetHeadersMessage(protocolVersion:protocolVersion!,
-                             blockLocatorHashes:blockLocatorHashes,
-                             blockHashStop:blockHashStop)
+    return GetHeadersMessage(protocolVersion: protocolVersion!,
+                             blockLocatorHashes: blockLocatorHashes,
+                             blockHashStop: blockHashStop)
   }
 }

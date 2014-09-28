@@ -25,14 +25,14 @@ public class DNSPeerDiscovery: PeerDiscovery {
 //    var IPAddresses: [IPAddress] = []
 //    for sockAddrData in sockAddrs as [NSData] {
 //      let sockAddrP = UnsafePointer<sockaddr_storage>.alloc(1)
-//      sockAddrData.getBytes(sockAddrP, length:sizeof(sockaddr_storage))
+//      sockAddrData.getBytes(sockAddrP, length: sizeof(sockaddr_storage))
 //      let sockAddr = sockAddrP.memory
 //      switch Int32(sockAddr.ss_family) {
-//        case AF_INET:
+//        case AF_INET: 
 //          IPAddresses.append(IPAddress.IPV4(0))
-//        case AF_INET6:
+//        case AF_INET6: 
 //          IPAddresses.append(IPAddress.IPV6(0, 0, 0, 0))
-//        default:
+//        default: 
 //          break
 //      }
 //      sockAddrP.destroy()
