@@ -9,21 +9,17 @@
 import Foundation
 
 public func ==(lhs: IPAddress, rhs: IPAddress) -> Bool {
-  switch lhs {
-    case .IPV4(let lword):
-      switch rhs {
-        case .IPV4(let rword):
-          return lword == rword
-        case .IPV6:
-          return false
-      }
-    case .IPV6(let lword0, let lword1, let lword2, let lword3):
-      switch rhs {
-        case .IPV4:
-          return false
-        case .IPV6(let rword0, let rword1, let rword2, let rword3):
-          return lword0 == rword0 && lword1 == rword1 && lword2 == rword2 && lword3 == rword3
-      }
+  switch (lhs, rhs) {
+    case (.IPV4(let lhsWord), .IPV4(let rhsWord)):
+      return lhsWord == rhsWord
+    case (.IPV6(let lhsWord0, let lhsWord1, let lhsWord2, let lhsWord3),
+          .IPV6(let rhsWord0, let rhsWord1, let rhsWord2, let rhsWord3)):
+      return lhsWord0 == rhsWord0 &&
+          lhsWord1 == rhsWord1 &&
+          lhsWord2 == rhsWord2 &&
+          lhsWord3 == rhsWord3
+    default:
+      return false
   }
 }
 

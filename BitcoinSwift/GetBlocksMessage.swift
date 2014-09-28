@@ -25,6 +25,8 @@ public struct GetBlocksMessage: MessagePayload {
     self.blockHashStop = blockHashStop
   }
 
+  // MARK: - MessagePayload
+
   public var command: Message.Command {
     return Message.Command.GetBlocks
   }
