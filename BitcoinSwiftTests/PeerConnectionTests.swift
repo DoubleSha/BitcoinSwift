@@ -65,7 +65,7 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
   func testSendVersionMessageOnConnect() {
     let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionMessageBytes,
-                                                 withExpectation: versionExpectation)
+                                             withExpectation: versionExpectation)
     peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 5)
     waitForExpectationsWithTimeout(5, handler: nil)
   }
@@ -73,7 +73,7 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
   func testSuccessfulVersionExchange() {
     let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionMessageBytes,
-                                                 withExpectation: versionExpectation)
+                                             withExpectation: versionExpectation)
     peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 5)
     waitForExpectationsWithTimeout(5, handler: nil)
 
@@ -91,7 +91,7 @@ class PeerConnectionTests: XCTestCase, PeerConnectionDelegate {
   func testConnectionTimeout() {
     connectionDidFailExpectation = expectationWithDescription("timeout")
     peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 1)
-    waitForExpectationsWithTimeout(3, handler: nil)
+    waitForExpectationsWithTimeout(2, handler: nil)
   }
 
   func testVersionButNoVersionAckTimeout() {

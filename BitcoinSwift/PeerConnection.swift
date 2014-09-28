@@ -109,7 +109,8 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   /// Once the socket is successfully opened, versionMessage is sent to the remote peer.
   /// The connection is considered "open" after the peer responds to the versionMessage with its
   /// own VersionMessage and a VersionAck confirming it is compatible.
-  public func connectWithVersionMessage(versionMessage: VersionMessage, timeout: NSTimeInterval) {
+  public func connectWithVersionMessage(versionMessage: VersionMessage,
+                                        timeout: NSTimeInterval = 5) {
     precondition(status == .NotConnected)
     precondition(!networkThread.executing)
     precondition(!receivedVersionAck)
@@ -119,7 +120,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     connectionTimeoutTimer =
         NSTimer.scheduledTimerWithTimeInterval(timeout,
                                                target: self,
-                                               selector: "connectionTimerDidTimeout: ",
+                                               selector: "connectionTimerDidTimeout:",
                                                userInfo: nil,
                                                repeats: false)
     networkThread.startWithCompletion {
