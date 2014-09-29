@@ -13,7 +13,7 @@ import Foundation
 /// remote node will respond with its version. No further communication is possible until both peers
 /// have exchanged their version.
 /// https://en.bitcoin.it/wiki/Protocol_specification#version
-public struct VersionMessage: MessagePayload {
+public struct VersionMessage {
 
   public let protocolVersion: UInt32
   public let services: PeerServices
@@ -44,8 +44,9 @@ public struct VersionMessage: MessagePayload {
     self.blockStartHeight = blockStartHeight
     self.announceRelayedTransactions = announceRelayedTransactions
   }
+}
 
-  // MARK: - MessagePayload
+extension VersionMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.Version

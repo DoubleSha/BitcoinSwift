@@ -15,7 +15,7 @@ public func ==(lhs: Transaction.LockTime, rhs: Transaction.LockTime) -> Bool {
     case (.BlockHeight(let lhsBlockHeight), .BlockHeight(let rhsBlockHeight)): 
       return lhsBlockHeight == rhsBlockHeight
     case (.Date(let lhsDate), .Date(let rhsDate)): 
-      return lhsDate.isEqualToDate(rhsDate)
+      return lhsDate == rhsDate
     default: 
       return false
   }

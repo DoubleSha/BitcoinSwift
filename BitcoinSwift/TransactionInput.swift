@@ -10,7 +10,7 @@ import Foundation
 
 public func ==(lhs: Transaction.Input, rhs: Transaction.Input) -> Bool {
   return lhs.outPoint == rhs.outPoint &&
-      lhs.scriptSignature.isEqualToData(rhs.scriptSignature) &&
+      lhs.scriptSignature == rhs.scriptSignature &&
       lhs.sequence == rhs.sequence
 }
 

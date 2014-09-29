@@ -129,6 +129,16 @@ public extension NSInputStream {
     return int
   }
 
+  public func readBool() -> Bool? {
+    if let uint8 = readUInt8() {
+      if uint8 > 0 {
+        return true
+      }
+      return false
+    }
+    return nil
+  }
+
   public func readASCIIStringWithLength(var length: Int) -> String? {
     var readBuffer = [UInt8](count: length, repeatedValue: 0)
     let numberOfBytesRead = self.read(&readBuffer, maxLength: readBuffer.count)
@@ -197,22 +207,39 @@ public extension NSInputStream {
     return nil
   }
 
-  public func readBool() -> Bool? {
-    if let uint8 = readUInt8() {
-      if uint8 > 0 {
-        return true
-      }
-      return false
-    }
-    return nil
-  }
-
   public func readVarString() -> String? {
     if let length = readVarInt() {
       return readASCIIStringWithLength(Int(length))
     }
     return nil
   }
+
+  public func readIPAddress() -> IPAddress? {
+    // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
+    // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
+    // Addresses are encoded using network byte order.
+    let word0 = readUInt32(endianness: .BigEndian)
+    let word1 = readUInt32(endianness: .BigEndian)
+    let word2 = readUInt32(endianness: .BigEndian)
+    let word3 = readUInt32(endianness: .BigEndian)
+    if word0 == nil || word1 == nil || word2 == nil || word3 == nil {
+      return nil
+    }
+    if word0! == 0 && word1! == 0 && word2! == 0xffff {
+      return IPAddress.IPV4(word3!)
+    }
+    return IPAddress.IPV6(word0!, word1!, word2!, word3!)
+  }
+
+  public func readDateFromUnixTimestamp(endianness: Endianness = .LittleEndian) -> NSDate? {
+    let rawTimestamp = readUInt32(endianness: endianness)
+    if rawTimestamp == nil {
+      return nil
+    }
+    return NSDate(timeIntervalSince1970: NSTimeInterval(rawTimestamp!))
+  }
+
+  // TODO: The functions below don't belong here. Move them somewhere else.
 
   public func readPeerAddress(includeTimestamp: Bool = true) -> PeerAddress? {
     var timestamp: NSDate? = nil
@@ -237,23 +264,6 @@ public extension NSInputStream {
       return nil
     }
     return PeerAddress(services: services, IP: IP!, port: port!, timestamp: timestamp)
-  }
-
-  public func readIPAddress() -> IPAddress? {
-    // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
-    // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
-    // Addresses are encoded using network byte order.
-    let word0 = readUInt32(endianness: .BigEndian)
-    let word1 = readUInt32(endianness: .BigEndian)
-    let word2 = readUInt32(endianness: .BigEndian)
-    let word3 = readUInt32(endianness: .BigEndian)
-    if word0 == nil || word1 == nil || word2 == nil || word3 == nil {
-      return nil
-    }
-    if word0! == 0 && word1! == 0 && word2! == 0xffff {
-      return IPAddress.IPV4(word3!)
-    }
-    return IPAddress.IPV6(word0!, word1!, word2!, word3!)
   }
 
   public func readInventoryVector() -> InventoryVector? {

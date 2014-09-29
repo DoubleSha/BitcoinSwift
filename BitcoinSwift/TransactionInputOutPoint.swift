@@ -9,8 +9,7 @@
 import Foundation
 
 public func ==(lhs: Transaction.OutPoint, rhs: Transaction.OutPoint) -> Bool {
-  return lhs.transactionHash.isEqualToData(rhs.transactionHash) &&
-      lhs.index == rhs.index
+  return lhs.transactionHash == rhs.transactionHash && lhs.index == rhs.index
 }
 
 public extension Transaction {

@@ -106,6 +106,16 @@ class BitcoinEncodingTests: XCTestCase {
     XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
 
+  func testAppendBool() {
+    var data = NSMutableData()
+    data.appendBool(true)
+    var expectedData = NSData(bytes: [0x01] as [UInt8], length: 1)
+    XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+    data.appendBool(false)
+    expectedData = NSData(bytes: [0x01, 0x00] as [UInt8], length: 2)
+    XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
   func testAppendVarIntUInt8() {
     var data = NSMutableData()
     data.appendVarInt(0xfc)
@@ -132,16 +142,6 @@ class BitcoinEncodingTests: XCTestCase {
     data.appendVarInt(0x0100000000)
     let expectedData =
         NSData(bytes: [0xff, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00] as [UInt8], length: 9)
-    XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
-  }
-
-  func testAppendBool() {
-    var data = NSMutableData()
-    data.appendBool(true)
-    var expectedData = NSData(bytes: [0x01] as [UInt8], length: 1)
-    XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
-    data.appendBool(false)
-    expectedData = NSData(bytes: [0x01, 0x00] as [UInt8], length: 2)
     XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
 
@@ -177,6 +177,15 @@ class BitcoinEncodingTests: XCTestCase {
         0x31, 0x32, 0x33, 0x34]
     let expectedData = NSData(bytes: IPBytes, length: IPBytes.count)
     XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
+  }
+
+  func testAppendDate() {
+    let date = NSDate(timeIntervalSince1970: NSTimeInterval(0x4d1015e2))
+    var data = NSMutableData()
+    data.appendDateAsUnixTimestamp(date)
+    let expectedBytes: [UInt8] = [0xe2, 0x15, 0x10, 0x4d]
+    let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
+    XCTAssertEqual(data, expectedData)
   }
 
   func testAppendPeerAddressWithoutTimestamp() {

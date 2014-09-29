@@ -9,8 +9,7 @@
 import Foundation
 
 public func ==(lhs: Transaction.Output, rhs: Transaction.Output) -> Bool {
-  return lhs.value == rhs.value &&
-      lhs.script.isEqualToData(rhs.script)
+  return lhs.value == rhs.value && lhs.script == rhs.script
 }
 
 public extension Transaction {

@@ -227,6 +227,25 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.close()
   }
 
+  func testReadBool() {
+    let bytes: [UInt8] = [0x01, 0x00]
+    let data = NSData(bytes: bytes, length: bytes.count)
+    let inputStream = NSInputStream(data: data)
+    inputStream.open()
+    if let bool = inputStream.readBool() {
+      XCTAssertTrue(bool, "\n[FAIL] Invalid bool \(bool)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read varint")
+    }
+    if let bool = inputStream.readBool() {
+      XCTAssertFalse(bool, "\n[FAIL] Invalid bool \(bool)")
+    } else {
+      XCTFail("\n[FAIL] Failed to read varint")
+    }
+    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
+    inputStream.close()
+  }
+
   func testReadASCIIString() {
     let bytes: [UInt8] = [0x61, 0x62, 0x63] // "abc"
     let data = NSData(bytes: bytes, length: bytes.count)
@@ -339,25 +358,6 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.close()
   }
 
-  func testReadBool() {
-    let bytes: [UInt8] = [0x01, 0x00]
-    let data = NSData(bytes: bytes, length: bytes.count)
-    let inputStream = NSInputStream(data: data)
-    inputStream.open()
-    if let bool = inputStream.readBool() {
-      XCTAssertTrue(bool, "\n[FAIL] Invalid bool \(bool)")
-    } else {
-      XCTFail("\n[FAIL] Failed to read varint")
-    }
-    if let bool = inputStream.readBool() {
-      XCTAssertFalse(bool, "\n[FAIL] Invalid bool \(bool)")
-    } else {
-      XCTFail("\n[FAIL] Failed to read varint")
-    }
-    XCTAssertFalse(inputStream.hasBytesAvailable, "\n[FAIL] inputStream should be exhausted")
-    inputStream.close()
-  }
-
   func testReadVarString() {
     let bytes: [UInt8] = [0x03, 0x61, 0x62, 0x63] // "abc"
     let data = NSData(bytes: bytes, length: bytes.count)
@@ -413,12 +413,25 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.close()
   }
 
+  func testReadDateFromUnixTimestamp() {
+    let bytes: [UInt8] = [0xe2, 0x15, 0x10, 0x4d]
+    let data = NSData(bytes: bytes, length: bytes.count)
+    let inputStream = NSInputStream(data: data)
+    inputStream.open()
+    if let date = inputStream.readDateFromUnixTimestamp() {
+      let expectedDate = NSDate(timeIntervalSince1970: NSTimeInterval(0x4d1015e2))
+      XCTAssertEqual(date, expectedDate)
+    } else {
+      XCTFail("\n[FAIL] Failed to parse Date")
+    }
+  }
+
   func testReadPeerAddressWithoutTimestamp() {
     let bytes: [UInt8] = [
         0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
         0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
-        0x20, 0x8D]                                     // port
+        0x20, 0x8d]                                     // port
     let data = NSData(bytes: bytes, length: bytes.count)
     let inputStream = NSInputStream(data: data)
     inputStream.open()

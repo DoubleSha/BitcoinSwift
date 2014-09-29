@@ -107,6 +107,10 @@ public extension NSMutableData {
     self.appendBytes(bytes, length: bytes.count)
   }
 
+  public func appendBool(value: Bool) {
+    value ? appendUInt8(1) : appendUInt8(0)
+  }
+
   public func appendVarInt(value: UInt64, endianness: Endianness = .LittleEndian) {
     switch value {
       case 0..<0xfd: 
@@ -128,29 +132,12 @@ public extension NSMutableData {
     appendVarInt(UInt64(value), endianness: endianness)
   }
 
-  public func appendBool(value: Bool) {
-    value ? appendUInt8(1) : appendUInt8(0)
-  }
-
   public func appendVarString(string: String) {
     let length = string.lengthOfBytesUsingEncoding(NSASCIIStringEncoding)
     appendVarInt(length)
     if length > 0 {
       appendBytes(string.dataUsingEncoding(NSASCIIStringEncoding)!.bytes, length: length)
     }
-  }
-
-  public func appendPeerAddress(peerAddress: PeerAddress, includeTimestamp: Bool = true) {
-    if includeTimestamp {
-      if let timestamp = peerAddress.timestamp {
-        appendUInt32(UInt32(timestamp.timeIntervalSince1970))
-      } else {
-        appendUInt32(UInt32(NSDate().timeIntervalSince1970))
-      }
-    }
-    appendUInt64(peerAddress.services.toRaw())
-    appendIPAddress(peerAddress.IP)
-    appendUInt16(peerAddress.port, endianness: .BigEndian)  // Network byte order.
   }
 
   public func appendIPAddress(IP: IPAddress) {
@@ -169,6 +156,25 @@ public extension NSMutableData {
         appendUInt32(word2, endianness: .BigEndian)
         appendUInt32(word3, endianness: .BigEndian)
     }
+  }
+
+  public func appendDateAsUnixTimestamp(date: NSDate, endianness: Endianness = .LittleEndian) {
+    appendUInt32(UInt32(date.timeIntervalSince1970), endianness: endianness)
+  }
+
+  // TODO: The functions below don't belong here. Move them somewhere else.
+
+  public func appendPeerAddress(peerAddress: PeerAddress, includeTimestamp: Bool = true) {
+    if includeTimestamp {
+      if let timestamp = peerAddress.timestamp {
+        appendUInt32(UInt32(timestamp.timeIntervalSince1970))
+      } else {
+        appendUInt32(UInt32(NSDate().timeIntervalSince1970))
+      }
+    }
+    appendUInt64(peerAddress.services.toRaw())
+    appendIPAddress(peerAddress.IP)
+    appendUInt16(peerAddress.port, endianness: .BigEndian)  // Network byte order.
   }
 
   public func appendInventoryVector(inventoryVector: InventoryVector) {
