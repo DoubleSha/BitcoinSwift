@@ -334,7 +334,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           delegate.peerConnection(self, didFailWithError: error)
         }
       }
-      NSThread.exit()
+      self.networkThread.cancel()
     }
   }
 

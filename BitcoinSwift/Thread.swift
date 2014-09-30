@@ -19,7 +19,10 @@ class Thread: NSThread {
     runLoop = NSRunLoop.currentRunLoop()
     completionBlock?()
     completionBlock = nil
-    runLoop.run()
+    while !cancelled {
+      runLoop.run()
+    }
+    runLoop = nil
   }
 
   func startWithCompletion(completionBlock: () -> Void) {
@@ -29,6 +32,7 @@ class Thread: NSThread {
 
   func addOperationWithBlock(block: () -> Void) {
     precondition(runLoop != nil, "Cannot add operation to thread before it is started")
-    CFRunLoopPerformBlock(runLoop.getCFRunLoop(), kCFRunLoopDefaultMode, block)
+    CFRunLoopPerformBlock(runLoop.getCFRunLoop(), kCFRunLoopCommonModes, block)
+    CFRunLoopWakeUp(runLoop.getCFRunLoop())
   }
 }
