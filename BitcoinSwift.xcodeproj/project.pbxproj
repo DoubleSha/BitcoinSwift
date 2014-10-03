@@ -130,6 +130,7 @@
 		D862845619AA7C1000CFCE80 /* VersionMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF0E6C4196BAF5A007BC06F /* VersionMessageTests.swift */; };
 		D8797AF219A9312B004C94FD /* InventoryMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8797AF119A9312B004C94FD /* InventoryMessage.swift */; };
 		D8797AF419A93A33004C94FD /* InventoryVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8797AF319A93A33004C94FD /* InventoryVector.swift */; };
+		D87DA2D119D8E2880085C273 /* RejectMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87DA2D019D8E2880085C273 /* RejectMessage.swift */; };
 		D8BA343B19D7368800A1232F /* GetDataMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D810F30819B50155009EE349 /* GetDataMessageTests.swift */; };
 		D8BA343D19D74C3C00A1232F /* NotFoundMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BA343C19D74C3C00A1232F /* NotFoundMessage.swift */; };
 		D8BA343F19D74E0E00A1232F /* NotFoundMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BA343E19D74E0E00A1232F /* NotFoundMessageTests.swift */; };
@@ -246,6 +247,7 @@
 		D845F45319D7A5FB00346A25 /* PongMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PongMessageTests.swift; sourceTree = "<group>"; };
 		D8797AF119A9312B004C94FD /* InventoryMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InventoryMessage.swift; sourceTree = "<group>"; };
 		D8797AF319A93A33004C94FD /* InventoryVector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InventoryVector.swift; sourceTree = "<group>"; };
+		D87DA2D019D8E2880085C273 /* RejectMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RejectMessage.swift; sourceTree = "<group>"; };
 		D8BA343C19D74C3C00A1232F /* NotFoundMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotFoundMessage.swift; sourceTree = "<group>"; };
 		D8BA343E19D74E0E00A1232F /* NotFoundMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotFoundMessageTests.swift; sourceTree = "<group>"; };
 		D8BA344019D763F600A1232F /* PingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PingMessage.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 				D8BA343C19D74C3C00A1232F /* NotFoundMessage.swift */,
 				D8BA344019D763F600A1232F /* PingMessage.swift */,
 				D845F45119D78C2600346A25 /* PongMessage.swift */,
+				D87DA2D019D8E2880085C273 /* RejectMessage.swift */,
 			);
 			path = BitcoinSwift;
 			sourceTree = "<group>";
@@ -712,6 +715,7 @@
 				0A2D51BC196E52EA009B6B25 /* DNSPeerDiscovery.swift in Sources */,
 				0A9AD040199DDD2C00ECEA92 /* AddrMessage.swift in Sources */,
 				0A78125019C4D41300187B9A /* MessageParser.swift in Sources */,
+				D87DA2D119D8E2880085C273 /* RejectMessage.swift in Sources */,
 				D845F45219D78C2600346A25 /* PongMessage.swift in Sources */,
 				D8BA343D19D74C3C00A1232F /* NotFoundMessage.swift in Sources */,
 				0A52ACEC1953979F0041541B /* ECKey.m in Sources */,
