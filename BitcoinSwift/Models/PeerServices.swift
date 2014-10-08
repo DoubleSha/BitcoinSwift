@@ -13,33 +13,32 @@ public func ==(lhs: PeerServices, rhs: PeerServices) -> Bool {
 }
 
 public func &(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
-  return PeerServices(lhs.value & rhs.value)
+  return PeerServices(rawValue: lhs.value & rhs.value)
 }
 
 public func |(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
-  return PeerServices(lhs.value | rhs.value)
+  return PeerServices(rawValue: lhs.value | rhs.value)
 }
 
 public func ^(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
-  return PeerServices(lhs.value ^ rhs.value)
+  return PeerServices(rawValue: lhs.value ^ rhs.value)
 }
 
 public prefix func ~(other: PeerServices) -> PeerServices {
-  return PeerServices(~other.value)
+  return PeerServices(rawValue: ~other.value)
 }
 
-// Bitfield of features to be enabled for this connection.
+/// Bitfield of features to be enabled for this connection.
 public struct PeerServices : RawOptionSetType {
-  private var value: UInt64 = 0
-  init(_ value: UInt64) { self.value = value }
-  public var boolValue: Bool { return self.value != 0 }
-  public func toRaw() -> UInt64 { return self.value }
-  public static func fromRaw(raw: UInt64) -> PeerServices? { return PeerServices(raw) }
-  public static func fromMask(raw: UInt64) -> PeerServices { return PeerServices(raw) }
-  public static func convertFromNilLiteral() -> PeerServices { return PeerServices(0) }
-  public static var allZeros: PeerServices { return PeerServices(0) }
+  private let value: UInt64
 
-  public static var None: PeerServices { return PeerServices(0) }
+  public init(rawValue value: UInt64) { self.value = value }
+  public init(nilLiteral: ()) { value = 0 }
+  public var rawValue: UInt64 { return value }
+
+  public static var allZeros: PeerServices { return PeerServices(rawValue: 0) }
+
+  public static var None: PeerServices { return PeerServices(rawValue: 0) }
   // This node can be asked for full blocks instead of just headers.
-  public static var NodeNetwork: PeerServices { return PeerServices(1 << 0) }
+  public static var NodeNetwork: PeerServices { return PeerServices(rawValue: 1 << 0) }
 }

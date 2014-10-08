@@ -50,7 +50,7 @@ extension Message {
         println("WARN: Failed to parse network magic value in message header")
         return nil
       }
-      let network = Network.fromRaw(networkRaw!)
+      let network = Network(rawValue: networkRaw!)
       if network == nil {
         println("WARN: Unsupported network \(networkRaw!) in message header")
         return nil
@@ -60,7 +60,7 @@ extension Message {
         println("WARN: Failed to parse command in message header")
         return nil
       }
-      let command = Command.fromRaw(commandRaw!)
+      let command = Command(rawValue: commandRaw!)
       if command == nil {
         println("WARN: Unsupported command \(commandRaw!) in message header")
         return nil
@@ -83,7 +83,7 @@ extension Message {
 
     public var data: NSData {
       var bytes = NSMutableData()
-      bytes.appendUInt32(network.toRaw())
+      bytes.appendUInt32(network.rawValue)
       bytes.appendData(command.data)
       bytes.appendUInt32(payloadLength)
       bytes.appendUInt32(payloadChecksum)

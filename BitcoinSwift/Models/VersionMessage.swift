@@ -55,7 +55,7 @@ extension VersionMessage: MessagePayload {
   public var data: NSData {
     var data = NSMutableData()
     data.appendUInt32(protocolVersion)
-    data.appendUInt64(services.toRaw())
+    data.appendUInt64(services.rawValue)
     data.appendInt64(Int64(date.timeIntervalSince1970))
     data.appendPeerAddress(receiverAddress, includeTimestamp: false)
     data.appendPeerAddress(senderAddress, includeTimestamp: false)
@@ -82,7 +82,7 @@ extension VersionMessage: MessagePayload {
       println("WARN: Failed to parse servicesRaw from VersionMessage \(data)")
       return nil
     }
-    let services = PeerServices.fromMask(servicesRaw!)
+    let services = PeerServices(rawValue: servicesRaw!)
     let timestamp = stream.readInt64()
     if timestamp == nil {
       println("WARN: Failed to parse timestamp from VersionMessage \(data)")

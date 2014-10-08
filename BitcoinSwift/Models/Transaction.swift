@@ -51,7 +51,7 @@ extension Transaction: MessagePayload {
     for output in outputs {
       data.appendData(output.data)
     }
-    data.appendUInt32(lockTime.toRaw())
+    data.appendUInt32(lockTime.rawValue)
     return data
   }
 

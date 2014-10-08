@@ -192,7 +192,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   // have a length of 0.
   public func didParseMessage(message: Message) {
     // TODO: Add the rest of the messages.
-    println("Received \(message.header.command.toRaw()) message")
+    println("Received \(message.header.command.rawValue) message")
     switch message.header.command {
       case .Version: 
         if peerVersion != nil {
@@ -226,7 +226,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           didConnect()
         }
       default: 
-        println("WARN: Received unknown command \(message.header.command.toRaw()). Ignoring")
+        println("WARN: Received unknown command \(message.header.command.rawValue). Ignoring")
     }
   }
 
@@ -269,7 +269,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     }
     if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
       let message = messageSendQueue.removeAtIndex(0)
-      println("Sending \(message.header.command.toRaw()) message")
+      println("Sending \(message.header.command.rawValue) message")
       pendingSendBytes += message.data.UInt8Array()
     }
     if pendingSendBytes.count > 0 {
@@ -359,7 +359,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   }
 
   private func errorWithCode(code: ErrorCode) -> NSError {
-    return NSError(domain: ErrorDomain, code: code.toRaw(), userInfo: nil)
+    return NSError(domain: ErrorDomain, code: code.rawValue, userInfo: nil)
   }
 
   private func isPeerVersionSupported(versionMessage: VersionMessage) -> Bool {

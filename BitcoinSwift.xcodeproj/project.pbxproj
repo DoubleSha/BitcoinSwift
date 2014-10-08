@@ -359,6 +359,7 @@
 			isa = PBXGroup;
 			children = (
 				0A52ACCE195397080041541B /* Supporting Files */,
+				0AC17A6F19E50869000E4942 /* Models */,
 				0A52ACD0195397080041541B /* BitcoinSwift.h */,
 				0A52ACE71953979F0041541B /* ECKey.h */,
 				0A52ACE81953979F0041541B /* ECKey.m */,
@@ -366,7 +367,6 @@
 				0A52ACFA1953A79B0041541B /* NSData+Hashing.m */,
 				0A248C1B1953F06900C4607E /* NSData+StringEncoding.h */,
 				0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */,
-				0AC17A6F19E50869000E4942 /* Models */,
 				0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */,
 				0A34DF641961197D007BBC35 /* Endianness.swift */,
 				0AF9C6F01960D51F009F281D /* NSData+BitcoinEncoding.swift */,

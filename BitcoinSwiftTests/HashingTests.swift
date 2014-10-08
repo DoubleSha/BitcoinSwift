@@ -11,7 +11,12 @@ import XCTest
 
 class HashingTests: XCTestCase {
 
-  let data = NSData(bytes: "abc".cStringUsingEncoding(NSASCIIStringEncoding)!, length: 3)
+  var data: NSData!
+
+  override func setUp() {
+    let bytes = "abc".cStringUsingEncoding(NSASCIIStringEncoding)!
+    data = NSData(bytes: bytes, length: 3)
+  }
 
   func testSHA256() {
     let expectedSHA256HashBytes: [UInt8] = [0xba, 0x78, 0x16, 0xbf, 0x8f, 0x01, 0xcf, 0xea,

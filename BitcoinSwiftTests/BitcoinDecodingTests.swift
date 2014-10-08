@@ -33,14 +33,14 @@ class BitcoinDecodingTests: XCTestCase {
 
     // Test reading a little-endian UInt8.
     if let int = inputStream.readUInt8() {
-      XCTAssertEqual(int, 0x01, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, UInt8(0x01), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
 
     // Test reading a big-endian UInt8.
     if let int = inputStream.readUInt8() {
-      XCTAssertEqual(int, 0x02, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, UInt8(0x02), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
@@ -57,14 +57,14 @@ class BitcoinDecodingTests: XCTestCase {
 
     // Test reading a little-endian UInt16.
     if let int = inputStream.readUInt16() {
-      XCTAssertEqual(int, 0x0201, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, UInt16(0x0201), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
 
     // Test reading a big-endian UInt16.
     if let int = inputStream.readUInt16(endianness: .BigEndian) {
-      XCTAssertEqual(int, 0x0304, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, UInt16(0x0304), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
@@ -86,14 +86,14 @@ class BitcoinDecodingTests: XCTestCase {
 
     // Test reading a little-endian UInt32.
     if let int = inputStream.readUInt32() {
-      XCTAssertEqual(int, 0x04030201, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, UInt32(0x04030201), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
 
     // Test reading a big-endian UInt32.
     if let int = inputStream.readUInt32(endianness: .BigEndian) {
-      XCTAssertEqual(int, 0x05060708, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, UInt32(0x05060708), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
@@ -117,14 +117,14 @@ class BitcoinDecodingTests: XCTestCase {
 
     // Test reading a little-endian UInt64.
     if let int = inputStream.readUInt64() {
-      XCTAssertEqual(int, 0x0807060504030201, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, UInt64(0x0807060504030201), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
 
     // Test reading a big-endian UInt64.
     if let int = inputStream.readUInt64(endianness: .BigEndian) {
-      XCTAssertEqual(int, 0x090a0b0c0d0e0f10, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, UInt64(0x090a0b0c0d0e0f10), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
@@ -146,14 +146,14 @@ class BitcoinDecodingTests: XCTestCase {
 
     // Test reading a little-endian Int16.
     if let int = inputStream.readInt16() {
-      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, Int16(-2), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
 
     // Test reading a big-endian Int16.
     if let int = inputStream.readInt16(endianness: .BigEndian) {
-      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, Int16(-2), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
@@ -175,14 +175,14 @@ class BitcoinDecodingTests: XCTestCase {
 
     // Test reading a little-endian Int32.
     if let int = inputStream.readInt32() {
-      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, Int32(-2), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
 
     // Test reading a big-endian Int32.
     if let int = inputStream.readInt32(endianness: .BigEndian) {
-      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, Int32(-2), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
@@ -206,14 +206,14 @@ class BitcoinDecodingTests: XCTestCase {
 
     // Test reading a little-endian Int64.
     if let int = inputStream.readInt64() {
-      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, Int64(-2), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
 
     // Test reading a big-endian Int64.
     if let int = inputStream.readInt64(endianness: .BigEndian) {
-      XCTAssertEqual(int, -2, "\n[FAIL] Unexpected int \(int)")
+      XCTAssertEqual(int, Int64(-2), "\n[FAIL] Unexpected int \(int)")
     } else {
       XCTFail("\n[FAIL] Failed to read int")
     }
@@ -308,7 +308,7 @@ class BitcoinDecodingTests: XCTestCase {
     let inputStream = NSInputStream(data: data)
     inputStream.open()
     if let uint8 = inputStream.readVarInt() {
-      XCTAssertEqual(uint8, 0xfc, "\n[FAIL] Invalid int \(uint8)")
+      XCTAssertEqual(uint8, UInt64(0xfc), "\n[FAIL] Invalid int \(uint8)")
     } else {
       XCTFail("\n[FAIL] Failed to read varint")
     }
@@ -322,7 +322,7 @@ class BitcoinDecodingTests: XCTestCase {
     let inputStream = NSInputStream(data: data)
     inputStream.open()
     if let uint16 = inputStream.readVarInt() {
-      XCTAssertEqual(uint16, 0x0102, "\n[FAIL] Invalid int \(uint16)")
+      XCTAssertEqual(uint16, UInt64(0x0102), "\n[FAIL] Invalid int \(uint16)")
     } else {
       XCTFail("\n[FAIL] Failed to read varint")
     }
@@ -336,7 +336,7 @@ class BitcoinDecodingTests: XCTestCase {
     let inputStream = NSInputStream(data: data)
     inputStream.open()
     if let uint32 = inputStream.readVarInt() {
-      XCTAssertEqual(uint32, 0x01020304, "\n[FAIL] Invalid int \(uint32)")
+      XCTAssertEqual(uint32, UInt64(0x01020304), "\n[FAIL] Invalid int \(uint32)")
     } else {
       XCTFail("\n[FAIL] Failed to read varint")
     }
@@ -350,7 +350,7 @@ class BitcoinDecodingTests: XCTestCase {
     let inputStream = NSInputStream(data: data)
     inputStream.open()
     if let uint64 = inputStream.readVarInt() {
-      XCTAssertEqual(uint64, 0x0102030405060708, "\n[FAIL] Invalid int \(uint64)")
+      XCTAssertEqual(uint64, UInt64(0x0102030405060708), "\n[FAIL] Invalid int \(uint64)")
     } else {
       XCTFail("\n[FAIL] Failed to read varint")
     }

@@ -254,7 +254,7 @@ public extension NSInputStream {
     if servicesRaw == nil {
       return nil
     }
-    let services = PeerServices.fromMask(servicesRaw!)
+    let services = PeerServices(rawValue: servicesRaw!)
     let IP = readIPAddress()
     if IP == nil {
       return nil
@@ -275,7 +275,7 @@ public extension NSInputStream {
     if hash == nil {
       return nil
     }
-    let type = InventoryVector.VectorType.fromRaw(rawType!)
+    let type = InventoryVector.VectorType(rawValue: rawType!)
     if type == nil {
       return nil
     }

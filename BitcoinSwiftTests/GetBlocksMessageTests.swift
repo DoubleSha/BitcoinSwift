@@ -57,7 +57,7 @@ class GetBlocksMessageTests: XCTestCase {
         0x33, 0x48, 0x0b, 0xa7, 0x44, 0xd8, 0xf7, 0x24]   // blockHashStop
     let data = NSData(bytes: bytes, length: bytes.count)
     if let getBlocksMessage = GetBlocksMessage.fromData(data) {
-      XCTAssertEqual(getBlocksMessage.protocolVersion, 70001)
+      XCTAssertEqual(getBlocksMessage.protocolVersion, UInt32(70001))
       XCTAssertEqual(getBlocksMessage.blockLocatorHashes, [blockLocatorHash0, blockLocatorHash1])
       XCTAssertNotNil(getBlocksMessage.blockHashStop)
       XCTAssertEqual(getBlocksMessage.blockHashStop!, blockHashStop)
@@ -84,7 +84,7 @@ class GetBlocksMessageTests: XCTestCase {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]   // blockHashStop
     let data = NSData(bytes: bytes, length: bytes.count)
     if let getBlocksMessage = GetBlocksMessage.fromData(data) {
-      XCTAssertEqual(getBlocksMessage.protocolVersion, 70001)
+      XCTAssertEqual(getBlocksMessage.protocolVersion, UInt32(70001))
       XCTAssertEqual(getBlocksMessage.blockLocatorHashes, [blockLocatorHash0, blockLocatorHash1])
       XCTAssertNil(getBlocksMessage.blockHashStop)
     } else {

@@ -25,7 +25,7 @@ public extension Transaction {
 
   /// The time at which the transaction is locked. After this point, the transaction cannot be
   /// modified and will be mined by the miners.
-  public enum LockTime: RawRepresentable, Equatable {
+  public enum LockTime: Equatable {
 
     /// The transaction will be mined immediately, and cannot be modified after being broadcast.
     case AlwaysLocked
@@ -35,8 +35,6 @@ public extension Transaction {
 
     /// The date after which the transaction will be locked.
     case Date(NSDate)
-
-    // MARK: - RawRepresentable
 
     public static func fromRaw(raw: UInt32) -> LockTime? {
       switch raw {
@@ -49,7 +47,7 @@ public extension Transaction {
       }
     }
 
-    public func toRaw() -> UInt32 {
+    public var rawValue: UInt32 {
       switch self {
         case .AlwaysLocked: 
           return 0

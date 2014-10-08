@@ -29,7 +29,7 @@ class VersionMessageTests: XCTestCase {
         0x01]                                             // Announce relayed transactions (true)
     let data = NSData(bytes: bytes, length: bytes.count)
     if let versionMessage = VersionMessage.fromData(data) {
-      XCTAssertEqual(versionMessage.protocolVersion, 70001)
+      XCTAssertEqual(versionMessage.protocolVersion, UInt32(70001))
       XCTAssertEqual(versionMessage.services, PeerServices.NodeNetwork)
       XCTAssertEqual(versionMessage.date, NSDate(timeIntervalSince1970: 1355854353))
       let expectedReceiverPeerAddress = PeerAddress(services: PeerServices.NodeNetwork,
@@ -40,9 +40,9 @@ class VersionMessageTests: XCTestCase {
                                                   port: 8333)
       XCTAssertEqual(versionMessage.receiverAddress, expectedReceiverPeerAddress)
       XCTAssertEqual(versionMessage.senderAddress, expectedSenderPeerAddress)
-      XCTAssertEqual(versionMessage.nonce, 0x6517e68c5db32e3b)
+      XCTAssertEqual(versionMessage.nonce, UInt64(0x6517e68c5db32e3b))
       XCTAssertEqual(versionMessage.userAgent, "/Satoshi:0.7.2/")
-      XCTAssertEqual(versionMessage.blockStartHeight, 212672)
+      XCTAssertEqual(versionMessage.blockStartHeight, Int32(212672))
       XCTAssertTrue(versionMessage.announceRelayedTransactions)
     } else {
       XCTFail("\n[FAIL] Failed to parse VersionMessage")

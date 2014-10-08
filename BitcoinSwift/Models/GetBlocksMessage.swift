@@ -41,7 +41,7 @@ public struct GetBlocksMessage: MessagePayload {
     if let hashStop = blockHashStop {
       data.appendData(hashStop)
     } else {
-      data.appendData(NSMutableData(length: 32))
+      data.appendData(NSMutableData(length: 32)!)
     }
     return data
   }

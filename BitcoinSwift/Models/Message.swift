@@ -33,7 +33,7 @@ public struct Message: Equatable {
 
     public var magicBytes: [UInt8] {
       let data = NSMutableData()
-      data.appendUInt32(self.toRaw())
+      data.appendUInt32(rawValue)
       return data.UInt8Array()
     }
   }
@@ -73,8 +73,8 @@ public struct Message: Equatable {
 
     /// The command string encoded into 12 bytes, null padded.
     public var data: NSData {
-      var data = NSMutableData(length: Command.encodedLength)
-      let ASCIIStringData = self.toRaw().dataUsingEncoding(NSASCIIStringEncoding)!
+      var data = NSMutableData(length: Command.encodedLength)!
+      let ASCIIStringData = rawValue.dataUsingEncoding(NSASCIIStringEncoding)!
       data.replaceBytesInRange(NSRange(location: 0, length: ASCIIStringData.length),
                                withBytes: ASCIIStringData.bytes)
       return data

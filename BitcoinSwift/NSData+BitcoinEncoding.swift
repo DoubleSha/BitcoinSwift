@@ -172,13 +172,13 @@ public extension NSMutableData {
         appendUInt32(UInt32(NSDate().timeIntervalSince1970))
       }
     }
-    appendUInt64(peerAddress.services.toRaw())
+    appendUInt64(peerAddress.services.rawValue)
     appendIPAddress(peerAddress.IP)
     appendUInt16(peerAddress.port, endianness: .BigEndian)  // Network byte order.
   }
 
   public func appendInventoryVector(inventoryVector: InventoryVector) {
-    appendUInt32(inventoryVector.type.toRaw())
+    appendUInt32(inventoryVector.type.rawValue)
     self.appendData(inventoryVector.hash)
   }
 }
