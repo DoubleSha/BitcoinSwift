@@ -8,12 +8,24 @@
 
 import Foundation
 
+public func ==(lhs: VersionMessage, rhs: VersionMessage) -> Bool {
+  return lhs.protocolVersion == rhs.protocolVersion &&
+      lhs.services == rhs.services &&
+      lhs.date == rhs.date &&
+      lhs.senderAddress == rhs.senderAddress &&
+      lhs.receiverAddress == rhs.receiverAddress &&
+      lhs.nonce == rhs.nonce &&
+      lhs.userAgent == rhs.userAgent &&
+      lhs.blockStartHeight == rhs.blockStartHeight &&
+      lhs.announceRelayedTransactions == rhs.announceRelayedTransactions
+}
+
 /// Message payload object corresponding to the Message.Command.Version command. When a node creates
 /// an outgoing connection, it will immediately advertise its version with this message and the
 /// remote node will respond with its version. No further communication is possible until both peers
 /// have exchanged their version.
 /// https://en.bitcoin.it/wiki/Protocol_specification#version
-public struct VersionMessage {
+public struct VersionMessage: Equatable {
 
   public let protocolVersion: UInt32
   public let services: PeerServices

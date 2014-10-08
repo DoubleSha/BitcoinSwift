@@ -16,7 +16,7 @@ public func ==(lhs: InventoryMessage, rhs: InventoryMessage) -> Bool {
 /// advertise its knowledge of one or more objects. It can be received unsolicited, or in reply to
 /// getblocks.
 /// https://en.bitcoin.it/wiki/Protocol_specification#inv
-public struct InventoryMessage: MessagePayload, Equatable {
+public struct InventoryMessage: Equatable {
 
   public let inventoryVectors: [InventoryVector]
 
@@ -24,8 +24,9 @@ public struct InventoryMessage: MessagePayload, Equatable {
     precondition(inventoryVectors.count > 0 && inventoryVectors.count <= 50000)
     self.inventoryVectors = inventoryVectors
   }
+}
 
-  // MARK: - MessagePayload
+extension InventoryMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.Inventory

@@ -1,5 +1,5 @@
 //
-//  AddrMessageTests.swift
+//  AddressMessageTests.swift
 //  BitcoinSwift
 //
 //  Created by Kevin Greene on 8/14/14.
@@ -9,9 +9,9 @@
 import BitcoinSwift
 import XCTest
 
-class AddrMessageTests: XCTestCase {
+class AddressMessageTests: XCTestCase {
 
-  func testAddrMessageDecoding() {
+  func testAddressMessageDecoding() {
     let bytes: [UInt8] = [
         0x02,                                             // Number of addresses
         // First PeerAddress
@@ -27,9 +27,9 @@ class AddrMessageTests: XCTestCase {
         0x00, 0x00, 0xff, 0xff, 0x0a, 0x00, 0x00, 0x02,   // IP of 10.0.0.2
         0x20, 0x8d]                                       // Port 8333
     let data = NSData(bytes: bytes, length: bytes.count)
-    let addrMessage = AddrMessage.fromData(data)
-    if addrMessage != nil {
-      XCTAssertEqual(addrMessage!.peerAddresses.count, 2)
+    let addressMessage = AddressMessage.fromData(data)
+    if addressMessage != nil {
+      XCTAssertEqual(addressMessage!.peerAddresses.count, 2)
       let expectedPeerAddresses = [
           PeerAddress(services: PeerServices.NodeNetwork,
                       IP: IPAddress.IPV4(0x0a000001),
@@ -39,14 +39,14 @@ class AddrMessageTests: XCTestCase {
                       IP: IPAddress.IPV4(0x0a000002),
                       port: 8333,
                       timestamp: NSDate(timeIntervalSince1970: 1355854353))]
-      XCTAssertEqual(addrMessage!.peerAddresses[0], expectedPeerAddresses[0])
-      XCTAssertEqual(addrMessage!.peerAddresses[1], expectedPeerAddresses[1])
+      XCTAssertEqual(addressMessage!.peerAddresses[0], expectedPeerAddresses[0])
+      XCTAssertEqual(addressMessage!.peerAddresses[1], expectedPeerAddresses[1])
     } else {
-      XCTFail("\n[FAIL] Failed to parse AddrMessage")
+      XCTFail("\n[FAIL] Failed to parse AddressMessage")
     }
   }
 
-  func testAddrMessageDecodingTooManyPeerAddresses() {
+  func testAddressMessageDecodingTooManyPeerAddresses() {
     let bytes: [UInt8] = [
         0x01,                                             // Number of addresses
         // First PeerAddress
@@ -62,13 +62,13 @@ class AddrMessageTests: XCTestCase {
         0x00, 0x00, 0xff, 0xff, 0x0a, 0x00, 0x00, 0x02,   // IP of 10.0.0.2
         0x20, 0x8d]                                       // Port 8333
     let data = NSData(bytes: bytes, length: bytes.count)
-    let addrMessage = AddrMessage.fromData(data)
-    if addrMessage != nil {
-      XCTFail("\n[FAIL] Parsing AddrMessage should have failed")
+    let addressMessage = AddressMessage.fromData(data)
+    if addressMessage != nil {
+      XCTFail("\n[FAIL] Parsing AddressMessage should have failed")
     }
   }
 
-  func testAddrMessageEncoding() {
+  func testAddressMessageEncoding() {
     let peerAddresses = [
         PeerAddress(services: PeerServices.NodeNetwork,
                     IP: IPAddress.IPV4(0x0a000001),
@@ -78,7 +78,7 @@ class AddrMessageTests: XCTestCase {
                     IP: IPAddress.IPV4(0x0a000002),
                     port: 8333,
                     timestamp: NSDate(timeIntervalSince1970: 1355854353))]
-    let addrMessage = AddrMessage(peerAddresses: peerAddresses)
+    let addressMessage = AddressMessage(peerAddresses: peerAddresses)
     let expectedBytes: [UInt8] = [
         0x02,                                             // Number of addresses
         // First PeerAddress
@@ -94,6 +94,6 @@ class AddrMessageTests: XCTestCase {
         0x00, 0x00, 0xff, 0xff, 0x0a, 0x00, 0x00, 0x02,   // IP of 10.0.0.2
         0x20, 0x8d]                                       // Port 8333
     let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
-    XCTAssertEqual(addrMessage.data, expectedData)
+    XCTAssertEqual(addressMessage.data, expectedData)
   }
 }

@@ -8,11 +8,15 @@
 
 import Foundation
 
+public func ==(lhs: PingMessage, rhs: PingMessage) -> Bool {
+  return lhs.nonce == rhs.nonce
+}
+
 /// The ping message is sent primarily to confirm that the TCP/IP connection is still valid. An
 /// error in transmission is presumed to be a closed connection and the address is removed as a
 /// current peer.
 /// https://en.bitcoin.it/wiki/Protocol_specification#ping
-public struct PingMessage: MessagePayload {
+public struct PingMessage: Equatable {
 
   public var nonce: UInt64
 
@@ -23,8 +27,9 @@ public struct PingMessage: MessagePayload {
       self.nonce = UInt64(arc4random()) | (UInt64(arc4random()) << 32)
     }
   }
+}
 
-  // MARK: - MessagePayload
+extension PingMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.Ping

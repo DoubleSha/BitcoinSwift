@@ -8,11 +8,17 @@
 
 import Foundation
 
+public func ==(lhs: GetBlocksMessage, rhs: GetBlocksMessage) -> Bool {
+  return lhs.protocolVersion == rhs.protocolVersion &&
+      lhs.blockLocatorHashes == rhs.blockLocatorHashes &&
+      lhs.blockHashStop == rhs.blockHashStop
+}
+
 /// Message payload object corresponding to the Message.Command.GetBlocks command. Return an inv
 /// packet containing the list of blocks starting right after the last known hash in the block
 /// locator object, up to blockHashStop or 500 blocks, whichever comes first.
 /// https://en.bitcoin.it/wiki/Protocol_specification#getblocks
-public struct GetBlocksMessage: MessagePayload {
+public struct GetBlocksMessage: Equatable {
 
   public let protocolVersion: UInt32
   public let blockLocatorHashes: [NSData]
@@ -24,8 +30,9 @@ public struct GetBlocksMessage: MessagePayload {
     self.blockLocatorHashes = blockLocatorHashes
     self.blockHashStop = blockHashStop
   }
+}
 
-  // MARK: - MessagePayload
+extension GetBlocksMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.GetBlocks

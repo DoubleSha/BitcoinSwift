@@ -8,18 +8,23 @@
 
 import Foundation
 
+public func ==(lhs: PongMessage, rhs: PongMessage) -> Bool {
+  return lhs.nonce == rhs.nonce
+}
+
 /// The pong message is sent in response to a ping message, generated using a nonce included in the 
 /// ping.
 /// https://en.bitcoin.it/wiki/Protocol_specification#pong
-public struct PongMessage: MessagePayload {
+public struct PongMessage: Equatable {
 
   public var nonce: UInt64
 
   public init(nonce: UInt64) {
     self.nonce = nonce
   }
+}
 
-  // MARK: - MessagePayload
+extension PongMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.Pong

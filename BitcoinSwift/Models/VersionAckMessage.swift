@@ -14,8 +14,6 @@ import Foundation
 /// https://en.bitcoin.it/wiki/Protocol_specification#verack
 public struct VersionAckMessage: MessagePayload {
 
-  // MARK: - MessagePayload
-
   public var command: Message.Command {
     return Message.Command.VersionAck
   }

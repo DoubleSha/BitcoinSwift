@@ -8,12 +8,16 @@
 
 import Foundation
 
+public func ==(lhs: GetDataMessage, rhs: GetDataMessage) -> Bool {
+  return lhs.inventoryVectors == rhs.inventoryVectors
+}
+
 /// Message payload object corresponding to the Message.Command.GetData command. Used in response
 /// to an 'inv' message to retrieve the content of a specific object. It can be used to retrieve
 /// transactions, but only if they are in the memory pool or relay set. Arbitrary access to
 /// transactions in the chain is not allowed.
 /// https://en.bitcoin.it/wiki/Protocol_specification#getdata
-public struct GetDataMessage: MessagePayload {
+public struct GetDataMessage: Equatable {
 
   public let inventoryVectors: [InventoryVector]
 
@@ -21,8 +25,9 @@ public struct GetDataMessage: MessagePayload {
     assert(inventoryVectors.count > 0 && inventoryVectors.count <= 50000)
     self.inventoryVectors = inventoryVectors
   }
+}
 
-  // MARK: - MessagePayload
+extension GetDataMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.GetData

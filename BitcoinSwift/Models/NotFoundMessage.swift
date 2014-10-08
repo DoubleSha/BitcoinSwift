@@ -16,7 +16,7 @@ public func ==(lhs: NotFoundMessage, rhs: NotFoundMessage) -> Bool {
 /// getdata, sent if any requested data items could not be relayed. For example, the requested
 /// transaction may not be in the memory pool or relay set.
 /// https://en.bitcoin.it/wiki/Protocol_specification#notfound
-public struct NotFoundMessage: MessagePayload, Equatable {
+public struct NotFoundMessage: Equatable {
 
   public let inventoryVectors: [InventoryVector]
 
@@ -24,8 +24,9 @@ public struct NotFoundMessage: MessagePayload, Equatable {
     precondition(inventoryVectors.count > 0 && inventoryVectors.count <= 50000)
     self.inventoryVectors = inventoryVectors
   }
+}
 
-  // MARK: - MessagePayload
+extension NotFoundMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.NotFound
