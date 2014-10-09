@@ -1,5 +1,8 @@
 Build status: [![Build Status](https://travis-ci.org/DoubleSha/BitcoinSwift.svg?branch=master)](https://travis-ci.org/DoubleSha/BitcoinSwift)
 
+Note: Travis-CI doesn't work yet with 6.1, so it'll be broken until they fix that.
+
+
 BitcoinSwift
 ============
 
