@@ -40,7 +40,7 @@ class PeerConnectionTests: XCTestCase {
   private var inputStreamDelegate: TestInputStreamDelegate!
   private var outputStreamDelegate: TestOutputStreamDelegate!
 
-  // If non-nil, fulfilled when peerConnection(: didFailWithError: ) is invoked.
+  // If non-nil, fulfilled when peerConnection(:didDisconnectWithError:) is invoked.
   private var connectionDidFailExpectation: XCTestExpectation?
   private var connectionDidConnectExpectation: XCTestExpectation?
 
@@ -133,7 +133,7 @@ extension PeerConnectionTests: PeerConnectionDelegate {
     connectionDidConnectExpectation?.fulfill()
   }
 
-  func peerConnection(peerConnection: PeerConnection, didFailWithError error: NSError?) {
+  func peerConnection(peerConnection: PeerConnection, didDisconnectWithError error: NSError?) {
     connectionDidFailExpectation?.fulfill()
   }
 }

@@ -19,7 +19,7 @@ public protocol PeerConnectionDelegate: class {
 
   /// Called when the connection to the remote peer is closed for any reason.
   /// If the connection was closed due to an error, then error will be non-nil.
-  func peerConnection(peerConnection: PeerConnection, didFailWithError error: NSError?)
+  func peerConnection(peerConnection: PeerConnection, didDisconnectWithError error: NSError?)
 }
 
 /// A PeerConnection handles the low-level socket connection to a peer and serializing/deserializing
@@ -331,7 +331,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
       dispatch_async(self.delegateQueue) {
         // For some reason, using self.delegate? within a block doesn't compile... Xcode bug?
         if let delegate = self.delegate {
-          delegate.peerConnection(self, didFailWithError: error)
+          delegate.peerConnection(self, didDisconnectWithError: error)
         }
       }
       self.networkThread.cancel()
