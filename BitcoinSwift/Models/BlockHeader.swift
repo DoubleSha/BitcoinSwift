@@ -70,32 +70,32 @@ extension Block.Header {
     }
     let version = stream.readUInt32()
     if version == nil {
-      println("WARN: Failed to parse version from Block.Header")
+      Logger.warn("Failed to parse version from Block.Header")
       return nil
     }
     let previousBlockHash = stream.readData(length: 32)
     if previousBlockHash == nil {
-      println("WARN: Failed to parse previousBlockHash from Block.Header")
+      Logger.warn("Failed to parse previousBlockHash from Block.Header")
       return nil
     }
     let merkleRoot = stream.readData(length: 32)
     if merkleRoot == nil {
-      println("WARN: Failed to parse merkleRoot from Block.Header")
+      Logger.warn("Failed to parse merkleRoot from Block.Header")
       return nil
     }
     let timestamp = stream.readDateFromUnixTimestamp()
     if timestamp == nil {
-      println("WARN: Failed to parse timestamp from Block.Header")
+      Logger.warn("Failed to parse timestamp from Block.Header")
       return nil
     }
     let difficultyBits = stream.readUInt32()
     if difficultyBits == nil {
-      println("WARN: Failed to parse difficultyBits from Block.Header")
+      Logger.warn("Failed to parse difficultyBits from Block.Header")
       return nil
     }
     let nonce = stream.readUInt32()
     if nonce == nil {
-      println("WARN: Failed to parse nonce from Block.Header")
+      Logger.warn("Failed to parse nonce from Block.Header")
       return nil
     }
     return Block.Header(version: version!,

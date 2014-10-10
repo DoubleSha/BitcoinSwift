@@ -47,32 +47,32 @@ extension Message {
       }
       let networkRaw = stream.readUInt32()
       if networkRaw == nil {
-        println("WARN: Failed to parse network magic value in message header")
+        Logger.warn("Failed to parse network magic value in message header")
         return nil
       }
       let network = Network(rawValue: networkRaw!)
       if network == nil {
-        println("WARN: Unsupported network \(networkRaw!) in message header")
+        Logger.warn("Unsupported network \(networkRaw!) in message header")
         return nil
       }
       let commandRaw = stream.readASCIIStringWithLength(Command.encodedLength)
       if commandRaw == nil {
-        println("WARN: Failed to parse command in message header")
+        Logger.warn("Failed to parse command in message header")
         return nil
       }
       let command = Command(rawValue: commandRaw!)
       if command == nil {
-        println("WARN: Unsupported command \(commandRaw!) in message header")
+        Logger.warn("Unsupported command \(commandRaw!) in message header")
         return nil
       }
       let payloadLength = stream.readUInt32()
       if payloadLength == nil {
-        println("WARN: Failed to parse size in message header")
+        Logger.warn("Failed to parse size in message header")
         return nil
       }
       let payloadChecksum = stream.readUInt32()
       if payloadChecksum == nil {
-        println("WARN: Failed to parse payload checksum in message header")
+        Logger.warn("Failed to parse payload checksum in message header")
         return nil
       }
       return Header(network: network!,

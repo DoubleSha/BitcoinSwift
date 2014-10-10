@@ -61,26 +61,26 @@ extension GetHeadersMessage: MessagePayload {
     stream.open()
     let protocolVersion = stream.readUInt32()
     if protocolVersion == nil {
-      println("WARN: Failed to parse protocolVersion from GetHeadersMessage \(data)")
+      Logger.warn("Failed to parse protocolVersion from GetHeadersMessage \(data)")
       return nil
     }
     let hashCount = stream.readVarInt()
     if hashCount == nil {
-      println("WARN: Failed to parse hashCount from GetHeadersMessage \(data)")
+      Logger.warn("Failed to parse hashCount from GetHeadersMessage \(data)")
       return nil
     }
     var blockLocatorHashes: [NSData] = []
     for _ in 0..<hashCount! {
       let blockLocatorHash = stream.readData(length: 32)
       if blockLocatorHash == nil {
-        println("WARN: Failed to parse blockLocatorHash from GetHeadersMessage \(data)")
+        Logger.warn("Failed to parse blockLocatorHash from GetHeadersMessage \(data)")
         return nil
       }
       blockLocatorHashes.append(blockLocatorHash!)
     }
     var blockHashStop = stream.readData(length: 32)
     if blockHashStop == nil {
-      println("WARN: Failed to parse blockHashStop from GetHeadersMessage \(data)")
+      Logger.warn("Failed to parse blockHashStop from GetHeadersMessage \(data)")
       return nil
     }
     let zeroHash = NSMutableData(length: 32)

@@ -86,7 +86,7 @@ public class MessageParser {
       if message.isChecksumValid() {
         delegate?.didParseMessage(message)
       } else {
-        println("WARN: Dropping \(message.command.rawValue) message with invalid checksum")
+        Logger.warn("Dropping \(message.command.rawValue) message with invalid checksum")
       }
       receivedBytes.removeRange(0..<payloadLength)
       receivedHeader = nil

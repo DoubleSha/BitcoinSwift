@@ -65,45 +65,45 @@ extension Transaction: MessagePayload {
     }
     let version = stream.readUInt32()
     if version == nil {
-      println("WARN: Failed to parse version in Transaction")
+      Logger.warn("Failed to parse version in Transaction")
       return nil
     }
     let inputCount = stream.readVarInt()
     if inputCount == nil {
-      println("WARN: Failed to parse inputCount in Transaction")
+      Logger.warn("Failed to parse inputCount in Transaction")
       return nil
     }
     var inputs: [Input] = []
     for i in 0..<inputCount! {
       let input = Input.fromStream(stream)
       if input == nil {
-        println("WARN: Failed to parse input at index \(i) in Transaction")
+        Logger.warn("Failed to parse input at index \(i) in Transaction")
         return nil
       }
       inputs.append(input!)
     }
     let outputCount = stream.readVarInt()
     if outputCount == nil {
-      println("WARN: Failed to parse outputCount in Transaction")
+      Logger.warn("Failed to parse outputCount in Transaction")
       return nil
     }
     var outputs: [Output] = []
     for i in 0..<outputCount! {
       let output = Output.fromStream(stream)
       if output == nil {
-        println("WARN: Failed to parse output at index \(i) in Transaction")
+        Logger.warn("Failed to parse output at index \(i) in Transaction")
         return nil
       }
       outputs.append(output!)
     }
     let lockTimeRaw = stream.readUInt32()
     if lockTimeRaw == nil {
-      println("WARN: Failed to parse lockTime in Transaction")
+      Logger.warn("Failed to parse lockTime in Transaction")
       return nil
     }
     let lockTime = LockTime.fromRaw(lockTimeRaw!)
     if lockTime == nil {
-      println("WARN: Invalid LockTime \(lockTimeRaw) in Transaction")
+      Logger.warn("Invalid LockTime \(lockTimeRaw) in Transaction")
       return nil
     }
     return Transaction(version: version!, inputs: inputs, outputs: outputs, lockTime: lockTime!)

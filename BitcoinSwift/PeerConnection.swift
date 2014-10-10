@@ -116,7 +116,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     precondition(!receivedVersionAck)
     precondition(connectionTimeoutTimer == nil)
     setStatus(.Connecting)
-    println("Attempting to connect to peer \(peerHostname!): \(peerPort)")
+    Logger.info("Attempting to connect to peer \(peerHostname!): \(peerPort)")
     connectionTimeoutTimer =
         NSTimer.scheduledTimerWithTimeInterval(timeout,
                                                target: self,
@@ -180,7 +180,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
       case NSStreamEvent.EndEncountered: 
         disconnectWithError(errorWithCode(.StreamEndEncountered))
       default: 
-        println("ERROR: Invalid NSStreamEvent \(event)")
+        Logger.error("Invalid NSStreamEvent \(event)")
         assert(false, "Invalid NSStreamEvent")
     }
   }
@@ -192,11 +192,11 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   // have a length of 0.
   public func didParseMessage(message: Message) {
     // TODO: Add the rest of the messages.
-    println("Received \(message.header.command.rawValue) message")
+    Logger.debug("Received \(message.header.command.rawValue) message")
     switch message.header.command {
       case .Version: 
         if peerVersion != nil {
-          println("WARN: Received extraneous VersionMessage. Ignoring")
+          Logger.warn("Received extraneous VersionMessage. Ignoring")
           break
         }
         assert(status == .Connecting)
@@ -218,7 +218,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
         if status != .Connecting {
           // The connection might have been cancelled, or it might have failed. For example,
           // the connection can fail if we received an invalid VersionMessage from the peer.
-          println("WARN: Ignoring VersionAck message because not in Connecting state")
+          Logger.warn("Ignoring VersionAck message because not in Connecting state")
           return
         }
         receivedVersionAck = true
@@ -226,7 +226,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           didConnect()
         }
       default: 
-        println("WARN: Received unknown command \(message.header.command.rawValue). Ignoring")
+        Logger.warn("Received unknown command \(message.header.command.rawValue). Ignoring")
     }
   }
 
@@ -245,7 +245,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
                                        &readStream,
                                        &writeStream);
     if readStream == nil || writeStream == nil {
-      println("Connection failed to peer \(self.peerHostname!): \(self.peerPort)")
+      Logger.info("Connection failed to peer \(self.peerHostname!): \(self.peerPort)")
       self.setStatus(.NotConnected)
       return nil
     }
@@ -269,7 +269,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     }
     if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
       let message = messageSendQueue.removeAtIndex(0)
-      println("Sending \(message.header.command.rawValue) message")
+      Logger.debug("Sending \(message.header.command.rawValue) message")
       pendingSendBytes += message.data.UInt8Array()
     }
     if pendingSendBytes.count > 0 {
@@ -342,6 +342,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     precondition(status == .Connecting)
     precondition(self.peerVersion != nil)
     precondition(receivedVersionAck)
+    Logger.info("Connected to peer \(peerHostname!): \(peerPort)")
     connectionTimeoutTimer?.invalidate()
     connectionTimeoutTimer = nil
     setStatus(.Connected)

@@ -50,28 +50,28 @@ extension GetDataMessage: MessagePayload {
     stream.open()
     let inventoryCount = stream.readVarInt()
     if inventoryCount == nil {
-      println("WARN: Failed to parse count from GetDataMessage \(data)")
+      Logger.warn("Failed to parse count from GetDataMessage \(data)")
       return nil
     }
     if inventoryCount! == 0 {
-      println("WARN: Failed to parse GetDataMessage. Count is zero \(data)")
+      Logger.warn("Failed to parse GetDataMessage. Count is zero \(data)")
       return nil
     }
     if inventoryCount! > 50000 {
-      println("WARN: Failed to parse GetDataMessage. Count is greater than 50000 \(data)")
+      Logger.warn("Failed to parse GetDataMessage. Count is greater than 50000 \(data)")
       return nil
     }
     var inventoryVectors: [InventoryVector] = []
     for _ in 0..<inventoryCount! {
       let inventoryVector = stream.readInventoryVector()
       if inventoryVector == nil {
-        println("WARN: Failed to parse inventory vector from GetDataMessage \(data)")
+        Logger.warn("Failed to parse inventory vector from GetDataMessage \(data)")
         return nil
       }
       inventoryVectors.append(inventoryVector!)
     }
     if stream.hasBytesAvailable {
-      println("WARN: Failed to parse GetDataMessage. Too many vectors \(data)")
+      Logger.warn("Failed to parse GetDataMessage. Too many vectors \(data)")
       return nil
     }
     return GetDataMessage(inventoryVectors: inventoryVectors)

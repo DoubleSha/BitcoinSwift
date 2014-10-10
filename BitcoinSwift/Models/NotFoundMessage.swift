@@ -49,28 +49,28 @@ extension NotFoundMessage: MessagePayload {
     stream.open()
     let inventoryCount = stream.readVarInt()
     if inventoryCount == nil {
-      println("WARN: Failed to parse count from NotFoundMessage \(data)")
+      Logger.warn("Failed to parse count from NotFoundMessage \(data)")
       return nil
     }
     if inventoryCount! == 0 {
-      println("WARN: Failed to parse NotFoundMessage. Count is zero \(data)")
+      Logger.warn("Failed to parse NotFoundMessage. Count is zero \(data)")
       return nil
     }
     if inventoryCount! > 50000 {
-      println("WARN: Failed to parse NotFoundMessage. Count is greater than 50000 \(data)")
+      Logger.warn("Failed to parse NotFoundMessage. Count is greater than 50000 \(data)")
       return nil
     }
     var inventoryVectors: [InventoryVector] = []
     for _ in 0..<inventoryCount! {
       let inventoryVector = stream.readInventoryVector()
       if inventoryVector == nil {
-        println("WARN: Failed to parse inventory vector from NotFoundMessage \(data)")
+        Logger.warn("Failed to parse inventory vector from NotFoundMessage \(data)")
         return nil
       }
       inventoryVectors.append(inventoryVector!)
     }
     if stream.hasBytesAvailable {
-      println("WARN: Failed to parse NotFoundMessage. Too many vectors \(data)")
+      Logger.warn("Failed to parse NotFoundMessage. Too many vectors \(data)")
       return nil
     }
     return NotFoundMessage(inventoryVectors: inventoryVectors)

@@ -52,19 +52,19 @@ extension Block: MessagePayload {
     stream.open()
     let header = Header.fromStream(stream)
     if header == nil {
-      println("WARN: Failed to parse header from BlockMessage \(data)")
+      Logger.warn("Failed to parse header from BlockMessage \(data)")
       return nil
     }
     let transactionsCount = stream.readVarInt()
     if transactionsCount == nil {
-      println("WARN: Failed to parse transactionsCount from BlockMessage \(data)")
+      Logger.warn("Failed to parse transactionsCount from BlockMessage \(data)")
       return nil
     }
     var transactions: [Transaction] = []
     for i in 0..<transactionsCount! {
       let transaction = Transaction.fromStream(stream)
       if transaction == nil {
-        println("WARN: Failed to parse transaction at index \(i) from BlockMessage \(data)")
+        Logger.warn("Failed to parse transaction at index \(i) from BlockMessage \(data)")
         return nil
       }
       transactions.append(transaction!)

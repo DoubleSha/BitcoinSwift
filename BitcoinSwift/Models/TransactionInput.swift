@@ -67,17 +67,17 @@ public extension Transaction.Input {
     }
     let scriptSignatureLength = stream.readVarInt()
     if scriptSignatureLength == nil {
-      println("WARN: Failed to parse scriptSignatureLength in Transaction.Input")
+      Logger.warn("Failed to parse scriptSignatureLength in Transaction.Input")
       return nil
     }
     let scriptSignature = stream.readData(length: Int(scriptSignatureLength!))
     if scriptSignature == nil {
-      println("WARN: Failed to parse scriptSignature in Transaction.Input")
+      Logger.warn("Failed to parse scriptSignature in Transaction.Input")
       return nil
     }
     let sequence = stream.readUInt32()
     if sequence == nil {
-      println("WARN: Failed to parse sequence in Transaction.Input")
+      Logger.warn("Failed to parse sequence in Transaction.Input")
       return nil
     }
     return Transaction.Input(outPoint: outPoint!,

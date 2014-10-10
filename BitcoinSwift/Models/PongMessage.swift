@@ -38,18 +38,18 @@ extension PongMessage: MessagePayload {
 
   public static func fromData(data: NSData) -> PongMessage? {
     if data.length == 0 {
-      println("WARN: No data passed to PongMessage \(data)")
+      Logger.warn("No data passed to PongMessage \(data)")
       return nil
     }
     let stream = NSInputStream(data: data)
     stream.open()
     let nonce = stream.readUInt64()
     if nonce == nil {
-      println("WARN: Failed to parse nonce from PingMessage \(data)")
+      Logger.warn("Failed to parse nonce from PingMessage \(data)")
       return nil
     }
     if stream.hasBytesAvailable {
-      println("WARN: Failed to parse PingMessage. Too much data \(data)")
+      Logger.warn("Failed to parse PingMessage. Too much data \(data)")
       return nil
     }
     return PongMessage(nonce: nonce!)

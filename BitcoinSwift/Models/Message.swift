@@ -135,7 +135,7 @@ public struct Message: Equatable {
     }
     let payloadData = stream.readData()
     if payloadData == nil || payloadData!.length == 0 {
-      println("WARN: Failed to parse payload in message")
+      Logger.warn("Failed to parse payload in message")
       return nil
     }
     stream.close()

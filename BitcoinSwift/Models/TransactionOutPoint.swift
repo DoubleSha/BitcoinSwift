@@ -50,12 +50,12 @@ public extension Transaction.OutPoint {
     }
     let transactionHash = stream.readData(length: 32)
     if transactionHash == nil {
-      println("WARN: Failed to parse transactionHash in Transaction.Input.Outpoint")
+      Logger.warn("Failed to parse transactionHash in Transaction.Input.Outpoint")
       return nil
     }
     let index = stream.readUInt32()
     if index == nil {
-      println("WARN: Failed to parse index in Transaction.Input.Outpoint")
+      Logger.warn("Failed to parse index in Transaction.Input.Outpoint")
       return nil
     }
     return Transaction.OutPoint(transactionHash: transactionHash!, index: index!)

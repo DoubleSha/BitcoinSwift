@@ -53,17 +53,17 @@ public extension Transaction.Output {
     }
     let value = stream.readInt64()
     if value == nil {
-      println("WARN: Failed to parse value from Transaction.Output")
+      Logger.warn("Failed to parse value from Transaction.Output")
       return nil
     }
     let scriptLength = stream.readVarInt()
     if scriptLength == nil {
-      println("WARN: Failed to parse scriptLength from Transaction.Output")
+      Logger.warn("Failed to parse scriptLength from Transaction.Output")
       return nil
     }
     let script = stream.readData(length: Int(scriptLength!))
     if script == nil {
-      println("WARN: Failed to parse script from Transaction.Output")
+      Logger.warn("Failed to parse script from Transaction.Output")
       return nil
     }
     // TODO: Validate script.
