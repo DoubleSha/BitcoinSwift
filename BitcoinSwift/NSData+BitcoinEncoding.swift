@@ -158,8 +158,12 @@ public extension NSMutableData {
     }
   }
 
-  public func appendDateAsUnixTimestamp(date: NSDate, endianness: Endianness = .LittleEndian) {
+  public func appendDateAs32BitUnixTimestamp(date: NSDate, endianness: Endianness = .LittleEndian) {
     appendUInt32(UInt32(date.timeIntervalSince1970), endianness: endianness)
+  }
+
+  public func appendDateAs64BitUnixTimestamp(date: NSDate, endianness: Endianness = .LittleEndian) {
+    appendUInt64(UInt64(date.timeIntervalSince1970), endianness: endianness)
   }
 
   // TODO: The functions below don't belong here. Move them somewhere else.

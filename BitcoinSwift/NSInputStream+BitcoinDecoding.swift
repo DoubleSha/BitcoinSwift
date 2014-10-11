@@ -231,8 +231,16 @@ public extension NSInputStream {
     return IPAddress.IPV6(word0!, word1!, word2!, word3!)
   }
 
-  public func readDateFromUnixTimestamp(endianness: Endianness = .LittleEndian) -> NSDate? {
+  public func readDateFrom32BitUnixTimestamp(endianness: Endianness = .LittleEndian) -> NSDate? {
     let rawTimestamp = readUInt32(endianness: endianness)
+    if rawTimestamp == nil {
+      return nil
+    }
+    return NSDate(timeIntervalSince1970: NSTimeInterval(rawTimestamp!))
+  }
+
+  public func readDateFrom64BitUnixTimestamp(endianness: Endianness = .LittleEndian) -> NSDate? {
+    let rawTimestamp = readUInt64(endianness: endianness)
     if rawTimestamp == nil {
       return nil
     }

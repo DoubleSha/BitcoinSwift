@@ -179,11 +179,20 @@ class BitcoinEncodingTests: XCTestCase {
     XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
   }
 
-  func testAppendDate() {
+  func testAppendDateAs32BitUnixTimestamp() {
     let date = NSDate(timeIntervalSince1970: NSTimeInterval(0x4d1015e2))
     var data = NSMutableData()
-    data.appendDateAsUnixTimestamp(date)
+    data.appendDateAs32BitUnixTimestamp(date)
     let expectedBytes: [UInt8] = [0xe2, 0x15, 0x10, 0x4d]
+    let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
+    XCTAssertEqual(data, expectedData)
+  }
+
+  func testAppendDateAs64BitUnixTimestamp() {
+    let date = NSDate(timeIntervalSince1970: NSTimeInterval(0x4d1015e2))
+    var data = NSMutableData()
+    data.appendDateAs64BitUnixTimestamp(date)
+    let expectedBytes: [UInt8] = [0xe2, 0x15, 0x10, 0x4d, 0x00, 0x00, 0x00, 0x00]
     let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
     XCTAssertEqual(data, expectedData)
   }

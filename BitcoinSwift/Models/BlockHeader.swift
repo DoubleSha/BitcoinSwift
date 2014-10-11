@@ -58,7 +58,7 @@ extension Block.Header {
     data.appendUInt32(version)
     data.appendData(previousBlockHash)
     data.appendData(merkleRoot)
-    data.appendDateAsUnixTimestamp(timestamp)
+    data.appendDateAs32BitUnixTimestamp(timestamp)
     data.appendUInt32(difficultyBits)
     data.appendUInt32(nonce)
     return data
@@ -83,7 +83,7 @@ extension Block.Header {
       Logger.warn("Failed to parse merkleRoot from Block.Header")
       return nil
     }
-    let timestamp = stream.readDateFromUnixTimestamp()
+    let timestamp = stream.readDateFrom32BitUnixTimestamp()
     if timestamp == nil {
       Logger.warn("Failed to parse timestamp from Block.Header")
       return nil

@@ -413,12 +413,25 @@ class BitcoinDecodingTests: XCTestCase {
     inputStream.close()
   }
 
-  func testReadDateFromUnixTimestamp() {
+  func testReadDateFrom32BitUnixTimestamp() {
     let bytes: [UInt8] = [0xe2, 0x15, 0x10, 0x4d]
     let data = NSData(bytes: bytes, length: bytes.count)
     let inputStream = NSInputStream(data: data)
     inputStream.open()
-    if let date = inputStream.readDateFromUnixTimestamp() {
+    if let date = inputStream.readDateFrom32BitUnixTimestamp() {
+      let expectedDate = NSDate(timeIntervalSince1970: NSTimeInterval(0x4d1015e2))
+      XCTAssertEqual(date, expectedDate)
+    } else {
+      XCTFail("\n[FAIL] Failed to parse Date")
+    }
+  }
+
+  func testReadDateFrom64BitUnixTimestamp() {
+    let bytes: [UInt8] = [0xe2, 0x15, 0x10, 0x4d, 0x00, 0x00, 0x00, 0x00]
+    let data = NSData(bytes: bytes, length: bytes.count)
+    let inputStream = NSInputStream(data: data)
+    inputStream.open()
+    if let date = inputStream.readDateFrom64BitUnixTimestamp() {
       let expectedDate = NSDate(timeIntervalSince1970: NSTimeInterval(0x4d1015e2))
       XCTAssertEqual(date, expectedDate)
     } else {
