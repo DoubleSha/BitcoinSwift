@@ -24,6 +24,7 @@ public func ==(lhs: Message, rhs: Message) -> Bool {
 
 /// Wrapper struct that contains the header and payload for sending a message.
 /// Use this to serialize/deserialize messages to/from the Bitcoin P2P wire format.
+/// https://en.bitcoin.it/wiki/Protocol_specification#Message_structure
 public struct Message: Equatable {
 
   /// Magic value indicating message origin network, and used to seek to next message when stream
@@ -44,19 +45,16 @@ public struct Message: Equatable {
   public enum Command: String {
     case Version = "version"
     case VersionAck = "verack"
-    case Addr = "addr"
+    case Address = "addr"
     case Inventory = "inv"
-    // TODO: Define message structs for each of the message types below.
-    // In progress.
     case GetData = "getdata"
-    // Not started.
     case NotFound = "notfound"
     case GetBlocks = "getblocks"
     case GetHeaders = "getheaders"
     case Transaction = "tx"
     case Block = "block"
     case Headers = "headers"
-    case GetAddr = "getaddr"
+    case GetAddress = "getaddr"
     case MemPool = "mempool"
     case Ping = "ping"
     case Pong = "pong"

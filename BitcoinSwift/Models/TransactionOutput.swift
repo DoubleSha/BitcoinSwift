@@ -16,6 +16,7 @@ public extension Transaction {
 
   /// An Output represents the bitcoin being received in a Transaction. It can then later be spent
   /// by an Input in another transaction.
+  /// https://en.bitcoin.it/wiki/Protocol_specification#tx
   public struct Output: Equatable {
 
     /// The value being sent in this output, in satoshi.

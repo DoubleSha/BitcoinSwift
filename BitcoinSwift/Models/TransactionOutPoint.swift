@@ -15,6 +15,7 @@ public func ==(lhs: Transaction.OutPoint, rhs: Transaction.OutPoint) -> Bool {
 public extension Transaction {
 
   /// Reference to an output in another transaction.
+  /// https://en.bitcoin.it/wiki/Protocol_specification#tx
   public struct OutPoint: Equatable {
 
     /// The hash of the transaction that contains this output.

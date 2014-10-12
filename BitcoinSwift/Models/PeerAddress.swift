@@ -15,6 +15,8 @@ public func ==(lhs: PeerAddress, rhs: PeerAddress) -> Bool {
       lhs.timestamp == rhs.timestamp
 }
 
+/// Used to represent networks addresses of peers over the wire.
+/// https://en.bitcoin.it/wiki/Protocol_specification#Network_address
 public struct PeerAddress: Equatable {
 
   public let services: PeerServices

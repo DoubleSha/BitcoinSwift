@@ -15,6 +15,7 @@ public func ==(lhs: Block, rhs: Block) -> Bool {
 /// Message payload object corresponding to the Message.Command.Block command. The block message
 /// is sent in response to a getdata message which requests transaction information from a
 /// block hash.
+/// https://en.bitcoin.it/wiki/Protocol_specification#block
 public struct Block: Equatable {
 
   public let header: Header

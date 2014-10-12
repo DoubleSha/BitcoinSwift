@@ -15,6 +15,8 @@ public func ==(lhs: Transaction, rhs: Transaction) -> Bool {
       lhs.lockTime == rhs.lockTime
 }
 
+/// Represents a Bitcoin transaction.
+/// https://en.bitcoin.it/wiki/Protocol_specification#tx
 public struct Transaction: Equatable {
 
   public let version: UInt32

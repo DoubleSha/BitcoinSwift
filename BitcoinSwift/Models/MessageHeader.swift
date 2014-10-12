@@ -17,6 +17,8 @@ public func ==(lhs: Message.Header, rhs: Message.Header) -> Bool {
 
 extension Message {
 
+  /// Metadata about the message.
+  /// https://en.bitcoin.it/wiki/Protocol_specification#Message_structure
   public struct Header: Equatable {
 
     public let network: Network

@@ -18,6 +18,7 @@ public func ==(lhs: AlertMessage, rhs: AlertMessage) -> Bool {
 /// Attempts to perform transactions, particularly automated transactions through the client, are
 /// suggested to be halted. The text in the Message string should be relayed to log files and any
 /// user interfaces.
+/// https://en.bitcoin.it/wiki/Protocol_specification#alert
 public struct AlertMessage: Equatable {
 
   public let alert: Alert

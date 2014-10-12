@@ -18,6 +18,7 @@ public extension Transaction {
 
   /// An Input represents the bitcoin being sent in a Transaction. It spends an Output from a
   /// previous transaction, referenced by outPoint.
+  /// https://en.bitcoin.it/wiki/Protocol_specification#tx
   public struct Input: Equatable {
 
     /// Reference to the output that this input is spending.

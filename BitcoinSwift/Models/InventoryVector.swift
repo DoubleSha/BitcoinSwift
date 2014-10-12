@@ -12,6 +12,9 @@ public func ==(lhs: InventoryVector, rhs: InventoryVector) -> Bool {
   return lhs.type == rhs.type && lhs.hash == rhs.hash
 }
 
+/// Inventory vectors are used for notifying other nodes about objects they have or data which is
+/// being requested.
+/// https://en.bitcoin.it/wiki/Protocol_specification#Inventory_Vectors
 public struct InventoryVector: Equatable {
 
   public enum VectorType: UInt32 {

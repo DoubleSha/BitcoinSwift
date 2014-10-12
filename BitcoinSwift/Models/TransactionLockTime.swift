@@ -25,6 +25,7 @@ public extension Transaction {
 
   /// The time at which the transaction is locked. After this point, the transaction cannot be
   /// modified and will be mined by the miners.
+  /// https://en.bitcoin.it/wiki/Protocol_specification#tx
   public enum LockTime: Equatable {
 
     /// The transaction will be mined immediately, and cannot be modified after being broadcast.

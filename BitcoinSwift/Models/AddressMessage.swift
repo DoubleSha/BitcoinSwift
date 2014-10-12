@@ -12,8 +12,8 @@ public func ==(lhs: AddressMessage, rhs: AddressMessage) -> Bool {
   return lhs.peerAddresses == rhs.peerAddresses
 }
 
-/// Message payload object corresponding to the Message.Command.Addr command. Provides information
-/// on known nodes of the network.
+/// Message payload object corresponding to the Message.Command.Address command.
+/// Provides information on known nodes of the network.
 /// https://en.bitcoin.it/wiki/Protocol_specification#addr
 public struct AddressMessage: Equatable {
 
@@ -28,7 +28,7 @@ public struct AddressMessage: Equatable {
 extension AddressMessage: MessagePayload {
 
   public var command: Message.Command {
-    return Message.Command.Addr
+    return Message.Command.Address
   }
 
   public var data: NSData {
