@@ -84,6 +84,10 @@ extension Transaction: MessagePayload {
       }
       inputs.append(input!)
     }
+    if inputs.count == 0 {
+      Logger.warn("Failed to parse inputs. No inputs found")
+      return nil
+    }
     let outputCount = stream.readVarInt()
     if outputCount == nil {
       Logger.warn("Failed to parse outputCount in Transaction")
@@ -97,6 +101,10 @@ extension Transaction: MessagePayload {
         return nil
       }
       outputs.append(output!)
+    }
+    if outputs.count == 0 {
+      Logger.warn("Failed to parse outputs. No outputs found")
+      return nil
     }
     let lockTimeRaw = stream.readUInt32()
     if lockTimeRaw == nil {
