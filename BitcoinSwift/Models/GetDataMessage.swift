@@ -62,10 +62,10 @@ extension GetDataMessage: MessagePayload {
       return nil
     }
     var inventoryVectors: [InventoryVector] = []
-    for _ in 0..<inventoryCount! {
+    for i in 0..<inventoryCount! {
       let inventoryVector = stream.readInventoryVector()
       if inventoryVector == nil {
-        Logger.warn("Failed to parse inventory vector from GetDataMessage \(data)")
+        Logger.warn("Failed to parse inventory vector \(i) from GetDataMessage \(data)")
         return nil
       }
       inventoryVectors.append(inventoryVector!)

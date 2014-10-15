@@ -18,8 +18,7 @@ public protocol MessagePayload {
 }
 
 public func ==(lhs: Message, rhs: Message) -> Bool {
-  return lhs.header == rhs.header &&
-      lhs.payload == rhs.payload
+  return lhs.header == rhs.header && lhs.payload == rhs.payload
 }
 
 /// Wrapper struct that contains the header and payload for sending a message.

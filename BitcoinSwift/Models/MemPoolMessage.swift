@@ -12,7 +12,7 @@ import Foundation
 /// verified but which have not yet confirmed. The response to receiving this message is an inv
 /// message containing the transaction hashes for all the transactions in the node's mempool.
 /// https://en.bitcoin.it/wiki/Protocol_specification#mempool
-struct MemPoolMessage: MessagePayload {
+public struct MemPoolMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.MemPool
