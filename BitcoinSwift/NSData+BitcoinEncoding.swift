@@ -19,6 +19,19 @@ public extension NSData {
     stream.close()
     return int
   }
+
+  public var reversedData: NSData {
+    // Copy the data into bytes.
+    var bytes = [UInt8](count: self.length, repeatedValue: 0)
+    self.getBytes(&bytes, length: bytes.count)
+    var tmp: UInt8 = 0
+    for i in 0..<(bytes.count / 2) {
+      tmp = bytes[i]
+      bytes[i] = bytes[bytes.count - i - 1]
+      bytes[bytes.count - i - 1] = tmp
+    }
+    return NSData(bytes: bytes, length: bytes.count)
+  }
 }
 
 public extension NSMutableData {

@@ -32,7 +32,7 @@ extension Block {
     /// transactions.
     /// https://en.bitcoin.it/wiki/Block_hashing_algorithm
     public var hash: NSData {
-      return data.SHA256Hash().SHA256Hash()
+      return data.SHA256Hash().SHA256Hash().reversedData
     }
 
     public init(version: UInt32,

@@ -26,6 +26,10 @@ public struct Block: Equatable {
     self.header = header
     self.transactions = transactions
   }
+
+  public var hash: NSData {
+    return header.hash
+  }
 }
 
 extension Block: MessagePayload {

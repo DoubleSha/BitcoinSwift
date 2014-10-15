@@ -11,6 +11,18 @@ import XCTest
 
 class BitcoinEncodingTests: XCTestCase {
 
+  func testReversedDataWithOddBytes() {
+    let data = NSData(bytes: [0x01, 0x02, 0x03] as [UInt8], length: 3)
+    let expectedData = NSData(bytes: [0x03, 0x02, 0x01] as [UInt8], length: 3)
+    XCTAssertEqual(data.reversedData, expectedData)
+  }
+
+  func testReversedDataWithEvenBytes() {
+    let data = NSData(bytes: [0x01, 0x02, 0x03, 0x04] as [UInt8], length: 4)
+    let expectedData = NSData(bytes: [0x04, 0x03, 0x02, 0x01] as [UInt8], length: 4)
+    XCTAssertEqual(data.reversedData, expectedData)
+  }
+
   func testAppendUInt8() {
     var data = NSMutableData()
     data.appendUInt8(0x1)
