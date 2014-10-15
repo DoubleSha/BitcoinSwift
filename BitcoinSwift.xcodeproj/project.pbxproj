@@ -18,6 +18,8 @@
 		0A1BDCC319A1A7A6008ED01F /* PeerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1BDCC219A1A7A6008ED01F /* PeerController.swift */; };
 		0A1C534719EB132E00D27206 /* GetAddressMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C534619EB132E00D27206 /* GetAddressMessage.swift */; };
 		0A1C534819EB132E00D27206 /* GetAddressMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C534619EB132E00D27206 /* GetAddressMessage.swift */; };
+		0A1C534A19EE480000D27206 /* MemPoolMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C534919EE480000D27206 /* MemPoolMessage.swift */; };
+		0A1C534B19EE480000D27206 /* MemPoolMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1C534919EE480000D27206 /* MemPoolMessage.swift */; };
 		0A248C1C1953F06900C4607E /* NSData+StringEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A248C1B1953F06900C4607E /* NSData+StringEncoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A248C1E1953F07600C4607E /* NSData+StringEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */; };
 		0A248C201954015200C4607E /* Base58Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C1F1954015200C4607E /* Base58Tests.swift */; };
@@ -198,6 +200,7 @@
 		0A1AFF4819B4283F0032F488 /* PeerConnectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConnectionTests.swift; sourceTree = "<group>"; };
 		0A1BDCC219A1A7A6008ED01F /* PeerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerController.swift; sourceTree = "<group>"; };
 		0A1C534619EB132E00D27206 /* GetAddressMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GetAddressMessage.swift; path = Models/GetAddressMessage.swift; sourceTree = "<group>"; };
+		0A1C534919EE480000D27206 /* MemPoolMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemPoolMessage.swift; path = Models/MemPoolMessage.swift; sourceTree = "<group>"; };
 		0A248C1B1953F06900C4607E /* NSData+StringEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+StringEncoding.h"; sourceTree = "<group>"; };
 		0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+StringEncoding.m"; sourceTree = "<group>"; };
 		0A248C1F1954015200C4607E /* Base58Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base58Tests.swift; sourceTree = "<group>"; };
@@ -466,6 +469,7 @@
 				0AC17A7719E508B2000E4942 /* InventoryMessage.swift */,
 				0AC17A7819E508B2000E4942 /* InventoryVector.swift */,
 				0AC17A7919E508B2000E4942 /* IPAddress.swift */,
+				0A1C534919EE480000D27206 /* MemPoolMessage.swift */,
 				0AC17A7A19E508B2000E4942 /* Message.swift */,
 				0AC17A7B19E508B2000E4942 /* MessageHeader.swift */,
 				0AC17A7C19E508B2000E4942 /* NotFoundMessage.swift */,
@@ -475,8 +479,8 @@
 				0AC17A8019E508B2000E4942 /* PongMessage.swift */,
 				0AC17A8119E508B2000E4942 /* Transaction.swift */,
 				0AC17A8219E508B2000E4942 /* TransactionInput.swift */,
-				0AC17A8319E508B2000E4942 /* TransactionOutPoint.swift */,
 				0AC17A8419E508B2000E4942 /* TransactionLockTime.swift */,
+				0AC17A8319E508B2000E4942 /* TransactionOutPoint.swift */,
 				0AC17A8519E508B2000E4942 /* TransactionOutput.swift */,
 				0AC17A8619E508B2000E4942 /* VersionAckMessage.swift */,
 				0AC17A8719E508B2000E4942 /* VersionMessage.swift */,
@@ -772,6 +776,7 @@
 				0AC17AB219E508B3000E4942 /* TransactionOutput.swift in Sources */,
 				0A110DDF19E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
 				0AC17AA819E508B2000E4942 /* PongMessage.swift in Sources */,
+				0A1C534A19EE480000D27206 /* MemPoolMessage.swift in Sources */,
 				0AC17A9619E508B2000E4942 /* InventoryMessage.swift in Sources */,
 				0AC17AA419E508B2000E4942 /* PeerServices.swift in Sources */,
 				0A3F87F419D2768B00E6E915 /* DeterministicECKey.m in Sources */,
@@ -855,6 +860,7 @@
 				0AC8CF4019A9369F00D93585 /* DNSPeerDiscovery.swift in Sources */,
 				0A110DE019E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
 				0AC8CF3B19A9369F00D93585 /* NSData+BitcoinEncoding.swift in Sources */,
+				0A1C534B19EE480000D27206 /* MemPoolMessage.swift in Sources */,
 				0AC17A8F19E508B2000E4942 /* BlockHeader.swift in Sources */,
 				0AC17AAF19E508B2000E4942 /* TransactionOutPoint.swift in Sources */,
 				0AC17AA119E508B2000E4942 /* NotFoundMessage.swift in Sources */,
