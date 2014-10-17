@@ -26,6 +26,8 @@
 		0A248C1E1953F07600C4607E /* NSData+StringEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */; };
 		0A248C201954015200C4607E /* Base58Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C1F1954015200C4607E /* Base58Tests.swift */; };
 		0A248C221954150800C4607E /* BitcoinAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C211954150800C4607E /* BitcoinAddressTests.swift */; };
+		0A26BA4919F0EFAB00278622 /* FilterClearMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A26BA4819F0EFAB00278622 /* FilterClearMessage.swift */; };
+		0A26BA4A19F0EFAB00278622 /* FilterClearMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A26BA4819F0EFAB00278622 /* FilterClearMessage.swift */; };
 		0A2D51BC196E52EA009B6B25 /* DNSPeerDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */; };
 		0A2D51C819777320009B6B25 /* DNSDiscoveryLiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51C719777320009B6B25 /* DNSDiscoveryLiveTests.swift */; };
 		0A34D5DD19E7B181003A3B89 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34D5DC19E7B181003A3B89 /* Logger.swift */; };
@@ -208,6 +210,7 @@
 		0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+StringEncoding.m"; sourceTree = "<group>"; };
 		0A248C1F1954015200C4607E /* Base58Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base58Tests.swift; sourceTree = "<group>"; };
 		0A248C211954150800C4607E /* BitcoinAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinAddressTests.swift; sourceTree = "<group>"; };
+		0A26BA4819F0EFAB00278622 /* FilterClearMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FilterClearMessage.swift; path = Models/FilterClearMessage.swift; sourceTree = "<group>"; };
 		0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSPeerDiscovery.swift; sourceTree = "<group>"; };
 		0A2D51C319777320009B6B25 /* BitcoinSwiftIOSLiveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcoinSwiftIOSLiveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A2D51C619777320009B6B25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -465,6 +468,7 @@
 				0AC17A7119E508B2000E4942 /* BitcoinAddress.swift */,
 				0AC17A7219E508B2000E4942 /* Block.swift */,
 				0AC17A7319E508B2000E4942 /* BlockHeader.swift */,
+				0A26BA4819F0EFAB00278622 /* FilterClearMessage.swift */,
 				0A1C534619EB132E00D27206 /* GetAddressMessage.swift */,
 				0AC17A7419E508B2000E4942 /* GetBlocksMessage.swift */,
 				0AC17A7519E508B2000E4942 /* GetDataMessage.swift */,
@@ -756,6 +760,7 @@
 				0AC17AA619E508B2000E4942 /* PingMessage.swift in Sources */,
 				0A98FAAA19A1CF4700E4E57B /* PeerDiscovery.swift in Sources */,
 				0AECD0D219AACA5400C11AC9 /* Thread.swift in Sources */,
+				0A26BA4919F0EFAB00278622 /* FilterClearMessage.swift in Sources */,
 				0A1C534719EB132E00D27206 /* GetAddressMessage.swift in Sources */,
 				0AC17A8C19E508B2000E4942 /* Block.swift in Sources */,
 				0AC17AB019E508B2000E4942 /* TransactionLockTime.swift in Sources */,
@@ -841,6 +846,7 @@
 				0AC17A9519E508B2000E4942 /* GetHeadersMessage.swift in Sources */,
 				0AC17AA719E508B2000E4942 /* PingMessage.swift in Sources */,
 				0AC8CF4419A9369F00D93585 /* PeerDiscovery.swift in Sources */,
+				0A26BA4A19F0EFAB00278622 /* FilterClearMessage.swift in Sources */,
 				0A1C534819EB132E00D27206 /* GetAddressMessage.swift in Sources */,
 				0AECD0D319AACA5400C11AC9 /* Thread.swift in Sources */,
 				0AC17A9319E508B2000E4942 /* GetDataMessage.swift in Sources */,
