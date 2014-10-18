@@ -25,6 +25,18 @@ class BitcoinDecodingTests: XCTestCase {
     XCTAssertEqual(int, expectedInt, "\n[FAIL] Invalid int \(int)")
   }
 
+  func testReversedDataWithOddBytes() {
+    let data = NSData(bytes: [0x01, 0x02, 0x03] as [UInt8], length: 3)
+    let expectedData = NSData(bytes: [0x03, 0x02, 0x01] as [UInt8], length: 3)
+    XCTAssertEqual(data.reversedData, expectedData)
+  }
+
+  func testReversedDataWithEvenBytes() {
+    let data = NSData(bytes: [0x01, 0x02, 0x03, 0x04] as [UInt8], length: 4)
+    let expectedData = NSData(bytes: [0x04, 0x03, 0x02, 0x01] as [UInt8], length: 4)
+    XCTAssertEqual(data.reversedData, expectedData)
+  }
+
   func testReadUInt8FromStream() {
     let bytes: [UInt8] = [0x01, 0x02]
     let data = NSData(bytes: bytes, length: bytes.count)

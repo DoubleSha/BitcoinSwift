@@ -51,6 +51,8 @@
 		0A435A7819F2CB6700FE2689 /* FilterAddMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A435A7619F2CB6700FE2689 /* FilterAddMessage.swift */; };
 		0A435A7A19F2CF2200FE2689 /* FilterAddMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A435A7919F2CF2200FE2689 /* FilterAddMessageTests.swift */; };
 		0A435A7B19F2CF2200FE2689 /* FilterAddMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A435A7919F2CF2200FE2689 /* FilterAddMessageTests.swift */; };
+		0A435A7D19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */; };
+		0A435A7E19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */; };
 		0A52ACD1195397080041541B /* BitcoinSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACD0195397080041541B /* BitcoinSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A52ACEB1953979F0041541B /* ECKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACE71953979F0041541B /* ECKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A52ACEC1953979F0041541B /* ECKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACE81953979F0041541B /* ECKey.m */; };
@@ -136,7 +138,7 @@
 		0AC8CF3519A9369F00D93585 /* NSData+Hashing.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A52ACFA1953A79B0041541B /* NSData+Hashing.m */; };
 		0AC8CF3719A9369F00D93585 /* NSData+StringEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A248C1B1953F06900C4607E /* NSData+StringEncoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0AC8CF3819A9369F00D93585 /* NSData+StringEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */; };
-		0AC8CF3B19A9369F00D93585 /* NSData+BitcoinEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6F01960D51F009F281D /* NSData+BitcoinEncoding.swift */; };
+		0AC8CF3B19A9369F00D93585 /* NSMutableData+BitcoinEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */; };
 		0AC8CF3C19A9369F00D93585 /* NSInputStream+BitcoinDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF62196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift */; };
 		0AC8CF3D19A9369F00D93585 /* Endianness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A34DF641961197D007BBC35 /* Endianness.swift */; };
 		0AC8CF4019A9369F00D93585 /* DNSPeerDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */; };
@@ -161,7 +163,7 @@
 		0AECD0DC19AAFFD600C11AC9 /* MessageHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECD0DA19AAFFD600C11AC9 /* MessageHeaderTests.swift */; };
 		0AF06B6919D8F484001EEE96 /* BlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF06B6819D8F484001EEE96 /* BlockTests.swift */; };
 		0AF06B6A19D8F484001EEE96 /* BlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF06B6819D8F484001EEE96 /* BlockTests.swift */; };
-		0AF9C6F11960D51F009F281D /* NSData+BitcoinEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6F01960D51F009F281D /* NSData+BitcoinEncoding.swift */; };
+		0AF9C6F11960D51F009F281D /* NSMutableData+BitcoinEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */; };
 		D845F45419D7A5FB00346A25 /* PongMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D845F45319D7A5FB00346A25 /* PongMessageTests.swift */; };
 		D862844D19AA7C0500CFCE80 /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6EE195E134C009F281D /* PeerConnection.swift */; };
 		D862845119AA7C0700CFCE80 /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6EE195E134C009F281D /* PeerConnection.swift */; };
@@ -235,6 +237,7 @@
 		0A435A7319F2C63C00FE2689 /* FilterLoadMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterLoadMessageTests.swift; sourceTree = "<group>"; };
 		0A435A7619F2CB6700FE2689 /* FilterAddMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FilterAddMessage.swift; path = Models/FilterAddMessage.swift; sourceTree = "<group>"; };
 		0A435A7919F2CF2200FE2689 /* FilterAddMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterAddMessageTests.swift; sourceTree = "<group>"; };
+		0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+BitcoinDecoding.swift"; sourceTree = "<group>"; };
 		0A52ACCB195397080041541B /* BitcoinSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BitcoinSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A52ACCF195397080041541B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A52ACD0195397080041541B /* BitcoinSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitcoinSwift.h; sourceTree = "<group>"; };
@@ -293,7 +296,7 @@
 		0AF06B6819D8F484001EEE96 /* BlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockTests.swift; sourceTree = "<group>"; };
 		0AF0E6C4196BAF5A007BC06F /* VersionMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionMessageTests.swift; sourceTree = "<group>"; };
 		0AF9C6EE195E134C009F281D /* PeerConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConnection.swift; sourceTree = "<group>"; };
-		0AF9C6F01960D51F009F281D /* NSData+BitcoinEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+BitcoinEncoding.swift"; sourceTree = "<group>"; };
+		0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMutableData+BitcoinEncoding.swift"; sourceTree = "<group>"; };
 		D810F30819B50155009EE349 /* GetDataMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetDataMessageTests.swift; sourceTree = "<group>"; };
 		D845F45319D7A5FB00346A25 /* PongMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PongMessageTests.swift; sourceTree = "<group>"; };
 		D8BA343E19D74E0E00A1232F /* NotFoundMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotFoundMessageTests.swift; sourceTree = "<group>"; };
@@ -397,25 +400,26 @@
 				0A52ACCE195397080041541B /* Supporting Files */,
 				0AC17A6F19E50869000E4942 /* Models */,
 				0A52ACD0195397080041541B /* BitcoinSwift.h */,
+				0A3F87F619D276A600E6E915 /* DeterministicECKey.h */,
+				0A3F87F319D2768B00E6E915 /* DeterministicECKey.m */,
+				0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */,
 				0A52ACE71953979F0041541B /* ECKey.h */,
 				0A52ACE81953979F0041541B /* ECKey.m */,
+				0A34DF641961197D007BBC35 /* Endianness.swift */,
+				0A34D5DC19E7B181003A3B89 /* Logger.swift */,
+				0A78124F19C4D41300187B9A /* MessageParser.swift */,
+				0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */,
 				0A52ACF81953A7690041541B /* NSData+Hashing.h */,
 				0A52ACFA1953A79B0041541B /* NSData+Hashing.m */,
 				0A248C1B1953F06900C4607E /* NSData+StringEncoding.h */,
 				0A248C1D1953F07600C4607E /* NSData+StringEncoding.m */,
-				0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */,
-				0A34DF641961197D007BBC35 /* Endianness.swift */,
-				0AF9C6F01960D51F009F281D /* NSData+BitcoinEncoding.swift */,
 				0A7FB5B319A338560008690F /* NSData+UInt8Array.swift */,
+				0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */,
 				0A34DF62196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift */,
 				0AF9C6EE195E134C009F281D /* PeerConnection.swift */,
 				0A1BDCC219A1A7A6008ED01F /* PeerController.swift */,
 				0A98FAA919A1CF4700E4E57B /* PeerDiscovery.swift */,
 				0AECD0D119AACA5400C11AC9 /* Thread.swift */,
-				0A78124F19C4D41300187B9A /* MessageParser.swift */,
-				0A3F87F319D2768B00E6E915 /* DeterministicECKey.m */,
-				0A3F87F619D276A600E6E915 /* DeterministicECKey.h */,
-				0A34D5DC19E7B181003A3B89 /* Logger.swift */,
 			);
 			path = BitcoinSwift;
 			sourceTree = "<group>";
@@ -771,7 +775,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AF9C6F11960D51F009F281D /* NSData+BitcoinEncoding.swift in Sources */,
+				0AF9C6F11960D51F009F281D /* NSMutableData+BitcoinEncoding.swift in Sources */,
 				0A34DF63196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift in Sources */,
 				0AC17AA619E508B2000E4942 /* PingMessage.swift in Sources */,
 				0A98FAAA19A1CF4700E4E57B /* PeerDiscovery.swift in Sources */,
@@ -805,6 +809,7 @@
 				0A435A7119F2C4FB00FE2689 /* FilterLoadMessage.swift in Sources */,
 				0A1C534A19EE480000D27206 /* MemPoolMessage.swift in Sources */,
 				0AC17A9619E508B2000E4942 /* InventoryMessage.swift in Sources */,
+				0A435A7D19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */,
 				0AC17AA419E508B2000E4942 /* PeerServices.swift in Sources */,
 				0A3F87F419D2768B00E6E915 /* DeterministicECKey.m in Sources */,
 				0A1BDCC319A1A7A6008ED01F /* PeerController.swift in Sources */,
@@ -891,10 +896,11 @@
 				0A110DE919E8FDDE00CBFCAC /* Alert.swift in Sources */,
 				0AC8CF4019A9369F00D93585 /* DNSPeerDiscovery.swift in Sources */,
 				0A110DE019E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
-				0AC8CF3B19A9369F00D93585 /* NSData+BitcoinEncoding.swift in Sources */,
+				0AC8CF3B19A9369F00D93585 /* NSMutableData+BitcoinEncoding.swift in Sources */,
 				0A435A7219F2C4FB00FE2689 /* FilterLoadMessage.swift in Sources */,
 				0A1C534B19EE480000D27206 /* MemPoolMessage.swift in Sources */,
 				0AC17A8F19E508B2000E4942 /* BlockHeader.swift in Sources */,
+				0A435A7E19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */,
 				0AC17AAF19E508B2000E4942 /* TransactionOutPoint.swift in Sources */,
 				0AC17AA119E508B2000E4942 /* NotFoundMessage.swift in Sources */,
 				0A3F87F519D2768B00E6E915 /* DeterministicECKey.m in Sources */,
