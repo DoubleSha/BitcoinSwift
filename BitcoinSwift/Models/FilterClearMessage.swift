@@ -10,7 +10,7 @@ import Foundation
 
 /// Clears the bloom filter the peer is using.
 /// https://en.bitcoin.it/wiki/Protocol_specification#filterload.2C_filteradd.2C_filterclear.2C_merkleblock
-struct FilterClearMessage: MessagePayload {
+public struct FilterClearMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.FilterClear
