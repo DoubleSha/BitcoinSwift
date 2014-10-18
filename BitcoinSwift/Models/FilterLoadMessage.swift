@@ -22,7 +22,7 @@ public func ==(lhs: FilterLoadMessage, rhs: FilterLoadMessage) -> Bool {
 public struct FilterLoadMessage: Equatable {
 
   public static let MaxFilterLength = 36_000
-  public static let MaxHashFunctions = 50
+  public static let MaxHashFunctions: UInt32 = 50
 
   public let filter: NSData
   public let hashFunctions: UInt32
@@ -30,8 +30,8 @@ public struct FilterLoadMessage: Equatable {
   public let flags: UInt8
 
   public init(filter: NSData, hashFunctions: UInt32, tweak: UInt32, flags: UInt8) {
-    precondition(filter.length <= MaxFilterLength)
-    precondition(hashFunctions <= MaxHashFunctions)
+    precondition(filter.length <= FilterLoadMessage.MaxFilterLength)
+    precondition(hashFunctions <= FilterLoadMessage.MaxHashFunctions)
     self.filter = filter
     self.hashFunctions = hashFunctions
     self.tweak = tweak
@@ -66,11 +66,11 @@ extension FilterLoadMessage: MessagePayload {
       Logger.warn("Failed to parse filterLength from FilterLoadMessage \(data)")
       return nil
     }
-    if filterLength! <= 0 || filterLength! > MaxFilterLength {
+    if filterLength! <= UInt64(0) || filterLength! > UInt64(FilterLoadMessage.MaxFilterLength) {
       Logger.warn("Invalid filterLength \(filterLength!) in FilterLoadMessage \(data)")
       return nil
     }
-    let filter = stream.readData(length: filterLength!)
+    let filter = stream.readData(length: Int(filterLength!))
     if filter == nil {
       Logger.warn("Failed to parse filter from FilterLoadMessage \(data)")
       return nil

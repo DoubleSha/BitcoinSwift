@@ -9,7 +9,7 @@
 import Foundation
 
 public func ==(lhs: FilterAddMessage, rhs: FilterAddMessage) -> Bool {
-  return lhs.filterData = rhs.filterData
+  return lhs.filterData == rhs.filterData
 }
 
 /// The given data element will be added to the bloom filter. A filter must have previously been
@@ -26,7 +26,7 @@ public struct FilterAddMessage: Equatable {
   public let filterData: NSData
 
   public init(filterData: NSData) {
-    precondition(filterData.length <= MaxFilterDataLength)
+    precondition(filterData.length <= FilterAddMessage.MaxFilterDataLength)
     self.filterData = filterData
   }
 }
@@ -55,11 +55,12 @@ extension FilterAddMessage: MessagePayload {
       Logger.warn("Failed to parse filterDataLength from FilterAddMessage \(data)")
       return nil
     }
-    if filterDataLength! <= 0 || filterDataLength! > MaxFilterDataLength {
+    if filterDataLength! <= UInt64(0) ||
+        filterDataLength! > UInt64(FilterAddMessage.MaxFilterDataLength) {
       Logger.warn("Invalid filterDataLength \(filterDataLength!) in FilterAddMessage \(data)")
       return nil
     }
-    let filterData = stream.readData(length: filterDataLength!)
+    let filterData = stream.readData(length: Int(filterDataLength!))
     if filterData == nil {
       Logger.warn("Failed to parse filterData from FilterAddMessage \(data)")
       return nil
