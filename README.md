@@ -13,7 +13,7 @@ Mailing list: https://groups.google.com/forum/#!forum/bitcoinswift
 
 IRC (freenode): #bitcoinswift
 
-It is a framework that can be linked into any iOS or OSX project. The code is modular, well-documented and very well-tested. I expect all pull requests to include unit tests. We don't take shortcuts around here.
+It is a framework that can be linked into any iOS or OSX project. The code is modular, well-documented and very well-tested. I expect all pull requests to include unit tests and live tests if appropriate. We don't take shortcuts around here.
 
 Please dive in and feel free to get your hands dirty. If you want to contribute, just send an email to the mailing list or find me on irc (#bitcoinswift).
 
