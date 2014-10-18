@@ -66,7 +66,7 @@ extension FilterLoadMessage: MessagePayload {
       Logger.warn("Failed to parse filterLength from FilterLoadMessage \(data)")
       return nil
     }
-    if filterLength! == 0 || filterLength! > MaxFilterLength {
+    if filterLength! <= 0 || filterLength! > MaxFilterLength {
       Logger.warn("Invalid filterLength \(filterLength!) in FilterLoadMessage \(data)")
       return nil
     }
