@@ -10,7 +10,7 @@ import Foundation
 
 public func ==(lhs: FilterLoadMessage, rhs: FilterLoadMessage) -> Bool {
   return lhs.filter == rhs.filter &&
-      lhs.hashFunctions == rhs.hashFunctions &&
+      lhs.numHashFunctions == rhs.numHashFunctions &&
       lhs.tweak == rhs.tweak &&
       lhs.flags == rhs.flags
 }
@@ -22,18 +22,17 @@ public func ==(lhs: FilterLoadMessage, rhs: FilterLoadMessage) -> Bool {
 public struct FilterLoadMessage: Equatable {
 
   public static let MaxFilterLength = 36_000
-  public static let MaxHashFunctions: UInt32 = 50
+  public static let MaxNumHashFunctions: UInt32 = 50
 
   public let filter: NSData
-  public let hashFunctions: UInt32
+  public let numHashFunctions: UInt32
   public let tweak: UInt32
   public let flags: UInt8
 
-  public init(filter: NSData, hashFunctions: UInt32, tweak: UInt32, flags: UInt8) {
+  public init(filter: NSData, numHashFunctions: UInt32, tweak: UInt32, flags: UInt8) {
     precondition(filter.length <= FilterLoadMessage.MaxFilterLength)
-    precondition(hashFunctions <= FilterLoadMessage.MaxHashFunctions)
     self.filter = filter
-    self.hashFunctions = hashFunctions
+    self.numHashFunctions = numHashFunctions
     self.tweak = tweak
     self.flags = flags
   }
@@ -49,7 +48,7 @@ extension FilterLoadMessage: MessagePayload {
     var data = NSMutableData()
     data.appendVarInt(filter.length)
     data.appendData(filter)
-    data.appendUInt32(hashFunctions)
+    data.appendUInt32(numHashFunctions)
     data.appendUInt32(tweak)
     data.appendUInt8(flags)
     return data
@@ -75,9 +74,9 @@ extension FilterLoadMessage: MessagePayload {
       Logger.warn("Failed to parse filter from FilterLoadMessage \(data)")
       return nil
     }
-    let hashFunctions = stream.readUInt32()
-    if hashFunctions == nil {
-      Logger.warn("Failed to parse hashFunctions from FilterLoadMessage \(data)")
+    let numHashFunctions = stream.readUInt32()
+    if numHashFunctions == nil {
+      Logger.warn("Failed to parse numHashFunctions from FilterLoadMessage \(data)")
       return nil
     }
     let tweak = stream.readUInt32()
@@ -91,7 +90,7 @@ extension FilterLoadMessage: MessagePayload {
       return nil
     }
     return FilterLoadMessage(filter: filter!,
-                             hashFunctions: hashFunctions!,
+                             numHashFunctions: numHashFunctions!,
                              tweak: tweak!,
                              flags: flags!)
   }
