@@ -18,11 +18,11 @@ public func ==(lhs: Block, rhs: Block) -> Bool {
 /// https://en.bitcoin.it/wiki/Protocol_specification#block
 public struct Block: Equatable {
 
-  public let header: Header
+  public let header: BlockHeader
   /// If the transactions array is empty, then this is just a block header.
   public let transactions: [Transaction]
 
-  public init(header: Header, transactions: [Transaction]) {
+  public init(header: BlockHeader, transactions: [Transaction]) {
     self.header = header
     self.transactions = transactions
   }
@@ -55,21 +55,21 @@ extension Block: MessagePayload {
     }
     let stream = NSInputStream(data: data)
     stream.open()
-    let header = Header.fromStream(stream)
+    let header = BlockHeader.fromStream(stream)
     if header == nil {
-      Logger.warn("Failed to parse header from BlockMessage \(data)")
+      Logger.warn("Failed to parse header from Block \(data)")
       return nil
     }
     let transactionsCount = stream.readVarInt()
     if transactionsCount == nil {
-      Logger.warn("Failed to parse transactionsCount from BlockMessage \(data)")
+      Logger.warn("Failed to parse transactionsCount from Block \(data)")
       return nil
     }
     var transactions: [Transaction] = []
     for i in 0..<transactionsCount! {
       let transaction = Transaction.fromStream(stream)
       if transaction == nil {
-        Logger.warn("Failed to parse transaction at index \(i) from BlockMessage \(data)")
+        Logger.warn("Failed to parse transaction at index \(i) from Block \(data)")
         return nil
       }
       transactions.append(transaction!)

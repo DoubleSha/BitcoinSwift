@@ -14,9 +14,9 @@ public func ==(lhs: HeadersMessage, rhs: HeadersMessage) -> Bool {
 
 public struct HeadersMessage: Equatable {
 
-  public let headers: [Block.Header]
+  public let headers: [BlockHeader]
 
-  public init(headers: [Block.Header]) {
+  public init(headers: [BlockHeader]) {
     self.headers = headers
   }
 }
@@ -53,9 +53,9 @@ extension HeadersMessage: MessagePayload {
       Logger.warn("Failed to parse HeadersMessage. Count is zero \(data)")
       return nil
     }
-    var headers: [Block.Header] = []
+    var headers: [BlockHeader] = []
     for i in 0..<count! {
-      let header = Block.Header.fromStream(stream)
+      let header = BlockHeader.fromStream(stream)
       if header == nil {
         Logger.warn("Failed to parse header \(i) from HeadersMessage \(data)")
         return nil

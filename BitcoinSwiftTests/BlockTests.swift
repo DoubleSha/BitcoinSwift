@@ -76,7 +76,7 @@ class BlockTests: XCTestCase {
         0x7f, 0xc8, 0x1b, 0xc3, 0x88, 0x8a, 0x51, 0x32,
         0x3a, 0x9f, 0xb8, 0xaa, 0x4b, 0x1e, 0x5e, 0x4a]
     let merkleRoot = NSData(bytes: merkleRootBytes, length: merkleRootBytes.count)
-    let header = Block.Header(version: 1,
+    let header = BlockHeader(version: 1,
                               previousBlockHash: previousBlockHash,
                               merkleRoot: merkleRoot,
                               timestamp: NSDate(timeIntervalSince1970: 1231006505),
