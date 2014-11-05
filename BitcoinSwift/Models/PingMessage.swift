@@ -43,7 +43,7 @@ extension PingMessage: MessagePayload {
 
   public static func fromData(data: NSData) -> PingMessage? {
     if data.length == 0 {
-      Logger.warn("No data passed to PingMessage \(data)")
+      Logger.warn("Empty data passed to PingMessage \(data)")
       return nil
     }
     let stream = NSInputStream(data: data)

@@ -167,6 +167,10 @@
 		0AECD0DC19AAFFD600C11AC9 /* MessageHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECD0DA19AAFFD600C11AC9 /* MessageHeaderTests.swift */; };
 		0AF06B6919D8F484001EEE96 /* BlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF06B6819D8F484001EEE96 /* BlockTests.swift */; };
 		0AF06B6A19D8F484001EEE96 /* BlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF06B6819D8F484001EEE96 /* BlockTests.swift */; };
+		0AF07C731A09EC9400A0C9F1 /* RejectMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF07C721A09EC9400A0C9F1 /* RejectMessage.swift */; };
+		0AF07C741A09EC9400A0C9F1 /* RejectMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF07C721A09EC9400A0C9F1 /* RejectMessage.swift */; };
+		0AF07C761A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF07C751A09ECBD00A0C9F1 /* RejectMessageTests.swift */; };
+		0AF07C771A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF07C751A09ECBD00A0C9F1 /* RejectMessageTests.swift */; };
 		0AF9C6F11960D51F009F281D /* NSMutableData+BitcoinEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */; };
 		D845F45419D7A5FB00346A25 /* PongMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D845F45319D7A5FB00346A25 /* PongMessageTests.swift */; };
 		D862844D19AA7C0500CFCE80 /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6EE195E134C009F281D /* PeerConnection.swift */; };
@@ -300,6 +304,8 @@
 		0AECD0D119AACA5400C11AC9 /* Thread.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		0AECD0DA19AAFFD600C11AC9 /* MessageHeaderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHeaderTests.swift; sourceTree = "<group>"; };
 		0AF06B6819D8F484001EEE96 /* BlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockTests.swift; sourceTree = "<group>"; };
+		0AF07C721A09EC9400A0C9F1 /* RejectMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RejectMessage.swift; path = Models/RejectMessage.swift; sourceTree = "<group>"; };
+		0AF07C751A09ECBD00A0C9F1 /* RejectMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RejectMessageTests.swift; sourceTree = "<group>"; };
 		0AF0E6C4196BAF5A007BC06F /* VersionMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionMessageTests.swift; sourceTree = "<group>"; };
 		0AF9C6EE195E134C009F281D /* PeerConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConnection.swift; sourceTree = "<group>"; };
 		0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMutableData+BitcoinEncoding.swift"; sourceTree = "<group>"; };
@@ -468,6 +474,7 @@
 				0A1AFF4819B4283F0032F488 /* PeerConnectionTests.swift */,
 				D8BA344319D76DB300A1232F /* PingMessageTests.swift */,
 				D845F45319D7A5FB00346A25 /* PongMessageTests.swift */,
+				0AF07C751A09ECBD00A0C9F1 /* RejectMessageTests.swift */,
 				0A98B3A019B59584001C878D /* TestInputStreamDelegate.swift */,
 				0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */,
 				0A5314E619D77E730090F82F /* TransactionTests.swift */,
@@ -513,6 +520,7 @@
 				0AC17A7E19E508B2000E4942 /* PeerServices.swift */,
 				0AC17A7F19E508B2000E4942 /* PingMessage.swift */,
 				0AC17A8019E508B2000E4942 /* PongMessage.swift */,
+				0AF07C721A09EC9400A0C9F1 /* RejectMessage.swift */,
 				0AC17A8119E508B2000E4942 /* Transaction.swift */,
 				0AC17A8219E508B2000E4942 /* TransactionInput.swift */,
 				0AC17A8419E508B2000E4942 /* TransactionLockTime.swift */,
@@ -795,6 +803,7 @@
 				0AC17AAC19E508B2000E4942 /* TransactionInput.swift in Sources */,
 				0AC17AA019E508B2000E4942 /* NotFoundMessage.swift in Sources */,
 				0A2D51BC196E52EA009B6B25 /* DNSPeerDiscovery.swift in Sources */,
+				0AF07C731A09EC9400A0C9F1 /* RejectMessage.swift in Sources */,
 				0AC17A9419E508B2000E4942 /* GetHeadersMessage.swift in Sources */,
 				0AC17A9E19E508B2000E4942 /* MessageHeader.swift in Sources */,
 				0A78125019C4D41300187B9A /* MessageParser.swift in Sources */,
@@ -846,6 +855,7 @@
 				D862845519AA7C0F00CFCE80 /* VersionMessageTests.swift in Sources */,
 				0A1AFF4919B4283F0032F488 /* PeerConnectionTests.swift in Sources */,
 				0A5314E719D77E730090F82F /* TransactionTests.swift in Sources */,
+				0AF07C761A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */,
 				0A78125919C4E4B700187B9A /* DummyMessage.swift in Sources */,
 				D8BA343B19D7368800A1232F /* GetDataMessageTests.swift in Sources */,
 				0A110DEB19E9088200CBFCAC /* AlertMessageTests.swift in Sources */,
@@ -888,6 +898,7 @@
 				0A78125119C4D41300187B9A /* MessageParser.swift in Sources */,
 				0AC17A8919E508B2000E4942 /* AddressMessage.swift in Sources */,
 				0AC17AA519E508B2000E4942 /* PeerServices.swift in Sources */,
+				0AF07C741A09EC9400A0C9F1 /* RejectMessage.swift in Sources */,
 				0AC17A9F19E508B2000E4942 /* MessageHeader.swift in Sources */,
 				0AC17A8B19E508B2000E4942 /* BitcoinAddress.swift in Sources */,
 				0AC17A9D19E508B2000E4942 /* Message.swift in Sources */,
@@ -940,6 +951,7 @@
 				0A5314E819D77E730090F82F /* TransactionTests.swift in Sources */,
 				0A1AFF4A19B4283F0032F488 /* PeerConnectionTests.swift in Sources */,
 				0A5314F519D8A1130090F82F /* NotFoundMessageTests.swift in Sources */,
+				0AF07C771A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */,
 				0A78125819C4E4B700187B9A /* DummyMessage.swift in Sources */,
 				0AC8CF5A19A9376B00D93585 /* AddrMessageTests.swift in Sources */,
 				0A78125419C4E45500187B9A /* MessageParserTests.swift in Sources */,

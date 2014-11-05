@@ -38,7 +38,7 @@ extension PongMessage: MessagePayload {
 
   public static func fromData(data: NSData) -> PongMessage? {
     if data.length == 0 {
-      Logger.warn("No data passed to PongMessage \(data)")
+      Logger.warn("Empty data passed to PongMessage \(data)")
       return nil
     }
     let stream = NSInputStream(data: data)
