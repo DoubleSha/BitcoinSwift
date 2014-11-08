@@ -60,20 +60,16 @@ class MessageTests: XCTestCase {
   }
 
   func testMessageEncoding() {
-    XCTAssertEqual(message.data, messageData)
+    XCTAssertEqual(message.bitcoinData, messageData)
   }
 
   func testMessageDecoding() {
-    if let testMessage = Message.fromData(messageData) {
+    let stream = NSInputStream(data: messageData)
+    stream.open()
+    if let testMessage = Message.fromBitcoinStream(stream) {
       XCTAssertEqual(testMessage, message)
     } else {
       XCTFail("\n[FAIL] Failed to parse message")
-    }
-  }
-
-  func testEmptyData() {
-    if let message = Message.fromData(NSData()) {
-      XCTFail("\n[FAIL] Message should be nil")
     }
   }
 }

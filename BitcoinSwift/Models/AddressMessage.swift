@@ -31,7 +31,7 @@ extension AddressMessage: MessagePayload {
     return Message.Command.Address
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendVarInt(peerAddresses.count)
     for peerAddress in peerAddresses {
@@ -40,37 +40,28 @@ extension AddressMessage: MessagePayload {
     return data
   }
 
-  public static func fromData(data: NSData) -> AddressMessage? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> AddressMessage? {
     let count = stream.readVarInt()
     if count == nil {
-      Logger.warn("Failed to parse count from AddressMessage \(data)")
+      Logger.warn("Failed to parse count from AddressMessage")
       return nil
     }
     if count! == 0 {
-      Logger.warn("Failed to parse AddressMessage. count is zero \(data)")
+      Logger.warn("Failed to parse AddressMessage. count is zero")
       return nil
     }
     if count! > 1000 {
-      Logger.warn("Failed to parse AddressMessage. count is greater than 1000 \(data)")
+      Logger.warn("Failed to parse AddressMessage. count is greater than 1000")
       return nil
     }
     var peerAddresses: [PeerAddress] = []
     for _ in 0..<count! {
       let peerAddress = stream.readPeerAddress()
       if peerAddress == nil {
-        Logger.warn("Failed to parse peer address from AddressMessage \(data)")
+        Logger.warn("Failed to parse peer address from AddressMessage")
         return nil
       }
       peerAddresses.append(peerAddress!)
-    }
-    if stream.hasBytesAvailable {
-      Logger.warn("Failed to parse AddressMessage. Too many addresses \(data)")
-      return nil
     }
     return AddressMessage(peerAddresses: peerAddresses)
   }

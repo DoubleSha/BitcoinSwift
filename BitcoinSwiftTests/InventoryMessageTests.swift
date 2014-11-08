@@ -34,8 +34,18 @@ class InventoryMessageTests: XCTestCase {
 
   // TODO: Add edge test cases: Too many vectors, empty data, etc.
 
+  func testInventoryMessageEncoding() {
+    let inventoryVectors = [
+        InventoryVector(type: InventoryVector.VectorType.Block, hash: vector0Hash)]
+    let inventoryMessage = InventoryMessage(inventoryVectors: inventoryVectors)
+    let expectedData = NSData(bytes: inventoryMessageBytes, length: inventoryMessageBytes.count)
+    XCTAssertEqual(inventoryMessage.bitcoinData, expectedData)
+  }
+
   func testInventoryMessageDecoding() {
-    if let inventoryMessage = InventoryMessage.fromData(inventoryMessageData) {
+    let stream = NSInputStream(data: inventoryMessageData)
+    stream.open()
+    if let inventoryMessage = InventoryMessage.fromBitcoinStream(stream) {
       let expectedInventoryVectors = [
           InventoryVector(type: InventoryVector.VectorType.Block, hash: vector0Hash)]
       let expectedInventoryMessage = InventoryMessage(inventoryVectors: expectedInventoryVectors)
@@ -43,13 +53,5 @@ class InventoryMessageTests: XCTestCase {
     } else {
       XCTFail("\n[FAIL] Failed to parse InventoryMessage")
     }
-  }
-
-  func testInventoryMessageEncoding() {
-    let inventoryVectors = [
-        InventoryVector(type: InventoryVector.VectorType.Block, hash: vector0Hash)]
-    let inventoryMessage = InventoryMessage(inventoryVectors: inventoryVectors)
-    let expectedData = NSData(bytes: inventoryMessageBytes, length: inventoryMessageBytes.count)
-    XCTAssertEqual(inventoryMessage.data, expectedData)
   }
 }

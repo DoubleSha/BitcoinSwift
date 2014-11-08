@@ -31,20 +31,16 @@ class MessageHeaderTests: XCTestCase {
   }
 
   func testMessageHeaderEncoding() {
-    XCTAssertEqual(header.data, headerData)
+    XCTAssertEqual(header.bitcoinData, headerData)
   }
 
   func testMessageHeaderDecoding() {
-    if let testHeader = Message.Header.fromData(headerData) {
+    let stream = NSInputStream(data: headerData)
+    stream.open()
+    if let testHeader = Message.Header.fromBitcoinStream(stream) {
       XCTAssertEqual(testHeader, header)
     } else {
       XCTFail("\n[FAIL] Failed to parse message header")
-    }
-  }
-
-  func testEmptyData() {
-    if let header = Message.Header.fromData(NSData()) {
-      XCTFail("\n[FAIL] Header should be nil")
     }
   }
 }

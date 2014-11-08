@@ -38,7 +38,7 @@ extension GetHeadersMessage: MessagePayload {
     return Message.Command.GetBlocks
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendUInt32(protocolVersion)
     data.appendVarInt(blockLocatorHashes.count)
@@ -53,34 +53,29 @@ extension GetHeadersMessage: MessagePayload {
     return data
   }
 
-  public static func fromData(data: NSData) -> GetHeadersMessage? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> GetHeadersMessage? {
     let protocolVersion = stream.readUInt32()
     if protocolVersion == nil {
-      Logger.warn("Failed to parse protocolVersion from GetHeadersMessage \(data)")
+      Logger.warn("Failed to parse protocolVersion from GetHeadersMessage")
       return nil
     }
     let hashCount = stream.readVarInt()
     if hashCount == nil {
-      Logger.warn("Failed to parse hashCount from GetHeadersMessage \(data)")
+      Logger.warn("Failed to parse hashCount from GetHeadersMessage")
       return nil
     }
     var blockLocatorHashes: [NSData] = []
     for _ in 0..<hashCount! {
       let blockLocatorHash = stream.readData(length: 32)
       if blockLocatorHash == nil {
-        Logger.warn("Failed to parse blockLocatorHash from GetHeadersMessage \(data)")
+        Logger.warn("Failed to parse blockLocatorHash from GetHeadersMessage")
         return nil
       }
       blockLocatorHashes.append(blockLocatorHash!)
     }
     var blockHashStop = stream.readData(length: 32)
     if blockHashStop == nil {
-      Logger.warn("Failed to parse blockHashStop from GetHeadersMessage \(data)")
+      Logger.warn("Failed to parse blockHashStop from GetHeadersMessage")
       return nil
     }
     let zeroHash = NSMutableData(length: 32)

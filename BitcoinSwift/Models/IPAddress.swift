@@ -26,4 +26,6 @@ public func ==(lhs: IPAddress, rhs: IPAddress) -> Bool {
 public enum IPAddress: Equatable {
   case IPV4(UInt32)
   case IPV6(UInt32, UInt32, UInt32, UInt32)
+
+  // TODO: Make this conform to BitcoinSerializable.
 }

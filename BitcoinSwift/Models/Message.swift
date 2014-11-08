@@ -11,10 +11,8 @@ import Foundation
 /// A MessagePayload can be any of the supported message types defined in the Message.Command enum.
 /// Implement the data and fromData methods to serialize/deserialize the payload from the Bitcoin
 /// P2P wire format.
-public protocol MessagePayload {
+public protocol MessagePayload: BitcoinSerializable {
   var command: Message.Command { get }
-  var data: NSData { get }
-  class func fromData(data: NSData) -> Self?
 }
 
 public func ==(lhs: Message, rhs: Message) -> Bool {
@@ -102,9 +100,9 @@ public struct Message: Equatable {
   public init(network: Network, payload: MessagePayload) {
     self.header = Header(network: network,
                          command: payload.command,
-                         payloadLength: UInt32(payload.data.length),
-                         payloadChecksum: Message.checksumForPayload(payload.data))
-    self.payload = payload.data
+                         payloadLength: UInt32(payload.bitcoinData.length),
+                         payloadChecksum: Message.checksumForPayload(payload.bitcoinData))
+    self.payload = payload.bitcoinData
   }
 
   public init(header: Header, payloadData: NSData) {
@@ -116,18 +114,27 @@ public struct Message: Equatable {
     return payloadChecksum == Message.checksumForPayload(payload)
   }
 
-  /// Parses the message from an NSData object. Returns nil if the message is invalid.
+  // MARK: - Private Methods
+
+  private static func checksumForPayload(payload: NSData) -> UInt32 {
+    return payload.SHA256Hash().SHA256Hash().UInt32AtIndex(0)!
+  }
+}
+
+extension Message: BitcoinSerializable {
+
+  public var bitcoinData: NSData {
+    var bytes = NSMutableData(data: header.bitcoinData)
+    bytes.appendData(payload)
+    return bytes
+  }
+
   /// Does not parse the payload data into its corresponding payload type. Use the corresponding
   /// struct that conforms to the MessagePayload protocol to parse the payload.
-  public static func fromData(data: NSData) -> Message? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
-    let header = Header.fromStream(stream)
+  public static func fromBitcoinStream(stream: NSInputStream) -> Message? {
+    let header = Header.fromBitcoinStream(stream)
     if header == nil {
-      // Header.fromData() has already logged a warning for us.
+      // Header.fromBitcoinStream() has already logged a warning for us.
       return nil
     }
     let payloadData = stream.readData()
@@ -135,20 +142,6 @@ public struct Message: Equatable {
       Logger.warn("Failed to parse payload in message")
       return nil
     }
-    stream.close()
     return Message(header: header!, payloadData: payloadData!)
-  }
-
-  /// Encodes the message into an NSData object for wire transmission.
-  public var data: NSData {
-    var bytes = NSMutableData(data: header.data)
-    bytes.appendData(payload)
-    return bytes
-  }
-
-  // MARK: - Private Methods
-
-  private static func checksumForPayload(payload: NSData) -> UInt32 {
-    return payload.SHA256Hash().SHA256Hash().UInt32AtIndex(0)!
   }
 }

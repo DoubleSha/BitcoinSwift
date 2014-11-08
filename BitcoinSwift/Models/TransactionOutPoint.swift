@@ -32,23 +32,16 @@ public extension Transaction {
   }
 }
 
-public extension Transaction.OutPoint {
+ extension Transaction.OutPoint: BitcoinSerializable {
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendData(transactionHash)
     data.appendUInt32(index)
     return data
   }
 
-  public static func fromData(data: NSData) -> Transaction.OutPoint? {
-    return Transaction.OutPoint.fromStream(NSInputStream(data: data))
-  }
-
-  public static func fromStream(stream: NSInputStream) -> Transaction.OutPoint? {
-    if stream.streamStatus != .Open {
-      stream.open()
-    }
+  public static func fromBitcoinStream(stream: NSInputStream) -> Transaction.OutPoint? {
     let transactionHash = stream.readData(length: 32)
     if transactionHash == nil {
       Logger.warn("Failed to parse transactionHash in Transaction.Input.Outpoint")

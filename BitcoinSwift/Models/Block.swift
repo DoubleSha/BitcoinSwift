@@ -38,38 +38,33 @@ extension Block: MessagePayload {
     return Message.Command.Block
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
-    data.appendData(header.data)
+    data.appendData(header.bitcoinData)
     // Note: the transactions array will be empty if this is just a block header.
     data.appendVarInt(transactions.count)
     for transaction in transactions {
-      data.appendData(transaction.data)
+      data.appendData(transaction.bitcoinData)
     }
     return data
   }
 
-  public static func fromData(data: NSData) -> Block? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
-    let header = BlockHeader.fromStream(stream)
+  public static func fromBitcoinStream(stream: NSInputStream) -> Block? {
+    let header = BlockHeader.fromBitcoinStream(stream)
     if header == nil {
-      Logger.warn("Failed to parse header from Block \(data)")
+      Logger.warn("Failed to parse header from Block")
       return nil
     }
     let transactionsCount = stream.readVarInt()
     if transactionsCount == nil {
-      Logger.warn("Failed to parse transactionsCount from Block \(data)")
+      Logger.warn("Failed to parse transactionsCount from Block")
       return nil
     }
     var transactions: [Transaction] = []
     for i in 0..<transactionsCount! {
-      let transaction = Transaction.fromStream(stream)
+      let transaction = Transaction.fromBitcoinStream(stream)
       if transaction == nil {
-        Logger.warn("Failed to parse transaction at index \(i) from Block \(data)")
+        Logger.warn("Failed to parse transaction at index \(i) from Block")
         return nil
       }
       transactions.append(transaction!)

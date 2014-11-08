@@ -16,16 +16,13 @@ public struct FilterClearMessage: MessagePayload {
     return Message.Command.FilterClear
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     // A filterclear message has no payload.
     return NSData()
   }
 
-  public static func fromData(data: NSData) -> FilterClearMessage? {
+  public static func fromBitcoinStream(stream: NSInputStream) -> FilterClearMessage? {
     // A filterclear message has no payload.
-    if data.length != 0 {
-      return nil
-    }
     return FilterClearMessage()
   }
 }

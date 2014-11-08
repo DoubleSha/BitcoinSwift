@@ -28,4 +28,6 @@ public struct InventoryVector: Equatable {
     self.type = type
     self.hash = hash
   }
+
+  // TODO: Make this conform to BitcoinSerializable.
 }

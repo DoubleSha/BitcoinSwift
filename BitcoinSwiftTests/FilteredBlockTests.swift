@@ -72,11 +72,13 @@ class FilteredBlockTests: XCTestCase {
   }
 
   func testFilteredBlockEncoding() {
-    XCTAssertEqual(filteredBlock.data, filteredBlockData)
+    XCTAssertEqual(filteredBlock.bitcoinData, filteredBlockData)
   }
 
   func testFilteredBlockDecoding() {
-    if let testFilteredBlock = FilteredBlock.fromData(filteredBlockData) {
+    let stream = NSInputStream(data: filteredBlockData)
+    stream.open()
+    if let testFilteredBlock = FilteredBlock.fromBitcoinStream(stream) {
       XCTAssertEqual(testFilteredBlock, filteredBlock)
     } else {
       XCTFail("\n[FAIL] Failed to parse FilteredBlock")

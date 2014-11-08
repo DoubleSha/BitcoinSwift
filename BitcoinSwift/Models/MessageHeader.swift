@@ -38,58 +38,55 @@ extension Message {
       self.payloadLength = payloadLength
       self.payloadChecksum = payloadChecksum
     }
-
-    public static func fromData(data: NSData) -> Header? {
-      return Header.fromStream(NSInputStream(data: data))
-    }
-
-    public static func fromStream(stream: NSInputStream) -> Header? {
-      if stream.streamStatus != .Open {
-        stream.open()
-      }
-      let networkRaw = stream.readUInt32()
-      if networkRaw == nil {
-        Logger.warn("Failed to parse network magic value in message header")
-        return nil
-      }
-      let network = Network(rawValue: networkRaw!)
-      if network == nil {
-        Logger.warn("Unsupported network \(networkRaw!) in message header")
-        return nil
-      }
-      let commandRaw = stream.readASCIIStringWithLength(Command.encodedLength)
-      if commandRaw == nil {
-        Logger.warn("Failed to parse command in message header")
-        return nil
-      }
-      let command = Command(rawValue: commandRaw!)
-      if command == nil {
-        Logger.warn("Unsupported command \(commandRaw!) in message header")
-        return nil
-      }
-      let payloadLength = stream.readUInt32()
-      if payloadLength == nil {
-        Logger.warn("Failed to parse size in message header")
-        return nil
-      }
-      let payloadChecksum = stream.readUInt32()
-      if payloadChecksum == nil {
-        Logger.warn("Failed to parse payload checksum in message header")
-        return nil
-      }
-      return Header(network: network!,
-                    command: command!,
-                    payloadLength: payloadLength!,
-                    payloadChecksum: payloadChecksum!)
-    }
-
-    public var data: NSData {
-      var bytes = NSMutableData()
-      bytes.appendUInt32(network.rawValue)
-      bytes.appendData(command.data)
-      bytes.appendUInt32(payloadLength)
-      bytes.appendUInt32(payloadChecksum)
-      return bytes
-    }
   }
 }
+
+extension Message.Header: BitcoinSerializable {
+
+  public var bitcoinData: NSData {
+    var bytes = NSMutableData()
+    bytes.appendUInt32(network.rawValue)
+    bytes.appendData(command.data)
+    bytes.appendUInt32(payloadLength)
+    bytes.appendUInt32(payloadChecksum)
+    return bytes
+  }
+
+  public static func fromBitcoinStream(stream: NSInputStream) -> Message.Header? {
+    let networkRaw = stream.readUInt32()
+    if networkRaw == nil {
+      Logger.warn("Failed to parse network magic value in message header")
+      return nil
+    }
+    let network = Message.Network(rawValue: networkRaw!)
+    if network == nil {
+      Logger.warn("Unsupported network \(networkRaw!) in message header")
+      return nil
+    }
+    let commandRaw = stream.readASCIIStringWithLength(Message.Command.encodedLength)
+    if commandRaw == nil {
+      Logger.warn("Failed to parse command in message header")
+      return nil
+    }
+    let command = Message.Command(rawValue: commandRaw!)
+    if command == nil {
+      Logger.warn("Unsupported command \(commandRaw!) in message header")
+      return nil
+    }
+    let payloadLength = stream.readUInt32()
+    if payloadLength == nil {
+      Logger.warn("Failed to parse size in message header")
+      return nil
+    }
+    let payloadChecksum = stream.readUInt32()
+    if payloadChecksum == nil {
+      Logger.warn("Failed to parse payload checksum in message header")
+      return nil
+    }
+    return Message.Header(network: network!,
+      command: command!,
+      payloadLength: payloadLength!,
+      payloadChecksum: payloadChecksum!)
+  }
+}
+

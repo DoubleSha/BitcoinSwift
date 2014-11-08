@@ -45,9 +45,9 @@ extension FilteredBlock: MessagePayload {
     return Message.Command.MerkleBlock
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
-    data.appendData(header.data)
+    data.appendData(header.bitcoinData)
     data.appendUInt32(totalNumTransactions)
     data.appendVarInt(hashes.count)
     for hash in hashes {
@@ -60,46 +60,41 @@ extension FilteredBlock: MessagePayload {
     return data
   }
 
-  public static func fromData(data: NSData) -> FilteredBlock? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
-    let header = BlockHeader.fromStream(stream)
+  public static func fromBitcoinStream(stream: NSInputStream) -> FilteredBlock? {
+    let header = BlockHeader.fromBitcoinStream(stream)
     if header == nil {
-      Logger.warn("Failed to parse header from FilteredBlock \(data)")
+      Logger.warn("Failed to parse header from FilteredBlock")
       return nil
     }
     let totalNumTransactions = stream.readUInt32()
     if totalNumTransactions == nil {
-      Logger.warn("Failed to parse totalNumTransactions from FilteredBlock \(data)")
+      Logger.warn("Failed to parse totalNumTransactions from FilteredBlock")
       return nil
     }
     let hashesCount = stream.readVarInt()
     if hashesCount == nil {
-      Logger.warn("Failed to parse hashesCount from FilteredBlock \(data)")
+      Logger.warn("Failed to parse hashesCount from FilteredBlock")
       return nil
     }
     var hashes: [NSData] = []
     for i in 0..<hashesCount! {
       let hash = stream.readData(length: 32)
       if hash == nil {
-        Logger.warn("Failed to parse hash \(i) from FilteredBlock \(data)")
+        Logger.warn("Failed to parse hash \(i) from FilteredBlock")
         return nil
       }
       hashes.append(hash!)
     }
     let flagBytesCount = stream.readVarInt()
     if flagBytesCount == nil {
-      Logger.warn("Failed to parse flagBytesCount from FilteredBlock \(data)")
+      Logger.warn("Failed to parse flagBytesCount from FilteredBlock")
       return nil
     }
     var flags: [UInt8] = []
     for i in 0..<flagBytesCount! {
       let flagByte = stream.readUInt8()
       if flagByte == nil {
-        Logger.warn("Failed to parse flagByte \(i) from FilteredBlock \(data)")
+        Logger.warn("Failed to parse flagByte \(i) from FilteredBlock")
         return nil
       }
       flags.append(flagByte!)

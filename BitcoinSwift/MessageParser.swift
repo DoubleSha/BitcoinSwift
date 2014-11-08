@@ -13,7 +13,7 @@ public protocol MessageParserDelegate: class {
 }
 
 /// Parses Messages from raw data received from the wire. Handles framing and ensuring message
-/// data integrety.
+/// data integrety. When a message is successfully parsed, the delegate is notified.
 public class MessageParser {
 
   public weak var delegate: MessageParserDelegate? = nil
@@ -59,8 +59,10 @@ public class MessageParser {
           // Wait for more bytes to be received.
           return
         }
-        let data = NSData(bytes: receivedBytes, length: receivedBytes.count)
-        receivedHeader = Message.Header.fromData(data)
+        let stream = NSInputStream(data: NSData(bytes: receivedBytes, length: receivedBytes.count))
+        stream.open()
+        receivedHeader = Message.Header.fromBitcoinStream(stream)
+        stream.close()
         if receivedHeader == nil {
           // Failed to parse the header for some reason. It's possible that the networkMagicBytes
           // coincidentally appeared in the byte data, or the header was invalid for some reason.
@@ -72,7 +74,6 @@ public class MessageParser {
         // We successfully parsed the header from receivedBytes, so remove those bytes.
         receivedBytes.removeRange(0..<Message.Header.length)
       }
-      assert(Message.Header.length == 24)
       // NOTE: payloadLength can be 0 for some message types, e.g. VersionAck.
       let payloadLength = Int(receivedHeader!.payloadLength)
       // TODO: Need to figure out a maximum length to allow here, or somebody could DOS us by

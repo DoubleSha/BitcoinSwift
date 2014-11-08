@@ -58,11 +58,13 @@ class RejectMessageTests: XCTestCase {
   }
 
   func testRejectMessageWithHashEncoding() {
-    XCTAssertEqual(rejectMessageWithHash.data, rejectMessageWithHashData)
+    XCTAssertEqual(rejectMessageWithHash.bitcoinData, rejectMessageWithHashData)
   }
 
   func testRejectMessageWithHashDecoding() {
-    if let testRejectMessageWithHash = RejectMessage.fromData(rejectMessageWithHashData) {
+    let stream = NSInputStream(data: rejectMessageWithHashData)
+    stream.open()
+    if let testRejectMessageWithHash = RejectMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testRejectMessageWithHash, rejectMessageWithHash)
     } else {
       XCTFail("\n[FAIL] Failed to parse RejectMessage")
@@ -70,11 +72,13 @@ class RejectMessageTests: XCTestCase {
   }
 
   func testRejectMessageWithoutHashEncoding() {
-    XCTAssertEqual(rejectMessageWithoutHash.data, rejectMessageWithoutHashData)
+    XCTAssertEqual(rejectMessageWithoutHash.bitcoinData, rejectMessageWithoutHashData)
   }
 
   func testRejectMessageWithoutHashDecoding() {
-    if let testRejectMessageWithoutHash = RejectMessage.fromData(rejectMessageWithoutHashData) {
+    let stream = NSInputStream(data: rejectMessageWithoutHashData)
+    stream.open()
+    if let testRejectMessageWithoutHash = RejectMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testRejectMessageWithoutHash, rejectMessageWithoutHash)
     } else {
       XCTFail("\n[FAIL] Failed to parse RejectMessage")

@@ -66,7 +66,7 @@ static const char base58Chars[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkm
 
 #pragma mark Private Methods
 
-- (NSString *)reversedStringWithString: (NSString *)string {
+- (NSString *)reversedStringWithString:(NSString *)string {
   NSMutableString *reversedString = [NSMutableString string];
   NSInteger charIndex = string.length;
   while (charIndex > 0) {

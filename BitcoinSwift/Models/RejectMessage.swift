@@ -49,7 +49,7 @@ extension RejectMessage: MessagePayload {
     return Message.Command.Reject
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendVarString(rejectedCommand.rawValue)
     data.appendUInt8(code.rawValue)
@@ -60,49 +60,39 @@ extension RejectMessage: MessagePayload {
     return data
   }
 
-  public static func fromData(data: NSData) -> RejectMessage? {
-    if data.length == 0 {
-      println("WARN: Empty data passed to RejectMessage \(data)")
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> RejectMessage? {
     let rawCommand = stream.readVarString()
     if rawCommand == nil {
-      println("WARN: Failed to parse rawCommand from RejectMessage \(data)")
+      println("WARN: Failed to parse rawCommand from RejectMessage")
       return nil
     }
     let command = Message.Command(rawValue: rawCommand!)
     if command == nil {
-      println("WARN: Invalid command \(rawCommand!) from RejectMessage \(data)")
+      println("WARN: Invalid command \(rawCommand!) from RejectMessage")
       return nil
     }
     let rawCode = stream.readUInt8()
     if rawCode == nil {
-      println("WARN: Failed to parse rawCode from RejectMessage \(data)")
+      println("WARN: Failed to parse rawCode from RejectMessage")
       return nil
     }
     let code = Code(rawValue: rawCode!)
     if code == nil {
-      println("WARN: Invalid code \(rawCode!) from RejectMessage \(data)")
+      println("WARN: Invalid code \(rawCode!) from RejectMessage")
       return nil
     }
     let reason = stream.readVarString()
     if reason == nil {
-      println("WARN: Failed to parse reason from RejectMessage \(data)")
+      println("WARN: Failed to parse reason from RejectMessage")
       return nil
     }
     var hash: NSData? = nil
     if stream.hasBytesAvailable {
       hash = stream.readData(length: 32)
       if hash == nil {
-        println("WARN: Failed to parse hash from RejectMessage \(data)")
+        println("WARN: Failed to parse hash from RejectMessage")
         return nil
       }
-    }
-    if stream.hasBytesAvailable {
-      println("WARN: Failed to parse RejectMessage. Too much data \(data)")
-      return nil
     }
     return RejectMessage(rejectedCommand: command!, code: code!, reason: reason!, hash: hash)
   }

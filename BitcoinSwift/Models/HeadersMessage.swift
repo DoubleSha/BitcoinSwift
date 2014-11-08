@@ -29,42 +29,33 @@ extension HeadersMessage: MessagePayload {
     return Message.Command.Headers
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendVarInt(headers.count)
     for header in headers {
-      data.appendData(header.data)
+      data.appendData(header.bitcoinData)
     }
     return data
   }
 
-  public static func fromData(data: NSData) -> HeadersMessage? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> HeadersMessage? {
     let count = stream.readVarInt()
     if count == nil {
-      Logger.warn("Failed to parse count from HeadersMessage \(data)")
+      Logger.warn("Failed to parse count from HeadersMessage")
       return nil
     }
     if count! == 0 {
-      Logger.warn("Failed to parse HeadersMessage. Count is zero \(data)")
+      Logger.warn("Failed to parse HeadersMessage. Count is zero")
       return nil
     }
     var headers: [BlockHeader] = []
     for i in 0..<count! {
-      let header = BlockHeader.fromStream(stream)
+      let header = BlockHeader.fromBitcoinStream(stream)
       if header == nil {
-        Logger.warn("Failed to parse header \(i) from HeadersMessage \(data)")
+        Logger.warn("Failed to parse header \(i) from HeadersMessage")
         return nil
       }
       headers.append(header!)
-    }
-    if stream.hasBytesAvailable {
-      Logger.warn("Failed to parse HeadersMessage. Too much data \(data)")
-      return nil
     }
     return HeadersMessage(headers: headers)
   }

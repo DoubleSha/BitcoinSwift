@@ -42,26 +42,19 @@ public extension Transaction {
   }
 }
 
-public extension Transaction.Input {
+ extension Transaction.Input: BitcoinSerializable {
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
-    data.appendData(outPoint.data)
+    data.appendData(outPoint.bitcoinData)
     data.appendVarInt(scriptSignature.length)
     data.appendData(scriptSignature)
     data.appendUInt32(sequence)
     return data
   }
 
-  public static func fromData(data: NSData) -> Transaction.Input? {
-    return Transaction.Input.fromStream(NSInputStream(data: data))
-  }
-
-  public static func fromStream(stream: NSInputStream) -> Transaction.Input? {
-    if stream.streamStatus != .Open {
-      stream.open()
-    }
-    let outPoint = Transaction.OutPoint.fromStream(stream)
+  public static func fromBitcoinStream(stream: NSInputStream) -> Transaction.Input? {
+    let outPoint = Transaction.OutPoint.fromBitcoinStream(stream)
     if outPoint == nil {
       // Message already logged in OutPoint.fromStream().
       return nil

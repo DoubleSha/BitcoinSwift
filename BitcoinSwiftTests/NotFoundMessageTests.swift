@@ -37,15 +37,17 @@ class NotFoundMessageTests: XCTestCase {
 
   // TODO: Add edge test cases: Too many vectors, empty data, etc.
 
+  func testNotFoundMessageEncoding() {
+    XCTAssertEqual(notFoundMessage.bitcoinData, notFoundMessageData)
+  }
+
   func testNotFoundMessageDecoding() {
-    if let testNotFoundMessage = NotFoundMessage.fromData(notFoundMessageData) {
+    let stream = NSInputStream(data: notFoundMessageData)
+    stream.open()
+    if let testNotFoundMessage = NotFoundMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testNotFoundMessage, notFoundMessage)
     } else {
       XCTFail("\n[FAIL] Failed to parse NotFoundMessage")
     }
-  }
-
-  func testNotFoundMessageEncoding() {
-    XCTAssertEqual(notFoundMessage.data, notFoundMessageData)
   }
 }

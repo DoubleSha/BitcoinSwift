@@ -25,23 +25,16 @@ class FilterAddMessageTests: XCTestCase {
   }
 
   func testFilterAddMessageEncoding() {
-    XCTAssertEqual(filterAddMessage.data, filterAddMessageData)
+    XCTAssertEqual(filterAddMessage.bitcoinData, filterAddMessageData)
   }
 
   func testFilterAddMessageDecoding() {
-    if let testFilterAddMessage = FilterAddMessage.fromData(filterAddMessageData) {
+    let stream = NSInputStream(data: filterAddMessageData)
+    stream.open()
+    if let testFilterAddMessage = FilterAddMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testFilterAddMessage, filterAddMessage)
     } else {
       XCTFail("\n[FAIL] Failed to parse FilterAddMessage")
     }
-  }
-
-  func testFilterAddMessageTooLong() {
-    let length = FilterAddMessage.MaxFilterDataLength + 1
-    var data = NSMutableData()
-    data.appendVarInt(length)
-    let bytes = [UInt8](count: length, repeatedValue: 0x01)
-    data.appendBytes(bytes, length: bytes.count)
-    XCTAssertTrue(FilterAddMessage.fromData(data) == nil)
   }
 }

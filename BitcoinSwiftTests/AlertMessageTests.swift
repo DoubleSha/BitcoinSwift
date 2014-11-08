@@ -82,11 +82,13 @@ class AlertMessageTests: XCTestCase {
   }
 
   func testAlertMessageEncoding() {
-    XCTAssertEqual(alertMessage.data, alertMessageData)
+    XCTAssertEqual(alertMessage.bitcoinData, alertMessageData)
   }
 
   func testAlertMessageDecoding() {
-    if let testAlertMessage = AlertMessage.fromData(alertMessageData) {
+    let stream = NSInputStream(data: alertMessageData)
+    stream.open()
+    if let testAlertMessage = AlertMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testAlertMessage, alertMessage)
     } else {
       XCTFail("\n[FAIL] Failed to parse AlertMessage")

@@ -44,7 +44,7 @@ extension FilterLoadMessage: MessagePayload {
     return Message.Command.FilterLoad
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendVarInt(filter.length)
     data.appendData(filter)
@@ -54,39 +54,34 @@ extension FilterLoadMessage: MessagePayload {
     return data
   }
 
-  public static func fromData(data: NSData) -> FilterLoadMessage? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> FilterLoadMessage? {
     let filterLength = stream.readVarInt()
     if filterLength == nil {
-      Logger.warn("Failed to parse filterLength from FilterLoadMessage \(data)")
+      Logger.warn("Failed to parse filterLength from FilterLoadMessage")
       return nil
     }
     if filterLength! <= UInt64(0) || filterLength! > UInt64(FilterLoadMessage.MaxFilterLength) {
-      Logger.warn("Invalid filterLength \(filterLength!) in FilterLoadMessage \(data)")
+      Logger.warn("Invalid filterLength \(filterLength!) in FilterLoadMessage")
       return nil
     }
     let filter = stream.readData(length: Int(filterLength!))
     if filter == nil {
-      Logger.warn("Failed to parse filter from FilterLoadMessage \(data)")
+      Logger.warn("Failed to parse filter from FilterLoadMessage")
       return nil
     }
     let numHashFunctions = stream.readUInt32()
     if numHashFunctions == nil {
-      Logger.warn("Failed to parse numHashFunctions from FilterLoadMessage \(data)")
+      Logger.warn("Failed to parse numHashFunctions from FilterLoadMessage")
       return nil
     }
     let tweak = stream.readUInt32()
     if tweak == nil {
-      Logger.warn("Failed to parse tweak from FilterLoadMessage \(data)")
+      Logger.warn("Failed to parse tweak from FilterLoadMessage")
       return nil
     }
     let flags = stream.readUInt8()
     if flags == nil {
-      Logger.warn("Failed to parse flags from FilterLoadMessage \(data)")
+      Logger.warn("Failed to parse flags from FilterLoadMessage")
       return nil
     }
     return FilterLoadMessage(filter: filter!,

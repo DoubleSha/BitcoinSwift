@@ -18,16 +18,13 @@ public struct GetAddressMessage: MessagePayload {
     return Message.Command.GetAddress
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     // A getaddr message has no payload.
     return NSData()
   }
 
-  public static func fromData(data: NSData) ->GetAddressMessage? {
+  public static func fromBitcoinStream(stream: NSInputStream) ->GetAddressMessage? {
     // A getaddr message has no payload.
-    if data.length != 0 {
-      return nil
-    }
     return GetAddressMessage()
   }
 }

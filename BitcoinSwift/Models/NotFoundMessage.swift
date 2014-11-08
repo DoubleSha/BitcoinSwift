@@ -32,7 +32,7 @@ extension NotFoundMessage: MessagePayload {
     return Message.Command.NotFound
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendVarInt(inventoryVectors.count)
     for inventoryVector in inventoryVectors {
@@ -41,37 +41,28 @@ extension NotFoundMessage: MessagePayload {
     return data
   }
 
-  public static func fromData(data: NSData) -> NotFoundMessage? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> NotFoundMessage? {
     let inventoryCount = stream.readVarInt()
     if inventoryCount == nil {
-      Logger.warn("Failed to parse count from NotFoundMessage \(data)")
+      Logger.warn("Failed to parse count from NotFoundMessage")
       return nil
     }
     if inventoryCount! == 0 {
-      Logger.warn("Failed to parse NotFoundMessage. Count is zero \(data)")
+      Logger.warn("Failed to parse NotFoundMessage. Count is zero")
       return nil
     }
     if inventoryCount! > 50000 {
-      Logger.warn("Failed to parse NotFoundMessage. Count is greater than 50000 \(data)")
+      Logger.warn("Failed to parse NotFoundMessage. Count is greater than 50000")
       return nil
     }
     var inventoryVectors: [InventoryVector] = []
     for _ in 0..<inventoryCount! {
       let inventoryVector = stream.readInventoryVector()
       if inventoryVector == nil {
-        Logger.warn("Failed to parse inventory vector from NotFoundMessage \(data)")
+        Logger.warn("Failed to parse inventory vector from NotFoundMessage")
         return nil
       }
       inventoryVectors.append(inventoryVector!)
-    }
-    if stream.hasBytesAvailable {
-      Logger.warn("Failed to parse NotFoundMessage. Too many vectors \(data)")
-      return nil
     }
     return NotFoundMessage(inventoryVectors: inventoryVectors)
   }

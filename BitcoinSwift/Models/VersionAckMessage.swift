@@ -18,16 +18,13 @@ public struct VersionAckMessage: MessagePayload {
     return Message.Command.VersionAck
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     // A verack message has no payload.
     return NSData()
   }
 
-  public static func fromData(data: NSData) -> VersionAckMessage? {
+  public static func fromBitcoinStream(stream: NSInputStream) -> VersionAckMessage? {
     // A verack message has no payload.
-    if data.length != 0 {
-      return nil
-    }
     return VersionAckMessage()
   }
 }

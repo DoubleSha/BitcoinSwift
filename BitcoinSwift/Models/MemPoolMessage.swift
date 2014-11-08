@@ -18,16 +18,13 @@ public struct MemPoolMessage: MessagePayload {
     return Message.Command.MemPool
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     // A mempool message has no payload.
     return NSData()
   }
 
-  public static func fromData(data: NSData) -> MemPoolMessage? {
+  public static func fromBitcoinStream(stream: NSInputStream) -> MemPoolMessage? {
     // A mempool message has no payload.
-    if data.length != 0 {
-      return nil
-    }
     return MemPoolMessage()
   }
 }

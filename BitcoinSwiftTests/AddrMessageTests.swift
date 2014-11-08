@@ -27,7 +27,9 @@ class AddressMessageTests: XCTestCase {
         0x00, 0x00, 0xff, 0xff, 0x0a, 0x00, 0x00, 0x02,   // IP of 10.0.0.2
         0x20, 0x8d]                                       // Port 8333
     let data = NSData(bytes: bytes, length: bytes.count)
-    let addressMessage = AddressMessage.fromData(data)
+    let stream = NSInputStream(data: data)
+    stream.open()
+    let addressMessage = AddressMessage.fromBitcoinStream(stream)
     if addressMessage != nil {
       XCTAssertEqual(addressMessage!.peerAddresses.count, 2)
       let expectedPeerAddresses = [
@@ -43,28 +45,6 @@ class AddressMessageTests: XCTestCase {
       XCTAssertEqual(addressMessage!.peerAddresses[1], expectedPeerAddresses[1])
     } else {
       XCTFail("\n[FAIL] Failed to parse AddressMessage")
-    }
-  }
-
-  func testAddressMessageDecodingTooManyPeerAddresses() {
-    let bytes: [UInt8] = [
-        0x01,                                             // Number of addresses
-        // First PeerAddress
-        0x11, 0xb2, 0xd0, 0x50,                           // Tue Dec 18 10:12:33 PST 2012
-        0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,   // 1 (NODE_NETWORK services)
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0xff, 0xff, 0x0a, 0x00, 0x00, 0x01,   // IP of 10.0.0.1
-        0x20, 0x8d,                                       // Port 8333
-        // Second PeerAddress
-        0x11, 0xb2, 0xd0, 0x50,                           // Tue Dec 18 10:12:33 PST 2012
-        0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,   // 1 (NODE_NETWORK services)
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0xff, 0xff, 0x0a, 0x00, 0x00, 0x02,   // IP of 10.0.0.2
-        0x20, 0x8d]                                       // Port 8333
-    let data = NSData(bytes: bytes, length: bytes.count)
-    let addressMessage = AddressMessage.fromData(data)
-    if addressMessage != nil {
-      XCTFail("\n[FAIL] Parsing AddressMessage should have failed")
     }
   }
 
@@ -94,6 +74,6 @@ class AddressMessageTests: XCTestCase {
         0x00, 0x00, 0xff, 0xff, 0x0a, 0x00, 0x00, 0x02,   // IP of 10.0.0.2
         0x20, 0x8d]                                       // Port 8333
     let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
-    XCTAssertEqual(addressMessage.data, expectedData)
+    XCTAssertEqual(addressMessage.bitcoinData, expectedData)
   }
 }

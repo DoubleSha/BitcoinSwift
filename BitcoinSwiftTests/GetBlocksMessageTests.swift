@@ -56,7 +56,9 @@ class GetBlocksMessageTests: XCTestCase {
         0x3c, 0x51, 0x92, 0x1e, 0xe4, 0x47, 0x4c, 0x25,
         0x33, 0x48, 0x0b, 0xa7, 0x44, 0xd8, 0xf7, 0x24]   // blockHashStop
     let data = NSData(bytes: bytes, length: bytes.count)
-    if let getBlocksMessage = GetBlocksMessage.fromData(data) {
+    let stream = NSInputStream(data: data)
+    stream.open()
+    if let getBlocksMessage = GetBlocksMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(getBlocksMessage.protocolVersion, UInt32(70001))
       XCTAssertEqual(getBlocksMessage.blockLocatorHashes, [blockLocatorHash0, blockLocatorHash1])
       XCTAssertNotNil(getBlocksMessage.blockHashStop)
@@ -83,7 +85,9 @@ class GetBlocksMessageTests: XCTestCase {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]   // blockHashStop
     let data = NSData(bytes: bytes, length: bytes.count)
-    if let getBlocksMessage = GetBlocksMessage.fromData(data) {
+    let stream = NSInputStream(data: data)
+    stream.open()
+    if let getBlocksMessage = GetBlocksMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(getBlocksMessage.protocolVersion, UInt32(70001))
       XCTAssertEqual(getBlocksMessage.blockLocatorHashes, [blockLocatorHash0, blockLocatorHash1])
       XCTAssertNil(getBlocksMessage.blockHashStop)
@@ -113,7 +117,7 @@ class GetBlocksMessageTests: XCTestCase {
         0x3c, 0x51, 0x92, 0x1e, 0xe4, 0x47, 0x4c, 0x25,
         0x33, 0x48, 0x0b, 0xa7, 0x44, 0xd8, 0xf7, 0x24]   // blockHashStop
     let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
-    XCTAssertEqual(getBlocksMessage.data, expectedData)
+    XCTAssertEqual(getBlocksMessage.bitcoinData, expectedData)
   }
 
   func testGetBlocksMessageWithNoBlockHashStopEncoding() {
@@ -136,6 +140,6 @@ class GetBlocksMessageTests: XCTestCase {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]   // blockHashStop
     let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
-    XCTAssertEqual(getBlocksMessage.data, expectedData)
+    XCTAssertEqual(getBlocksMessage.bitcoinData, expectedData)
   }
 }

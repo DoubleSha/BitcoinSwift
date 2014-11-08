@@ -52,9 +52,9 @@ extension AlertMessage: MessagePayload {
     return Message.Command.Alert
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
-    let alertData = alert.data
+    let alertData = alert.bitcoinData
     data.appendVarInt(alertData.length)
     data.appendData(alertData)
     data.appendVarInt(signature.length)
@@ -62,46 +62,28 @@ extension AlertMessage: MessagePayload {
     return data
   }
 
-  public static func fromData(data: NSData) -> AlertMessage? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> AlertMessage? {
     let alertDataLength = stream.readVarInt()
     if alertDataLength == nil {
-      Logger.warn("Failed to parse alertDataLength from AlertMessage \(data)")
+      Logger.warn("Failed to parse alertDataLength from AlertMessage")
       return nil
     }
-    if alertDataLength! > UInt64(data.length) {
-      Logger.warn("Invalid alertDataLength \(alertDataLength!) in AlertMessage \(data)")
-      return nil
-    }
-    let alertData = stream.readData(length: Int(alertDataLength!))
-    if alertData == nil {
-      Logger.warn("Failed to parse alertData in AlertMessage \(data)")
-      return nil
-    }
-    let alert = Alert.fromData(alertData!)
+    let alert = Alert.fromBitcoinStream(stream)
     if alert == nil {
-      Logger.warn("Failed to parse alert from AlertMessage \(data)")
+      Logger.warn("Failed to parse alert from AlertMessage")
       return nil
     }
     let signatureLength = stream.readVarInt()
     if signatureLength == nil {
-      Logger.warn("Failed to parse signatureLength from AlertMessage \(data)")
+      Logger.warn("Failed to parse signatureLength from AlertMessage")
       return nil
     }
     let signature = stream.readData(length: Int(signatureLength!))
     if signature == nil {
-      Logger.warn("Failed to parse signature from AlertMessage \(data)")
+      Logger.warn("Failed to parse signature from AlertMessage")
       return nil
     }
     // TODO: Validate signature.
-    if stream.hasBytesAvailable {
-      Logger.warn("Failed to parse AlertMessage. Too much data \(data)")
-      return nil
-    }
     return AlertMessage(alert: alert!, signature: signature!)
   }
 }

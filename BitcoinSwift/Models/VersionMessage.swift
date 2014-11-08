@@ -64,7 +64,7 @@ extension VersionMessage: MessagePayload {
     return Message.Command.Version
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendUInt32(protocolVersion)
     data.appendUInt64(services.rawValue)
@@ -78,57 +78,52 @@ extension VersionMessage: MessagePayload {
     return data
   }
 
-  public static func fromData(data: NSData) -> VersionMessage? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> VersionMessage? {
     let protocolVersion = stream.readUInt32()
     if protocolVersion == nil {
-      Logger.warn("Failed to parse protocolVersion from VersionMessage \(data)")
+      Logger.warn("Failed to parse protocolVersion from VersionMessage")
       return nil
     }
     let servicesRaw = stream.readUInt64()
     if servicesRaw == nil {
-      Logger.warn("Failed to parse servicesRaw from VersionMessage \(data)")
+      Logger.warn("Failed to parse servicesRaw from VersionMessage")
       return nil
     }
     let services = PeerServices(rawValue: servicesRaw!)
     let timestamp = stream.readInt64()
     if timestamp == nil {
-      Logger.warn("Failed to parse timestamp from VersionMessage \(data)")
+      Logger.warn("Failed to parse timestamp from VersionMessage")
       return nil
     }
     let date = NSDate(timeIntervalSince1970: NSTimeInterval(timestamp!))
     let receiverAddress = stream.readPeerAddress(includeTimestamp: false)
     if receiverAddress == nil {
-      Logger.warn("Failed to parse receiverAddress from VersionMessage \(data)")
+      Logger.warn("Failed to parse receiverAddress from VersionMessage")
       return nil
     }
     let senderAddress = stream.readPeerAddress(includeTimestamp: false)
     if senderAddress == nil {
-      Logger.warn("Failed to parse senderAddress from VersionMessage \(data)")
+      Logger.warn("Failed to parse senderAddress from VersionMessage")
       return nil
     }
     let nonce = stream.readUInt64()
     if nonce == nil {
-      Logger.warn("Failed to parse nonce from VersionMessage \(data)")
+      Logger.warn("Failed to parse nonce from VersionMessage")
       return nil
     }
     let userAgent = stream.readVarString()
     if userAgent == nil {
-      Logger.warn("Failed to parse userAgent from VersionMessage \(data)")
+      Logger.warn("Failed to parse userAgent from VersionMessage")
       return nil
     }
     let blockStartHeight = stream.readInt32()
     if blockStartHeight == nil {
-      Logger.warn("Failed to parse blockStartHeight from VersionMessage \(data)")
+      Logger.warn("Failed to parse blockStartHeight from VersionMessage")
       return nil
     }
     let announceRelayedTransactions = stream.readBool()
     if announceRelayedTransactions == nil {
-      Logger.warn("Failed to parse announceRelayedTransactions from VersionMessage \(data)")
+      Logger.warn("Failed to parse announceRelayedTransactions from VersionMessage")
       return nil
     }
     return VersionMessage(protocolVersion: protocolVersion!,

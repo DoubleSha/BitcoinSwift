@@ -193,6 +193,8 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   public func didParseMessage(message: Message) {
     // TODO: Add the rest of the messages.
     Logger.debug("Received \(message.header.command.rawValue) message")
+    let payloadStream = NSInputStream(data: message.payload)
+    payloadStream.open()
     switch message.header.command {
       case .Version: 
         if peerVersion != nil {
@@ -200,7 +202,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           break
         }
         assert(status == .Connecting)
-        let versionMessage = VersionMessage.fromData(message.payload)
+        let versionMessage = VersionMessage.fromBitcoinStream(payloadStream)
         if versionMessage == nil {
           disconnectWithError(errorWithCode(.Unknown))
           break
@@ -219,7 +221,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           // The connection might have been cancelled, or it might have failed. For example,
           // the connection can fail if we received an invalid VersionMessage from the peer.
           Logger.warn("Ignoring VersionAck message because not in Connecting state")
-          return
+          break
         }
         receivedVersionAck = true
         if peerVersion != nil {
@@ -228,6 +230,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
       default: 
         Logger.warn("Received unknown command \(message.header.command.rawValue). Ignoring")
     }
+    payloadStream.close()
   }
 
   // MARK: - Private Methods
@@ -270,7 +273,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
       let message = messageSendQueue.removeAtIndex(0)
       Logger.debug("Sending \(message.header.command.rawValue) message")
-      pendingSendBytes += message.data.UInt8Array()
+      pendingSendBytes += message.bitcoinData.UInt8Array()
     }
     if pendingSendBytes.count > 0 {
       let bytesWritten = outputStream.write(pendingSendBytes, maxLength: pendingSendBytes.count)

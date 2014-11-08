@@ -33,11 +33,13 @@ class FilterLoadMessageTests: XCTestCase {
   }
 
   func testFilterLoadMessageEncoding() {
-    XCTAssertEqual(filterLoadMessage.data, filterLoadMessageData)
+    XCTAssertEqual(filterLoadMessage.bitcoinData, filterLoadMessageData)
   }
 
   func testFilterLoadMessageDecoding() {
-    if let testFilterLoadMessage = FilterLoadMessage.fromData(filterLoadMessageData) {
+    let stream = NSInputStream(data: filterLoadMessageData)
+    stream.open()
+    if let testFilterLoadMessage = FilterLoadMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testFilterLoadMessage, filterLoadMessage)
     } else {
       XCTFail("\n[FAIL] Failed to parse FilterLoadMessage")

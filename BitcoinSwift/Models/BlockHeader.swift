@@ -30,7 +30,7 @@ public struct BlockHeader: Equatable {
   /// transactions.
   /// https://en.bitcoin.it/wiki/Block_hashing_algorithm
   public var hash: NSData {
-    return data.SHA256Hash().SHA256Hash().reversedData
+    return bitcoinData.SHA256Hash().SHA256Hash().reversedData
   }
 
   public init(version: UInt32,
@@ -48,9 +48,9 @@ public struct BlockHeader: Equatable {
   }
 }
 
-extension BlockHeader {
+extension BlockHeader: BitcoinSerializable {
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendUInt32(version)
     data.appendData(previousBlockHash)
@@ -61,10 +61,7 @@ extension BlockHeader {
     return data
   }
 
-  public static func fromStream(stream: NSInputStream) -> BlockHeader? {
-    if stream.streamStatus != .Open {
-      stream.open()
-    }
+  public static func fromBitcoinStream(stream: NSInputStream) -> BlockHeader? {
     let version = stream.readUInt32()
     if version == nil {
       Logger.warn("Failed to parse version from BlockHeader")

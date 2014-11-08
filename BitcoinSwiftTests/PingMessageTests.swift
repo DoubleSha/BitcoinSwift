@@ -12,27 +12,24 @@ import XCTest
 class PingMessageTests: XCTestCase {
 
   let pingMessageBytes: [UInt8] = [0x65, 0x89, 0xad, 0xb4, 0x25, 0xc0, 0x6e, 0xb9]
-  let pingMessageNonce: UInt64 = 13361828412632435045
-  var nonceData: NSData!
+
+  var pingMessageData: NSData!
+  var pingMessage: PingMessage!
 
   override func setUp() {
-    nonceData = NSData(bytes: pingMessageBytes, length: pingMessageBytes.count)
-  }
-
-  func testPingMessageNoNonce() {
-    let ping1 = PingMessage()
-    let ping2 = PingMessage()
-    XCTAssert(ping1.nonce != ping2.nonce)
+    pingMessageData = NSData(bytes: pingMessageBytes, length: pingMessageBytes.count)
+    pingMessage = PingMessage(nonce: 13361828412632435045)
   }
 
   func testPingMessageEncoding() {
-    let pingMessage = PingMessage(nonce: pingMessageNonce)
-    XCTAssertEqual(pingMessage.data, nonceData)
+    XCTAssertEqual(pingMessage.bitcoinData, pingMessageData)
   }
 
   func testPingMessageDecoding() {
-    if let ping1 = PingMessage.fromData(nonceData) {
-      XCTAssertEqual(ping1.nonce, pingMessageNonce)
+    let stream = NSInputStream(data: pingMessageData)
+    stream.open()
+    if let testPingMessage = PingMessage.fromBitcoinStream(stream) {
+      XCTAssertEqual(testPingMessage, pingMessage)
     } else {
       XCTFail("\n[FAIL] Failed to parse PingMessage")
     }

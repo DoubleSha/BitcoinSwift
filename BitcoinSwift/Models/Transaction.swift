@@ -42,29 +42,22 @@ extension Transaction: MessagePayload {
     return Message.Command.Transaction
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     let data = NSMutableData()
     data.appendUInt32(version)
     data.appendVarInt(inputs.count)
     for input in inputs {
-      data.appendData(input.data)
+      data.appendData(input.bitcoinData)
     }
     data.appendVarInt(outputs.count)
     for output in outputs {
-      data.appendData(output.data)
+      data.appendData(output.bitcoinData)
     }
     data.appendUInt32(lockTime.rawValue)
     return data
   }
 
-  public static func fromData(data: NSData) -> Transaction? {
-    return Transaction.fromStream(NSInputStream(data: data))
-  }
-
-  public static func fromStream(stream: NSInputStream) -> Transaction? {
-    if stream.streamStatus != .Open {
-      stream.open()
-    }
+  public static func fromBitcoinStream(stream: NSInputStream) -> Transaction? {
     let version = stream.readUInt32()
     if version == nil {
       Logger.warn("Failed to parse version in Transaction")
@@ -77,7 +70,7 @@ extension Transaction: MessagePayload {
     }
     var inputs: [Input] = []
     for i in 0..<inputCount! {
-      let input = Input.fromStream(stream)
+      let input = Input.fromBitcoinStream(stream)
       if input == nil {
         Logger.warn("Failed to parse input at index \(i) in Transaction")
         return nil
@@ -95,7 +88,7 @@ extension Transaction: MessagePayload {
     }
     var outputs: [Output] = []
     for i in 0..<outputCount! {
-      let output = Output.fromStream(stream)
+      let output = Output.fromBitcoinStream(stream)
       if output == nil {
         Logger.warn("Failed to parse output at index \(i) in Transaction")
         return nil

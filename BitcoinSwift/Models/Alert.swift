@@ -88,9 +88,9 @@ public struct Alert: Equatable {
   }
 }
 
-extension Alert {
+extension Alert: BitcoinSerializable {
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendInt32(version)
     data.appendDateAs64BitUnixTimestamp(relayUntilDate)
@@ -114,97 +114,88 @@ extension Alert {
     return data
   }
 
-  public static func fromData(data: NSData) -> Alert? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> Alert? {
     let version = stream.readInt32()
     if version == nil {
-      Logger.warn("Failed to parse version from Alert \(data)")
+      Logger.warn("Failed to parse version from Alert")
       return nil
     }
     let relayUntilDate = stream.readDateFrom64BitUnixTimestamp()
     if relayUntilDate == nil {
-      Logger.warn("Failed to parse relayUntilDate from Alert \(data)")
+      Logger.warn("Failed to parse relayUntilDate from Alert")
       return nil
     }
     let expirationDate = stream.readDateFrom64BitUnixTimestamp()
     if expirationDate == nil {
-      Logger.warn("Failed to parse expirationDate from Alert \(data)")
+      Logger.warn("Failed to parse expirationDate from Alert")
       return nil
     }
     let ID = stream.readInt32()
     if ID == nil {
-      Logger.warn("Failed to parse ID from Alert \(data)")
+      Logger.warn("Failed to parse ID from Alert")
       return nil
     }
     let cancelID = stream.readInt32()
     if cancelID == nil {
-      Logger.warn("Failed to parse cancelID from Alert \(data)")
+      Logger.warn("Failed to parse cancelID from Alert")
       return nil
     }
     let cancelIDsCount = stream.readVarInt()
     if cancelIDsCount == nil {
-      Logger.warn("Failed to parse cancelIDsCount from Alert \(data)")
+      Logger.warn("Failed to parse cancelIDsCount from Alert")
       return nil
     }
     var cancelIDs: [Int32] = []
     for i in 0..<cancelIDsCount! {
       let cancelID = stream.readInt32()
       if cancelID == nil {
-        Logger.warn("Failed to parse cancelID \(i) from Alert \(data)")
+        Logger.warn("Failed to parse cancelID \(i) from Alert")
         return nil
       }
       cancelIDs.append(cancelID!)
     }
     let minimumVersion = stream.readInt32()
     if minimumVersion == nil {
-      Logger.warn("Failed to parse minimumVersion from Alert \(data)")
+      Logger.warn("Failed to parse minimumVersion from Alert")
       return nil
     }
     let maximumVersion = stream.readInt32()
     if maximumVersion == nil {
-      Logger.warn("Failed to parse maximumVersion from Alert \(data)")
+      Logger.warn("Failed to parse maximumVersion from Alert")
       return nil
     }
     let affectedUserAgentsCount = stream.readVarInt()
     if affectedUserAgentsCount == nil {
-      Logger.warn("Failed to parse affectedUserAgentsCount from Alert \(data)")
+      Logger.warn("Failed to parse affectedUserAgentsCount from Alert")
       return nil
     }
     var affectedUserAgents: [String] = []
     for i in 0..<affectedUserAgentsCount! {
       let affectedUserAgent = stream.readVarString()
       if affectedUserAgent == nil {
-        Logger.warn("Failed to parse affectedUserAgent \(i) from Alert \(data)")
+        Logger.warn("Failed to parse affectedUserAgent \(i) from Alert")
         return nil
       }
       affectedUserAgents.append(affectedUserAgent!)
     }
     let priority = stream.readInt32()
     if priority == nil {
-      Logger.warn("Failed to parse priority from Alert \(data)")
+      Logger.warn("Failed to parse priority from Alert")
       return nil
     }
     let comment = stream.readVarString()
     if comment == nil {
-      Logger.warn("Failed to parse comment from Alert \(data)")
+      Logger.warn("Failed to parse comment from Alert")
       return nil
     }
     let message = stream.readVarString()
     if message == nil {
-      Logger.warn("Failed to parse message from Alert \(data)")
+      Logger.warn("Failed to parse message from Alert")
       return nil
     }
     let reserved = stream.readVarString()
     if reserved == nil {
-      Logger.warn("Failed to parse reserved from Alert \(data)")
-      return nil
-    }
-    if stream.hasBytesAvailable {
-      Logger.warn("Failed to parse Alert. Too much data \(data)")
+      Logger.warn("Failed to parse reserved from Alert")
       return nil
     }
     return Alert(version: version!,

@@ -37,32 +37,27 @@ extension FilterAddMessage: MessagePayload {
     return Message.Command.FilterAdd
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendVarInt(filterData.length)
     data.appendData(filterData)
     return data
   }
 
-  public static func fromData(data: NSData) -> FilterAddMessage? {
-    if data.length == 0 {
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> FilterAddMessage? {
     let filterDataLength = stream.readVarInt()
     if filterDataLength == nil {
-      Logger.warn("Failed to parse filterDataLength from FilterAddMessage \(data)")
+      Logger.warn("Failed to parse filterDataLength from FilterAddMessage")
       return nil
     }
     if filterDataLength! <= UInt64(0) ||
         filterDataLength! > UInt64(FilterAddMessage.MaxFilterDataLength) {
-      Logger.warn("Invalid filterDataLength \(filterDataLength!) in FilterAddMessage \(data)")
+      Logger.warn("Invalid filterDataLength \(filterDataLength!) in FilterAddMessage")
       return nil
     }
     let filterData = stream.readData(length: Int(filterDataLength!))
     if filterData == nil {
-      Logger.warn("Failed to parse filterData from FilterAddMessage \(data)")
+      Logger.warn("Failed to parse filterData from FilterAddMessage")
       return nil
     }
     return FilterAddMessage(filterData: filterData!)

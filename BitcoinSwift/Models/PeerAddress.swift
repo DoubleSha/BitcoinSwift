@@ -30,4 +30,6 @@ public struct PeerAddress: Equatable {
     self.port = port
     self.timestamp = timestamp
   }
+
+  // TODO: Make this conform to BitcoinSerializable.
 }

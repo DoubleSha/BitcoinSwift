@@ -34,9 +34,9 @@ public extension Transaction {
   }
 }
 
-public extension Transaction.Output {
+ extension Transaction.Output: BitcoinSerializable {
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendInt64(value)
     data.appendVarInt(script.length)
@@ -44,14 +44,7 @@ public extension Transaction.Output {
     return data
   }
 
-  public static func fromData(data: NSData) -> Transaction.Output? {
-    return Transaction.Output.fromStream(NSInputStream(data: data))
-  }
-
-  public static func fromStream(stream: NSInputStream) -> Transaction.Output? {
-    if stream.streamStatus != .Open {
-      stream.open()
-    }
+  public static func fromBitcoinStream(stream: NSInputStream) -> Transaction.Output? {
     let value = stream.readInt64()
     if value == nil {
       Logger.warn("Failed to parse value from Transaction.Output")

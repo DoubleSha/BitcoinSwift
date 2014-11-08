@@ -30,26 +30,16 @@ extension PongMessage: MessagePayload {
     return Message.Command.Pong
   }
 
-  public var data: NSData {
+  public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendUInt64(nonce)
     return data
   }
 
-  public static func fromData(data: NSData) -> PongMessage? {
-    if data.length == 0 {
-      Logger.warn("Empty data passed to PongMessage \(data)")
-      return nil
-    }
-    let stream = NSInputStream(data: data)
-    stream.open()
+  public static func fromBitcoinStream(stream: NSInputStream) -> PongMessage? {
     let nonce = stream.readUInt64()
     if nonce == nil {
-      Logger.warn("Failed to parse nonce from PingMessage \(data)")
-      return nil
-    }
-    if stream.hasBytesAvailable {
-      Logger.warn("Failed to parse PingMessage. Too much data \(data)")
+      Logger.warn("Failed to parse nonce from PingMessage")
       return nil
     }
     return PongMessage(nonce: nonce!)
