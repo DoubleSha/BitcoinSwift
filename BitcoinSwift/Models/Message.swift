@@ -59,7 +59,7 @@ public struct Message: Equatable {
     case FilterLoad = "filterload"
     case FilterAdd = "filteradd"
     case FilterClear = "filterclear"
-    case MerkleBlock = "merkleblock"
+    case FilteredBlock = "merkleblock"
     case Alert = "alert"
 
     /// The length of the command string when encoded into ascii format for wire-transmission.

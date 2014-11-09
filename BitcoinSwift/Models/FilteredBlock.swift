@@ -42,7 +42,7 @@ public struct FilteredBlock: Equatable {
 extension FilteredBlock: MessagePayload {
 
   public var command: Message.Command {
-    return Message.Command.MerkleBlock
+    return Message.Command.FilteredBlock
   }
 
   public var bitcoinData: NSData {
