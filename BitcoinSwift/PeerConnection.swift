@@ -12,8 +12,6 @@ import Foundation
 /// the connected peer.
 public protocol PeerConnectionDelegate: class {
 
-  // TODO: Make these optional once Swift supports pure-Swift optional methods.
-
   /// Called when a connection is successfully established with the remote peer.
   /// peerVersion is the version message received from the peer during the version handshake.
   func peerConnection(peerConnection: PeerConnection,
@@ -23,43 +21,34 @@ public protocol PeerConnectionDelegate: class {
   /// If the connection was closed due to an error, then error will be non-nil.
   func peerConnection(peerConnection: PeerConnection, didDisconnectWithError error: NSError?)
 
+  /// Called when a message is received. Switch on message to handle the actual message.
   func peerConnection(peerConnection: PeerConnection,
-                      didReceiveAddressMessage addressMessage: AddressMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveInventoryMessage inventoryMessage: InventoryMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveGetDataMessage getDataMessage: GetDataMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveNotFoundMessage notFoundMessage: NotFoundMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveGetBlocksMessage getBlocksMessage: GetBlocksMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveGetHeadersMessage getHeadersMessage: GetHeadersMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveTransaction transaction: Transaction)
-  func peerConnection(peerConnection: PeerConnection, didReceiveBlock block: Block)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveHeadersMessage headersMessage: HeadersMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveGetAddressMessage getAddressMessage: GetAddressMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveMemPoolMessage memPoolMessage: MemPoolMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceivePingMessage pingMessage: PingMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceivePongMessage pongMessage: PongMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveRejectMessage rejectMessage: RejectMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveFilterLoadMessage filterLoadMessage: FilterLoadMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveFilterAddMessage filterAddMessage: FilterAddMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveFilterClearMessage filterClearMessage: FilterClearMessage)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveFilteredBlock filteredBlock: FilteredBlock)
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveAlertMessage alertMessage: AlertMessage)
+                      didReceiveMessage message: PeerConnection.PeerConnectionMessage)
+}
+
+extension PeerConnection {
+
+  public enum PeerConnectionMessage {
+    case AddressMessage(BitcoinSwift.AddressMessage)
+    case InventoryMessage(BitcoinSwift.InventoryMessage)
+    case GetDataMessage(BitcoinSwift.GetDataMessage)
+    case NotFoundMessage(BitcoinSwift.NotFoundMessage)
+    case GetBlocksMessage(BitcoinSwift.GetBlocksMessage)
+    case GetHeadersMessage(BitcoinSwift.GetHeadersMessage)
+    case Transaction(BitcoinSwift.Transaction)
+    case Block(BitcoinSwift.Block)
+    case HeadersMessage(BitcoinSwift.HeadersMessage)
+    case GetAddressMessage(BitcoinSwift.GetAddressMessage)
+    case MemPoolMessage(BitcoinSwift.MemPoolMessage)
+    case PingMessage(BitcoinSwift.PingMessage)
+    case PongMessage(BitcoinSwift.PongMessage)
+    case RejectMessage(BitcoinSwift.RejectMessage)
+    case FilterLoadMessage(BitcoinSwift.FilterLoadMessage)
+    case FilterAddMessage(BitcoinSwift.FilterAddMessage)
+    case FilterClearMessage(BitcoinSwift.FilterClearMessage)
+    case FilteredBlock(BitcoinSwift.FilteredBlock)
+    case AlertMessage(BitcoinSwift.AlertMessage)
+  }
 }
 
 /// A PeerConnection handles the low-level socket connection to a peer and serializing/deserializing
@@ -269,79 +258,98 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
         }
       case .Address:
         if let addressMessage = AddressMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveAddressMessage: addressMessage)
+          let message = PeerConnectionMessage.AddressMessage(addressMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Inventory:
         if let inventoryMessage = InventoryMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveInventoryMessage: inventoryMessage)
+          let message = PeerConnectionMessage.InventoryMessage(inventoryMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .GetData:
         if let getDataMessage = GetDataMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveGetDataMessage: getDataMessage)
+          let message = PeerConnectionMessage.GetDataMessage(getDataMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .NotFound:
         if let notFoundMessage = NotFoundMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveNotFoundMessage: notFoundMessage)
+          let message = PeerConnectionMessage.NotFoundMessage(notFoundMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .GetBlocks:
         if let getBlocksMessage = GetBlocksMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveGetBlocksMessage: getBlocksMessage)
+          let message = PeerConnectionMessage.GetBlocksMessage(getBlocksMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .GetHeaders:
         if let getHeadersMessage = GetHeadersMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveGetHeadersMessage: getHeadersMessage)
+          let message = PeerConnectionMessage.GetHeadersMessage(getHeadersMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Transaction:
         if let transaction = Transaction.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveTransaction: transaction)
+          let message = PeerConnectionMessage.Transaction(transaction)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Block:
         if let block = Block.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveBlock: block)
+          let message = PeerConnectionMessage.Block(block)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Headers:
         if let headersMessage = HeadersMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveHeadersMessage: headersMessage)
+          let message = PeerConnectionMessage.HeadersMessage(headersMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .GetAddress:
         if let getAddressMessage = GetAddressMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveGetAddressMessage: getAddressMessage)
+          let message = PeerConnectionMessage.GetAddressMessage(getAddressMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .MemPool:
         if let memPoolMessage = MemPoolMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveMemPoolMessage: memPoolMessage)
+          let message = PeerConnectionMessage.MemPoolMessage(memPoolMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Ping:
         if let pingMessage = PingMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceivePingMessage: pingMessage)
+          let message = PeerConnectionMessage.PingMessage(pingMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Pong:
         if let pongMessage = PongMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceivePongMessage: pongMessage)
+          let message = PeerConnectionMessage.PongMessage(pongMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Reject:
         if let rejectMessage = RejectMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveRejectMessage: rejectMessage)
+          let message = PeerConnectionMessage.RejectMessage(rejectMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .FilterLoad:
         if let filterLoadMessage = FilterLoadMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveFilterLoadMessage: filterLoadMessage)
+          let message = PeerConnectionMessage.FilterLoadMessage(filterLoadMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .FilterAdd:
         if let filterAddMessage = FilterAddMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveFilterAddMessage: filterAddMessage)
+          let message = PeerConnectionMessage.FilterAddMessage(filterAddMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .FilterClear:
         if let filterClearMessage = FilterClearMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveFilterClearMessage: filterClearMessage)
+          let message = PeerConnectionMessage.FilterClearMessage(filterClearMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .FilteredBlock:
         if let filteredBlock = FilteredBlock.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveFilteredBlock: filteredBlock)
+          let message = PeerConnectionMessage.FilteredBlock(filteredBlock)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Alert:
         if let alertMessage = AlertMessage.fromBitcoinStream(payloadStream) {
-          delegate?.peerConnection(self, didReceiveAlertMessage: alertMessage)
+          let message = PeerConnectionMessage.AlertMessage(alertMessage)
+          delegate?.peerConnection(self, didReceiveMessage: message)
         }
       default: 
         Logger.warn("Received unknown command \(message.header.command.rawValue). Ignoring")

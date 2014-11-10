@@ -39,6 +39,11 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
     }
   }
 
+  func peerConnection(peerConnection: PeerConnection,
+                      didReceiveMessage message: PeerConnection.PeerConnectionMessage) {
+    // NOP.
+  }
+
   // MARK: - Helper methods
 
   func dummyVersionMessage() -> VersionMessage {
@@ -55,44 +60,4 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
                           blockStartHeight: 0,
                           announceRelayedTransactions: true)
   }
-
-  // TODO: Make these optional once Swift supports pure-Swift optional methods.
-
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveAddressMessage addressMessage: AddressMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveInventoryMessage inventoryMessage: InventoryMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveGetDataMessage getDataMessage: GetDataMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveNotFoundMessage notFoundMessage: NotFoundMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveGetBlocksMessage getBlocksMessage: GetBlocksMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveGetHeadersMessage getHeadersMessage: GetHeadersMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveTransaction transaction: Transaction) {}
-  func peerConnection(peerConnection: PeerConnection, didReceiveBlock block: Block) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveHeadersMessage headersMessage: HeadersMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveGetAddressMessage getAddressMessage: GetAddressMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveMemPoolMessage memPoolMessage: MemPoolMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceivePingMessage pingMessage: PingMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceivePongMessage pongMessage: PongMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveRejectMessage rejectMessage: RejectMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveFilterLoadMessage filterLoadMessage: FilterLoadMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveFilterAddMessage filterAddMessage: FilterAddMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveFilterClearMessage filterClearMessage: FilterClearMessage) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveFilteredBlock filteredBlock: FilteredBlock) {}
-  func peerConnection(peerConnection: PeerConnection,
-                      didReceiveAlertMessage alertMessage: AlertMessage) {}
 }
