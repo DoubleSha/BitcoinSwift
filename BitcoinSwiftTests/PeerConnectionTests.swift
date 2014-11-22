@@ -21,10 +21,17 @@ class PeerConnectionTests: XCTestCase {
     let inputStream: NSInputStream
     let outputStream: NSOutputStream
 
-    init(inputStream: NSInputStream, outputStream: NSOutputStream) {
+    init(inputStream: NSInputStream,
+         outputStream: NSOutputStream,
+         delegate: PeerConnectionDelegate,
+         delegateQueue: NSOperationQueue) {
       self.inputStream = inputStream
       self.outputStream = outputStream
-      super.init(hostname: hostname, port: port, network: network)
+      super.init(hostname: hostname,
+                 port: port,
+                 network: network,
+                 delegate: delegate,
+                 delegateQueue: delegateQueue)
     }
 
     override func streamsToPeerWithHostname(hostname: String, port: UInt16) ->
@@ -39,6 +46,8 @@ class PeerConnectionTests: XCTestCase {
   private var peerConnection: MockPeerConnection!
   private var inputStreamDelegate: TestInputStreamDelegate!
   private var outputStreamDelegate: TestOutputStreamDelegate!
+  private var backgroundThread: Thread!
+  private var delegateQueue: NSOperationQueue!
 
   // If non-nil, fulfilled when peerConnection(:didDisconnectWithError:) is invoked.
   private var connectionDidFailExpectation: XCTestExpectation?
@@ -49,17 +58,36 @@ class PeerConnectionTests: XCTestCase {
     self.inputStream = inputStream
     let (connInputStream, outputStream) = NSStream.boundStreamsWithBufferSize(1024)
     self.outputStream = outputStream
-    inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
-    outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
-    inputStreamDelegate = TestInputStreamDelegate()
-    inputStream.delegate = inputStreamDelegate
-    outputStreamDelegate = TestOutputStreamDelegate()
-    outputStream.delegate = outputStreamDelegate
+    backgroundThread = Thread()
+    inputStreamDelegate = TestInputStreamDelegate(thread: backgroundThread)
+    outputStreamDelegate = TestOutputStreamDelegate(thread: backgroundThread)
+    self.inputStream = inputStream
+    self.outputStream = outputStream
+    self.inputStream.delegate = inputStreamDelegate
+    self.outputStream.delegate = outputStreamDelegate
+    let semaphore = dispatch_semaphore_create(0)
+    backgroundThread.startWithCompletion {
+      self.backgroundThread.addOperationWithBlock {
+        self.inputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(),
+                                           forMode: NSDefaultRunLoopMode)
+        self.outputStream.scheduleInRunLoop(NSRunLoop.currentRunLoop(),
+                                            forMode: NSDefaultRunLoopMode)
+        self.inputStream.open()
+        self.outputStream.open()
+        dispatch_semaphore_signal(semaphore)
+      }
+    }
+    // Set the delegate queue to a background queue because the main queue might be blocked waiting
+    // for expectatations. That would cause deadlocks.
+    delegateQueue = NSOperationQueue()
     peerConnection = MockPeerConnection(inputStream: connInputStream,
-                                        outputStream: connOutputStream)
-    peerConnection.delegate = self
-    inputStream.open()
-    outputStream.open()
+                                        outputStream: connOutputStream,
+                                        delegate: self,
+                                        delegateQueue: delegateQueue)
+    // Wait for the backgroundThread to start.
+    let timeoutError =
+        dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC)))
+    XCTAssertEqual(timeoutError, 0, "Timed out waiting for backgroundThread to start")
   }
 
   func testSendVersionMessageOnConnect() {
@@ -88,15 +116,13 @@ class PeerConnectionTests: XCTestCase {
     waitForExpectationsWithTimeout(5, handler: nil)
   }
 
-  // TODO: Fix this test and re-enable.
-  func DISABLED_testConnectionTimeout() {
+  func testConnectionTimeout() {
     connectionDidFailExpectation = expectationWithDescription("timeout")
     peerConnection.connectWithVersionMessage(DummyMessage.versionMessagePayload, timeout: 1)
     waitForExpectationsWithTimeout(2, handler: nil)
   }
 
-  // TODO: Fix this test and re-enable.
-  func DISABLED_testVersionButNoVersionAckTimeout() {
+  func testVersionButNoVersionAckTimeout() {
     let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionMessageBytes,
                                              withExpectation: versionExpectation)
@@ -111,8 +137,7 @@ class PeerConnectionTests: XCTestCase {
     waitForExpectationsWithTimeout(2, handler: nil)
   }
 
-  // TODO: Fix this test and re-enable.
-  func DISABLED_testVersionAckButNoVersionTimeout() {
+  func testVersionAckButNoVersionTimeout() {
     let versionExpectation = expectationWithDescription("version")
     inputStreamDelegate.expectToReceiveBytes(DummyMessage.versionMessageBytes,
                                              withExpectation: versionExpectation)
@@ -137,10 +162,8 @@ extension PeerConnectionTests: PeerConnectionDelegate {
     connectionDidFailExpectation?.fulfill()
   }
 
-  // TODO: Make these optional once Swift supports pure-Swift optional methods.
-
   func peerConnection(peerConnection: PeerConnection,
-                      didReceiveMessage message: PeerConnection.PeerConnectionMessage) {
+                      didReceiveMessage message: PeerConnectionMessage) {
     // NOP.
   }
 }

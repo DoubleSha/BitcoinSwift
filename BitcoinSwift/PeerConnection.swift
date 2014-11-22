@@ -23,32 +23,29 @@ public protocol PeerConnectionDelegate: class {
 
   /// Called when a message is received. Switch on message to handle the actual message.
   func peerConnection(peerConnection: PeerConnection,
-                      didReceiveMessage message: PeerConnection.PeerConnectionMessage)
+                      didReceiveMessage message: PeerConnectionMessage)
 }
 
-extension PeerConnection {
-
-  public enum PeerConnectionMessage {
-    case AddressMessage(BitcoinSwift.AddressMessage)
-    case InventoryMessage(BitcoinSwift.InventoryMessage)
-    case GetDataMessage(BitcoinSwift.GetDataMessage)
-    case NotFoundMessage(BitcoinSwift.NotFoundMessage)
-    case GetBlocksMessage(BitcoinSwift.GetBlocksMessage)
-    case GetHeadersMessage(BitcoinSwift.GetHeadersMessage)
-    case Transaction(BitcoinSwift.Transaction)
-    case Block(BitcoinSwift.Block)
-    case HeadersMessage(BitcoinSwift.HeadersMessage)
-    case GetAddressMessage(BitcoinSwift.GetAddressMessage)
-    case MemPoolMessage(BitcoinSwift.MemPoolMessage)
-    case PingMessage(BitcoinSwift.PingMessage)
-    case PongMessage(BitcoinSwift.PongMessage)
-    case RejectMessage(BitcoinSwift.RejectMessage)
-    case FilterLoadMessage(BitcoinSwift.FilterLoadMessage)
-    case FilterAddMessage(BitcoinSwift.FilterAddMessage)
-    case FilterClearMessage(BitcoinSwift.FilterClearMessage)
-    case FilteredBlock(BitcoinSwift.FilteredBlock)
-    case AlertMessage(BitcoinSwift.AlertMessage)
-  }
+public enum PeerConnectionMessage {
+  case AddressMessage(BitcoinSwift.AddressMessage)
+  case InventoryMessage(BitcoinSwift.InventoryMessage)
+  case GetDataMessage(BitcoinSwift.GetDataMessage)
+  case NotFoundMessage(BitcoinSwift.NotFoundMessage)
+  case GetBlocksMessage(BitcoinSwift.GetBlocksMessage)
+  case GetHeadersMessage(BitcoinSwift.GetHeadersMessage)
+  case Transaction(BitcoinSwift.Transaction)
+  case Block(BitcoinSwift.Block)
+  case HeadersMessage(BitcoinSwift.HeadersMessage)
+  case GetAddressMessage(BitcoinSwift.GetAddressMessage)
+  case MemPoolMessage(BitcoinSwift.MemPoolMessage)
+  case PingMessage(BitcoinSwift.PingMessage)
+  case PongMessage(BitcoinSwift.PongMessage)
+  case RejectMessage(BitcoinSwift.RejectMessage)
+  case FilterLoadMessage(BitcoinSwift.FilterLoadMessage)
+  case FilterAddMessage(BitcoinSwift.FilterAddMessage)
+  case FilterClearMessage(BitcoinSwift.FilterClearMessage)
+  case FilteredBlock(BitcoinSwift.FilteredBlock)
+  case AlertMessage(BitcoinSwift.AlertMessage)
 }
 
 /// A PeerConnection handles the low-level socket connection to a peer and serializing/deserializing
@@ -70,7 +67,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   private var _status: Status = .NotConnected
 
   public weak var delegate: PeerConnectionDelegate?
-  private var delegateQueue: dispatch_queue_t
+  private var delegateQueue: NSOperationQueue
 
   // Depending on the constructor used, either the hostname or the IP will be non-nil.
   private let peerHostname: String?
@@ -106,7 +103,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
               port: UInt16,
               network: Message.Network,
               delegate: PeerConnectionDelegate? = nil,
-              delegateQueue: dispatch_queue_t = dispatch_get_main_queue()) {
+              delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue()) {
     self.delegate = delegate
     self.peerIP = nil
     self.peerHostname = hostname
@@ -122,7 +119,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
               port: UInt16,
               network: Message.Network,
               delegate: PeerConnectionDelegate? = nil,
-              delegateQueue: dispatch_queue_t = dispatch_get_main_queue()) {
+              delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue()) {
     self.delegate = delegate
     self.peerIP = IP
     self.peerHostname = nil
@@ -455,7 +452,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
       self.peerVersion = nil
       self.receivedVersionAck = false
       self.setStatus(.NotConnected)
-      dispatch_async(self.delegateQueue) {
+      self.delegateQueue.addOperationWithBlock {
         // For some reason, using self.delegate? within a block doesn't compile... Xcode bug?
         if let delegate = self.delegate {
           delegate.peerConnection(self, didDisconnectWithError: error)
@@ -474,7 +471,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     connectionTimeoutTimer = nil
     setStatus(.Connected)
     let peerVersion = self.peerVersion!
-    dispatch_async(delegateQueue) {
+    self.delegateQueue.addOperationWithBlock {
       // For some reason, using self.delegate? within a block doesn't compile... Xcode bug?
       if let delegate = self.delegate {
         delegate.peerConnection(self, didConnectWithPeerVersion: peerVersion)

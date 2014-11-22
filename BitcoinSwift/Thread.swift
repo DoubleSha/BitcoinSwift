@@ -10,12 +10,12 @@ import Foundation
 
 // A convenience wrapper around NSThread that adds support for a completion block once the thread
 // starts, and nice syntax for scheduling operations on the thread's runloop.
-class Thread: NSThread {
+public class Thread: NSThread {
 
   var runLoop: NSRunLoop!
   var completionBlock: (() -> Void)?
 
-  override func main() {
+  public override func main() {
     runLoop = NSRunLoop.currentRunLoop()
     completionBlock?()
     completionBlock = nil
@@ -25,12 +25,12 @@ class Thread: NSThread {
     runLoop = nil
   }
 
-  func startWithCompletion(completionBlock: () -> Void) {
+  public func startWithCompletion(completionBlock: () -> Void) {
     self.completionBlock = completionBlock
     start()
   }
 
-  func addOperationWithBlock(block: () -> Void) {
+  public func addOperationWithBlock(block: () -> Void) {
     precondition(runLoop != nil, "Cannot add operation to thread before it is started")
     CFRunLoopPerformBlock(runLoop.getCFRunLoop(), kCFRunLoopCommonModes, block)
     CFRunLoopWakeUp(runLoop.getCFRunLoop())

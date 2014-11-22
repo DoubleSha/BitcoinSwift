@@ -6,33 +6,34 @@
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
+import BitcoinSwift
 import Foundation
 import XCTest
 
 /// Set this as the delegate for an input stream for unit testing.
 class TestInputStreamDelegate: NSObject, NSStreamDelegate {
 
+  private var thread: Thread
   private var expectation: XCTestExpectation?
   private var expectedBytes: [UInt8] = []
   private var receivedBytes: [UInt8] = []
   private var readBuffer = [UInt8](count: 1024, repeatedValue: 0)
+
+  init(thread: Thread) {
+    self.thread = thread
+  }
 
   /// Waits until it receives expectedReceivedBytes or times out if not enough bytes are received
   /// before timeout expires.
   /// When the expected bytes are received, expectation is fulfilled.
   func expectToReceiveBytes(expectedBytes: [UInt8],
                             withExpectation expectation: XCTestExpectation) {
-    XCTAssertNil(self.expectation)
-    if receivedBytes.count >= expectedBytes.count {
-      // Use XCTAssertEqual so we can see what is wrong with the bytes we received if they
-      // are not equal.
-      XCTAssertEqual(receivedBytes, expectedBytes)
-      receivedBytes.removeAll()
-      expectation.fulfill()
-      return
+    thread.addOperationWithBlock {
+      XCTAssertNil(self.expectation)
+      self.expectedBytes = expectedBytes
+      self.expectation = expectation
+      self.verifyExpectedBytes()
     }
-    self.expectedBytes = expectedBytes
-    self.expectation = expectation
   }
 
   func stream(stream: NSStream, handleEvent event: NSStreamEvent) {
@@ -44,23 +45,33 @@ class TestInputStreamDelegate: NSObject, NSStreamDelegate {
       case NSStreamEvent.HasSpaceAvailable: 
         break
       case NSStreamEvent.HasBytesAvailable: 
-        let inputStream = stream as NSInputStream
-        while inputStream.hasBytesAvailable {
-          let bytesRead = inputStream.read(&readBuffer, maxLength: readBuffer.count)
-          if bytesRead > 0 {
-            receivedBytes += readBuffer[0..<bytesRead]
-          }
-        }
-        if expectedBytes.count > 0 && receivedBytes.count >= expectedBytes.count {
-          // Use XCTAssertEqual so we can see what is wrong with the bytes we received if they
-          // are not equal.
-          XCTAssertEqual(receivedBytes, expectedBytes)
-          receivedBytes.removeAll()
-          expectation?.fulfill()
-          expectation = nil
-        }
+        readFromStream(stream as NSInputStream)
       default: 
         XCTFail("Invalid NSStreamEvent \(event)")
+    }
+  }
+
+  private func readFromStream(inputStream: NSInputStream) {
+    thread.addOperationWithBlock {
+      while inputStream.hasBytesAvailable {
+        let bytesRead = inputStream.read(&self.readBuffer, maxLength: self.readBuffer.count)
+        if bytesRead > 0 {
+          println("Read \(bytesRead) bytes")
+          self.receivedBytes += self.readBuffer[0..<bytesRead]
+        }
+      }
+      self.verifyExpectedBytes()
+    }
+  }
+
+  private func verifyExpectedBytes() {
+    if expectedBytes.count > 0 && receivedBytes.count >= expectedBytes.count {
+      // Use XCTAssertEqual so we can see what is wrong with the bytes we received if they
+      // are not equal.
+      XCTAssertEqual(receivedBytes, expectedBytes)
+      receivedBytes.removeAll()
+      expectation?.fulfill()
+      expectation = nil
     }
   }
 }

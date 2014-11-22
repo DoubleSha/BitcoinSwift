@@ -6,16 +6,24 @@
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
+import BitcoinSwift
 import Foundation
 import XCTest
 
 class TestOutputStreamDelegate: NSObject, NSStreamDelegate {
 
+  private var thread: Thread
   private var pendingSendBytes: [UInt8] = []
 
+  init(thread: Thread) {
+    self.thread = thread
+  }
+
   func sendBytes(bytes: [UInt8], outputStream: NSOutputStream) {
-    pendingSendBytes += bytes
-    send(outputStream)
+    thread.addOperationWithBlock {
+      self.pendingSendBytes += bytes
+      self.send(outputStream)
+    }
   }
 
   func stream(stream: NSStream, handleEvent event: NSStreamEvent) {
@@ -34,14 +42,17 @@ class TestOutputStreamDelegate: NSObject, NSStreamDelegate {
   }
 
   private func send(outputStream: NSOutputStream) {
-    if pendingSendBytes.count > 0 {
-      let bytesWritten = outputStream.write(pendingSendBytes, maxLength: pendingSendBytes.count)
-      if bytesWritten > 0 {
-        pendingSendBytes.removeRange(0..<bytesWritten)
-      }
-      if pendingSendBytes.count > 0 {
-        dispatch_async(dispatch_get_main_queue()) {
-          self.send(outputStream)
+    thread.addOperationWithBlock {
+      if self.pendingSendBytes.count > 0 {
+        let bytesWritten = outputStream.write(self.pendingSendBytes,
+                                              maxLength: self.pendingSendBytes.count)
+        if bytesWritten > 0 {
+          self.pendingSendBytes.removeRange(0..<bytesWritten)
+        }
+        if self.pendingSendBytes.count > 0 {
+          self.thread.addOperationWithBlock {
+            self.send(outputStream)
+          }
         }
       }
     }
