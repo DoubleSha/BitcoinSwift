@@ -5,7 +5,11 @@ before_install:
   - if brew outdated | grep -qx xctool; then brew upgrade xctool; fi
 
 script: 
-- xctool clean build -project BitcoinSwift.xcodeproj -scheme BitcoinSwiftIOS -sdk iphonesimulator
+  - xctool clean build -project BitcoinSwift.xcodeproj -scheme BitcoinSwiftIOS -sdk iphonesimulator
+  - xctool clean build -project BitcoinSwift.xcodeproj -scheme BitcoinSwiftOSX -sdk macosx
+  - xctool test -project BitcoinSwift.xcodeproj -scheme BitcoinSwiftOSXTests -sdk macosx
 
 notifications:
-  irc: "chat.freenode.net#bitcoinswift"
+  irc:
+    channels: "chat.freenode.net#bitcoinswift"
+    skip_join: true
