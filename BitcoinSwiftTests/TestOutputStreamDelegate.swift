@@ -28,13 +28,15 @@ class TestOutputStreamDelegate: NSObject, NSStreamDelegate {
 
   func stream(stream: NSStream, handleEvent event: NSStreamEvent) {
     switch event {
-      case NSStreamEvent.None: 
+      case NSStreamEvent.None:
         break
       case NSStreamEvent.OpenCompleted: 
         break
       case NSStreamEvent.HasSpaceAvailable: 
         send(stream as NSOutputStream)
       case NSStreamEvent.HasBytesAvailable: 
+        break
+      case NSStreamEvent.EndEncountered:
         break
       default: 
         XCTFail("Invalid NSStreamEvent \(event)")

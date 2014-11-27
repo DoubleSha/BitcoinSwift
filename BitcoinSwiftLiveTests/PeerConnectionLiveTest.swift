@@ -40,7 +40,7 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
   }
 
   func peerConnection(peerConnection: PeerConnection,
-                      didReceiveMessage message: PeerConnection.PeerConnectionMessage) {
+                      didReceiveMessage message: PeerConnectionMessage) {
     // NOP.
   }
 
