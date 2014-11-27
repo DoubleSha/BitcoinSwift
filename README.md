@@ -1,8 +1,6 @@
 [![Build Status](https://travis-ci.org/DoubleSha/BitcoinSwift.svg?branch=master)](https://travis-ci.org/DoubleSha/BitcoinSwift)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
 
-Note: Travis-CI doesn't work yet with xcode 6.1, so the build will look broken until they fix that.
-
 
 BitcoinSwift
 ============
