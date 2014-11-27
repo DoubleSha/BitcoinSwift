@@ -8,8 +8,9 @@ class DataFetcher: PeerConnectionDelegate {
   let queue = NSOperationQueue()
   let semaphore = dispatch_semaphore_create(0)
   var getDataMessage: GetDataMessage?
+  var getHeadersMessage: GetHeadersMessage?
   var transactionResponse: Transaction?
-  var blockResponse: Block?
+  var blockResponse: BlockHeader?
 
   func fetchTransactionWithHash(hash: NSData) -> Transaction? {
     let inventoryVector = InventoryVector(type: .Transaction, hash: hash)
@@ -20,9 +21,8 @@ class DataFetcher: PeerConnectionDelegate {
     return transactionResponse
   }
 
-  func fetchBlockWithHash(hash: NSData) -> Block? {
-    let inventoryVector = InventoryVector(type: .Block, hash: hash)
-    getDataMessage = GetDataMessage(inventoryVectors: [inventoryVector])
+  func fetchBlockWithHash(hash: NSData) -> BlockHeader? {
+    getHeadersMessage = GetHeadersMessage(protocolVersion: 1, blockLocatorHashes: [hash])
     let connection = connect()
     waitWithTimeout(30)
     connection.disconnect()
@@ -33,7 +33,9 @@ class DataFetcher: PeerConnectionDelegate {
 
   func peerConnection(peerConnection: PeerConnection,
                       didConnectWithPeerVersion peerVersion: VersionMessage) {
-    if let message = getDataMessage {
+    if let message = getHeadersMessage {
+      peerConnection.sendMessageWithPayload(message)
+    } else if let message = getDataMessage {
       peerConnection.sendMessageWithPayload(message)
     }
   }
@@ -48,8 +50,8 @@ class DataFetcher: PeerConnectionDelegate {
       case .Transaction(let transaction):
         transactionResponse = transaction
         dispatch_semaphore_signal(semaphore)
-      case .Block(let block):
-        blockResponse = block
+      case .HeadersMessage(let headersMessage):
+        blockResponse = headersMessage.headers[0]
         dispatch_semaphore_signal(semaphore)
       case .NotFoundMessage(let notFoundMessage):
         println("Not Found")
