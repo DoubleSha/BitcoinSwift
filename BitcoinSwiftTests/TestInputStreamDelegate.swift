@@ -56,7 +56,6 @@ class TestInputStreamDelegate: NSObject, NSStreamDelegate {
       while inputStream.hasBytesAvailable {
         let bytesRead = inputStream.read(&self.readBuffer, maxLength: self.readBuffer.count)
         if bytesRead > 0 {
-          println("Read \(bytesRead) bytes")
           self.receivedBytes += self.readBuffer[0..<bytesRead]
         }
       }
