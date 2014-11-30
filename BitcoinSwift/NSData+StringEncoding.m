@@ -48,7 +48,7 @@ static const char base58Chars[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkm
   BN_CTX_free(ctx);
   // Reverse the string because we have been building it backwards. It's more efficient to reverse
   // the string after we are finished, rather than appending to the front as we go.
-  return [self reversedStringWithString: base58String];
+  return [self reversedStringWithString:base58String];
 }
 
 - (NSString *)hexString {
