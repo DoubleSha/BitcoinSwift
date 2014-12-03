@@ -481,6 +481,7 @@
 				0A9AD042199DE2C700ECEA92 /* AddrMessageTests.swift */,
 				0A110DEA19E9088200CBFCAC /* AlertMessageTests.swift */,
 				0A248C1F1954015200C4607E /* Base58Tests.swift */,
+				0A84E5F41A2B045D0070238D /* BigIntegerTests.swift */,
 				0A248C211954150800C4607E /* BitcoinAddressTests.swift */,
 				0AA580BB196A053600B0E519 /* BitcoinDecodingTests.swift */,
 				0ABA36431960EC0A00C6D098 /* BitcoinEncodingTests.swift */,
@@ -509,7 +510,6 @@
 				0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */,
 				0A5314E619D77E730090F82F /* TransactionTests.swift */,
 				0AF0E6C4196BAF5A007BC06F /* VersionMessageTests.swift */,
-				0A84E5F41A2B045D0070238D /* BigIntegerTests.swift */,
 			);
 			path = BitcoinSwiftTests;
 			sourceTree = "<group>";

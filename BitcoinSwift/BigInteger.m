@@ -46,18 +46,39 @@
   return self;
 }
 
+- (instancetype)initWithCompactData:(NSData *)compactData {
+  self = [super init];
+  if (self) {
+    _bn = BN_new();
+    if (compactData) {
+      BN_mpi2bn([compactData bytes], (int)[compactData length], _bn);
+    }
+  }
+  return self;
+}
+
 - (void)dealloc {
   BN_free(_bn);
 }
 
 - (NSData *)data {
-  int numBytes = BN_num_bytes(_bn);
-  if (numBytes == 0) {
+  int size = BN_num_bytes(_bn);
+  if (size == 0) {
     return [[NSData alloc] init];
   }
-  unsigned char buffer[numBytes];
+  unsigned char buffer[size];
   BN_bn2bin(_bn, buffer);
-  return [NSData dataWithBytes:buffer length:numBytes];
+  return [NSData dataWithBytes:buffer length:size];
+}
+
+- (NSData *)compactData {
+  int size = BN_bn2mpi(_bn, NULL);
+  if (size == 0) {
+    return [[NSData alloc] init];
+  }
+  unsigned char buffer[size];
+  BN_bn2mpi(_bn, buffer);
+  return [NSData dataWithBytes:buffer length:size];
 }
 
 - (BigInteger *)add:(BigInteger *)other {

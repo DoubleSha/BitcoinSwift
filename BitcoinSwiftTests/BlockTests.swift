@@ -80,7 +80,7 @@ class BlockTests: XCTestCase {
                               previousBlockHash: previousBlockHash,
                               merkleRoot: merkleRoot,
                               timestamp: NSDate(timeIntervalSince1970: 1231006505),
-                              difficultyBits: 0x1d00ffff,
+                              compactDifficulty: 0x1d00ffff,
                               nonce: 0x7c2bac1d)
     let outPointTxHashBytes: [UInt8] = [
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

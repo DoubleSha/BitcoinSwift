@@ -12,11 +12,13 @@
 @interface BigInteger : NSObject
 
 @property(nonatomic, readonly) NSData *data;
+@property(nonatomic, readonly) NSData *compactData;
 
 - (instancetype)init;
 - (instancetype)init:(int)value;
 - (instancetype)initWithIntegerLiteral:(int)value;
 - (instancetype)initWithData:(NSData *)data;
+- (instancetype)initWithCompactData:(NSData *)compactData;
 
 - (BigInteger *)add:(BigInteger *)other;
 - (BigInteger *)subtract:(BigInteger *)other;

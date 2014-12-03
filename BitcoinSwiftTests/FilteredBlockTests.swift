@@ -56,7 +56,7 @@ class FilteredBlockTests: XCTestCase {
                              previousBlockHash: previousBlockHash,
                              merkleRoot: merkleRoot,
                              timestamp: timestamp,
-                             difficultyBits: 0x1b04864c,
+                             compactDifficulty: 0x1b04864c,
                              nonce: 0x635da48f)
     let transactionHashBytes: [UInt8] = [
         0xb5, 0x0c, 0xc0, 0x69, 0xd6, 0xa3, 0xe3, 0x3e,
