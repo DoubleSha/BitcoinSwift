@@ -55,6 +55,17 @@ extension HeadersMessage: MessagePayload {
         Logger.warn("Failed to parse header \(i) from HeadersMessage")
         return nil
       }
+      // There is a transaction count at the end of each header. It should always be 0.
+      let transactionCount = stream.readVarInt()
+      if transactionCount == nil {
+        Logger.warn("Failed to parse transactionCount for header \(i) from HeadersMessage")
+        return nil
+      }
+      if transactionCount! != 0 {
+        Logger.warn("Invalid transactionCount \(transactionCount!) for header \(i) from " +
+            "HeadersMessage")
+        return nil
+      }
       headers.append(header!)
     }
     return HeadersMessage(headers: headers)
