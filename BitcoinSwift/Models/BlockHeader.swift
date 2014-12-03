@@ -26,6 +26,22 @@ public struct BlockHeader: Equatable {
   public let compactDifficulty: UInt32
   public let nonce: UInt32
 
+  static private let largestDifficulty = BigInteger(1) << 256
+
+  public init(version: UInt32,
+              previousBlockHash: NSData,
+              merkleRoot: NSData,
+              timestamp: NSDate,
+              compactDifficulty: UInt32,
+              nonce: UInt32) {
+    self.version = version
+    self.previousBlockHash = previousBlockHash
+    self.merkleRoot = merkleRoot
+    self.timestamp = timestamp
+    self.compactDifficulty = compactDifficulty
+    self.nonce = nonce
+  }
+
   /// hash is calculated from the information in the block header. It does not include the
   /// transactions.
   /// https://en.bitcoin.it/wiki/Block_hashing_algorithm
@@ -41,18 +57,12 @@ public struct BlockHeader: Equatable {
     return BigInteger(compactData: compactDifficultyData)
   }
 
-  public init(version: UInt32,
-              previousBlockHash: NSData,
-              merkleRoot: NSData,
-              timestamp: NSDate,
-              compactDifficulty: UInt32,
-              nonce: UInt32) {
-    self.version = version
-    self.previousBlockHash = previousBlockHash
-    self.merkleRoot = merkleRoot
-    self.timestamp = timestamp
-    self.compactDifficulty = compactDifficulty
-    self.nonce = nonce
+  /// The work represented by this block.
+  /// Work is defined as the number of tries needed to solve a block in the average case.
+  /// Consider a difficulty target that covers 5% of all possible hash values. Then the work of the
+  /// block will be 20. As the difficulty gets lower, the amount of work goes up.
+  public var work: BigInteger {
+    return BlockHeader.largestDifficulty / (difficulty + BigInteger(1))
   }
 }
 
