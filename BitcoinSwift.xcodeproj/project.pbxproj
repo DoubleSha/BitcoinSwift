@@ -83,6 +83,8 @@
 		0A84E5F61A2B045D0070238D /* BigIntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A84E5F41A2B045D0070238D /* BigIntegerTests.swift */; };
 		0A84E5F81A2B054E0070238D /* BigInteger+Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A84E5F71A2B054E0070238D /* BigInteger+Operators.swift */; };
 		0A84E5F91A2B054E0070238D /* BigInteger+Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A84E5F71A2B054E0070238D /* BigInteger+Operators.swift */; };
+		0A84E5FB1A2EDB020070238D /* PeerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A84E5FA1A2EDB020070238D /* PeerControllerTests.swift */; };
+		0A84E5FC1A2EDB020070238D /* PeerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A84E5FA1A2EDB020070238D /* PeerControllerTests.swift */; };
 		0A98B3A119B59584001C878D /* TestInputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A98B3A019B59584001C878D /* TestInputStreamDelegate.swift */; };
 		0A98B3A219B59584001C878D /* TestInputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A98B3A019B59584001C878D /* TestInputStreamDelegate.swift */; };
 		0A98FAAA19A1CF4700E4E57B /* PeerDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A98FAA919A1CF4700E4E57B /* PeerDiscovery.swift */; };
@@ -286,6 +288,7 @@
 		0A7FB5B519A33AA00008690F /* NSDataToUInt8ArrayTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDataToUInt8ArrayTests.swift; sourceTree = "<group>"; };
 		0A84E5F41A2B045D0070238D /* BigIntegerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BigIntegerTests.swift; sourceTree = "<group>"; };
 		0A84E5F71A2B054E0070238D /* BigInteger+Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BigInteger+Operators.swift"; sourceTree = "<group>"; };
+		0A84E5FA1A2EDB020070238D /* PeerControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerControllerTests.swift; sourceTree = "<group>"; };
 		0A98B3A019B59584001C878D /* TestInputStreamDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestInputStreamDelegate.swift; sourceTree = "<group>"; };
 		0A98FAA919A1CF4700E4E57B /* PeerDiscovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerDiscovery.swift; sourceTree = "<group>"; };
 		0A98FAAB19A1EBFD00E4E57B /* PeerConnectionLiveTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConnectionLiveTest.swift; sourceTree = "<group>"; };
@@ -503,6 +506,7 @@
 				0A7FB5B519A33AA00008690F /* NSDataToUInt8ArrayTests.swift */,
 				0A9EA98619B53363006E573F /* NSStream+Binding.swift */,
 				0A1AFF4819B4283F0032F488 /* PeerConnectionTests.swift */,
+				0A84E5FA1A2EDB020070238D /* PeerControllerTests.swift */,
 				D8BA344319D76DB300A1232F /* PingMessageTests.swift */,
 				D845F45319D7A5FB00346A25 /* PongMessageTests.swift */,
 				0AF07C751A09ECBD00A0C9F1 /* RejectMessageTests.swift */,
@@ -918,6 +922,7 @@
 				0A435A7419F2C63C00FE2689 /* FilterLoadMessageTests.swift in Sources */,
 				0ABA36441960EC0A00C6D098 /* BitcoinEncodingTests.swift in Sources */,
 				D8BA343F19D74E0E00A1232F /* NotFoundMessageTests.swift in Sources */,
+				0A84E5FB1A2EDB020070238D /* PeerControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1019,6 +1024,7 @@
 				0AC8CF5819A9376B00D93585 /* BitcoinDecodingTests.swift in Sources */,
 				0AC8CF5519A9376B00D93585 /* Base58Tests.swift in Sources */,
 				0AC8CF5719A9376B00D93585 /* BitcoinEncodingTests.swift in Sources */,
+				0A84E5FC1A2EDB020070238D /* PeerControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1266,6 +1272,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEPLOYMENT_LOCATION = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1285,7 +1292,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = BitcoinSwift;
 				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 			};
 			name = Debug;
 		};
@@ -1295,6 +1302,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				DEPLOYMENT_LOCATION = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1310,7 +1318,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = BitcoinSwift;
 				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
 			};
 			name = Release;
 		};
