@@ -28,6 +28,7 @@ class BlockHeaderDownloader {
 extension BlockHeaderDownloader: PeerControllerDelegate {
 
   func blockChainSyncComplete() {
+    println("COMPLETE")
     dispatch_semaphore_signal(semaphore)
   }
 }

@@ -21,6 +21,8 @@ public class PeerController {
   private let blockStore: SPVBlockStore
   private var connection: PeerConnection?
   private weak var delegate: PeerControllerDelegate?
+  private var peerVersion: VersionMessage?
+  private var headersDownloaded = 0
 
   public init(hostname: String,
               port: UInt16,
@@ -39,6 +41,7 @@ public class PeerController {
   public func start() {
     precondition(connection == nil)
     queue.addOperationWithBlock {
+      self.headersDownloaded = 0
       self.connection = PeerConnection(hostname: self.hostname,
                                        port: self.port,
                                        network: self.network,
@@ -81,6 +84,7 @@ extension PeerController: PeerConnectionDelegate {
   public func peerConnection(peerConnection: PeerConnection,
                              didConnectWithPeerVersion peerVersion: VersionMessage) {
     queue.addOperationWithBlock {
+      self.peerVersion = peerVersion
       let getHeadersMessage = GetHeadersMessage(protocolVersion: 70002,
                                                 blockLocatorHashes: [self.genesisBlockHash])
       self.connection?.sendMessageWithPayload(getHeadersMessage)
@@ -101,18 +105,20 @@ extension PeerController: PeerConnectionDelegate {
           Logger.info("  " + inventoryVector.description)
         }
       case .HeadersMessage(let headersMessage):
-        Logger.info("Received \(headersMessage.headers.count) block headers")
-        // If there are still more headers to sync, request more.
-        if headersMessage.headers.count == 2000 {
-          queue.addOperationWithBlock {
+        queue.addOperationWithBlock {
+          self.headersDownloaded += headersMessage.headers.count
+          // If there are still more headers to sync, request more.
+          if headersMessage.headers.count == 2000 {
+            let percentComplete = Double(self.headersDownloaded) /
+                Double(self.peerVersion!.blockStartHeight) * 100
+            Logger.info("Received \(headersMessage.headers.count) block headers. " +
+                "\(Int(percentComplete))% complete")
             let lastHeaderHash = headersMessage.headers.last!.hash.reversedData
             let getHeadersMessage = GetHeadersMessage(protocolVersion: 70002,
                                                       blockLocatorHashes: [lastHeaderHash])
             self.connection?.sendMessageWithPayload(getHeadersMessage)
-          }
-        } else {
-          Logger.info("Header sync complete")
-          queue.addOperationWithBlock {
+          } else {
+            Logger.info("Header sync complete")
             if let delegate = self.delegate {
               delegate.blockChainSyncComplete()
             }
