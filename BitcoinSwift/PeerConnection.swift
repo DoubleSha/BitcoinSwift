@@ -69,9 +69,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   public weak var delegate: PeerConnectionDelegate?
   private var delegateQueue: NSOperationQueue
 
-  // Depending on the constructor used, either the hostname or the IP will be non-nil.
   private let peerHostname: String?
-  private let peerIP: IPAddress?
   private let peerPort: UInt16
   private let network: Message.Network
 
@@ -105,24 +103,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
               delegate: PeerConnectionDelegate? = nil,
               delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue()) {
     self.delegate = delegate
-    self.peerIP = nil
     self.peerHostname = hostname
-    self.peerPort = port
-    self.network = network
-    self.delegateQueue = delegateQueue
-    self.messageParser = MessageParser(network: network)
-    super.init()
-    self.messageParser.delegate = self
-  }
-
-  public init(IP: IPAddress,
-              port: UInt16,
-              network: Message.Network,
-              delegate: PeerConnectionDelegate? = nil,
-              delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue()) {
-    self.delegate = delegate
-    self.peerIP = IP
-    self.peerHostname = nil
     self.peerPort = port
     self.network = network
     self.delegateQueue = delegateQueue
@@ -142,7 +123,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     precondition(!receivedVersionAck)
     precondition(connectionTimeoutTimer == nil)
     setStatus(.Connecting)
-    Logger.info("Attempting to connect to peer \(peerHostname!): \(peerPort)")
+    Logger.info("Attempting to connect to peer \(peerHostname!):\(peerPort)")
     connectionTimeoutTimer =
         NSTimer.scheduledTimerWithTimeInterval(timeout,
                                                target: self,
@@ -151,7 +132,6 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
                                                repeats: false)
     networkThread.startWithCompletion {
       self.networkThread.addOperationWithBlock {
-        // TODO: Support peerIP here instead of just peerHostname.
         if let (inputStream, outputStream) =
             self.streamsToPeerWithHostname(self.peerHostname!, port: self.peerPort) {
           self.inputStream = inputStream
@@ -217,7 +197,6 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
   // parsing was successful. For some message types (e.g. VersionAck), payloadData is expected to
   // have a length of 0.
   public func didParseMessage(message: Message) {
-    // TODO: Add the rest of the messages.
     Logger.debug("Received \(message.header.command.rawValue) message")
     let payloadStream = NSInputStream(data: message.payload)
     payloadStream.open()
@@ -369,7 +348,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
                                        &readStream,
                                        &writeStream);
     if readStream == nil || writeStream == nil {
-      Logger.info("Connection failed to peer \(self.peerHostname!): \(self.peerPort)")
+      Logger.info("Connection failed to peer \(self.peerHostname!):\(self.peerPort)")
       self.setStatus(.NotConnected)
       return nil
     }
@@ -439,6 +418,9 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     if status == .Disconnecting || status == .NotConnected {
       return
     }
+    if let error = error {
+      Logger.warn("Socket error \(error)")
+    }
     setStatus(.Disconnecting)
     connectionTimeoutTimer?.invalidate()
     connectionTimeoutTimer = nil
@@ -466,7 +448,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     precondition(status == .Connecting)
     precondition(self.peerVersion != nil)
     precondition(receivedVersionAck)
-    Logger.info("Connected to peer \(peerHostname!): \(peerPort)")
+    Logger.info("Connected to peer \(peerHostname!):\(peerPort)")
     connectionTimeoutTimer?.invalidate()
     connectionTimeoutTimer = nil
     setStatus(.Connected)
