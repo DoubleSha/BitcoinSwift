@@ -29,5 +29,16 @@ public struct InventoryVector: Equatable {
     self.hash = hash
   }
 
+  public var description: String {
+    switch type {
+      case .Error:
+        return "ERROR \(hash.reversedData.hexString())"
+      case .Block:
+        return "BLOCK \(hash.reversedData.hexString())"
+      case .Transaction:
+        return "TRANSACTION \(hash.reversedData.hexString())"
+    }
+  }
+
   // TODO: Make this conform to BitcoinSerializable.
 }
