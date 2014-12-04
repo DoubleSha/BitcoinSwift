@@ -12,6 +12,12 @@ public class InMemorySPVBlockStore: SPVBlockStore {
 
   private var blockHeadersByHash = Dictionary<NSData, BlockHeader>()
 
+  public init() {}
+
+  public var head: BlockHeader? {
+    return nil
+  }
+
   public func blockHeaderWithHash(hash: NSData) -> BlockHeader? {
     return blockHeadersByHash[hash]
   }
