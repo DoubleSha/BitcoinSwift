@@ -35,7 +35,7 @@ public struct GetHeadersMessage: Equatable {
 extension GetHeadersMessage: MessagePayload {
 
   public var command: Message.Command {
-    return Message.Command.GetBlocks
+    return Message.Command.GetHeaders
   }
 
   public var bitcoinData: NSData {
