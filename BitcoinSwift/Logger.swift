@@ -32,7 +32,15 @@ public class Logger {
     Logger.log(message, prefix: "CRITICAL")
   }
 
+  private class var currentTimeString: String {
+    var time = time_t(NSDate().timeIntervalSince1970)
+    var timeStruct = gmtime(&time)
+    var timeBuffer: [Int8] = Array<Int8>(count: 20, repeatedValue: 0)
+    strftime(&timeBuffer, 20, "%Y-%m-%d %H:%M:%S", timeStruct)
+    return NSString(CString: timeBuffer, encoding: NSASCIIStringEncoding)!
+  }
+
   private class func log(message: String, prefix: String) {
-    println("\(prefix) [\(NSDate().description)] \(message)")
+    println("\(prefix) [\(currentTimeString)] \(message)")
   }
 }
