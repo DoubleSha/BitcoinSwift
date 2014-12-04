@@ -111,7 +111,12 @@ extension PeerController: PeerConnectionDelegate {
             self.connection?.sendMessageWithPayload(getHeadersMessage)
           }
         } else {
-          Logger.info("Header sync complete!")
+          Logger.info("Header sync complete")
+          queue.addOperationWithBlock {
+            if let delegate = self.delegate {
+              delegate.blockChainSyncComplete()
+            }
+          }
         }
       default:
         break
