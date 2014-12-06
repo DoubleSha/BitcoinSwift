@@ -76,6 +76,8 @@
 		0A627FC61A33B81100170C31 /* SHA256HashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FC41A33B81100170C31 /* SHA256HashTests.swift */; };
 		0A627FC81A33C01E00170C31 /* PeerAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FC71A33C01E00170C31 /* PeerAddressTests.swift */; };
 		0A627FC91A33C01E00170C31 /* PeerAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FC71A33C01E00170C31 /* PeerAddressTests.swift */; };
+		0A627FCB1A33CB7200170C31 /* IPAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */; };
+		0A627FCC1A33CB7200170C31 /* IPAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */; };
 		0A78124D19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78124E19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78125019C4D41300187B9A /* MessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124F19C4D41300187B9A /* MessageParser.swift */; };
@@ -290,6 +292,7 @@
 		0A627FC11A33B5BF00170C31 /* SHA256Hash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SHA256Hash.swift; path = Models/SHA256Hash.swift; sourceTree = "<group>"; };
 		0A627FC41A33B81100170C31 /* SHA256HashTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SHA256HashTests.swift; sourceTree = "<group>"; };
 		0A627FC71A33C01E00170C31 /* PeerAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerAddressTests.swift; sourceTree = "<group>"; };
+		0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPAddressTests.swift; sourceTree = "<group>"; };
 		0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestOutputStreamDelegate.swift; sourceTree = "<group>"; };
 		0A78124F19C4D41300187B9A /* MessageParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParser.swift; sourceTree = "<group>"; };
 		0A78125219C4E45500187B9A /* MessageParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParserTests.swift; sourceTree = "<group>"; };
@@ -508,6 +511,7 @@
 				0A3F880219D74D8400E6E915 /* GetHeadersMessageTests.swift */,
 				0A52ACFC1953AAA00041541B /* HashingTests.swift */,
 				D8E8663619A95E2B00319A0D /* InventoryMessageTests.swift */,
+				0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */,
 				0AECD0DA19AAFFD600C11AC9 /* MessageHeaderTests.swift */,
 				0A78125219C4E45500187B9A /* MessageParserTests.swift */,
 				0A34DF6A19664041007BBC35 /* MessageTests.swift */,
@@ -916,6 +920,7 @@
 				D8BA343B19D7368800A1232F /* GetDataMessageTests.swift in Sources */,
 				0A110DEB19E9088200CBFCAC /* AlertMessageTests.swift in Sources */,
 				0A9AD043199DE2C700ECEA92 /* AddrMessageTests.swift in Sources */,
+				0A627FCB1A33CB7200170C31 /* IPAddressTests.swift in Sources */,
 				0A78125319C4E45500187B9A /* MessageParserTests.swift in Sources */,
 				D8E8663919A9C40300319A0D /* InventoryMessageTests.swift in Sources */,
 				0A52ACFD1953AAA00041541B /* HashingTests.swift in Sources */,
@@ -1021,6 +1026,7 @@
 				0AF07C771A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */,
 				0A78125819C4E4B700187B9A /* DummyMessage.swift in Sources */,
 				0AC8CF5A19A9376B00D93585 /* AddrMessageTests.swift in Sources */,
+				0A627FCC1A33CB7200170C31 /* IPAddressTests.swift in Sources */,
 				0A78125419C4E45500187B9A /* MessageParserTests.swift in Sources */,
 				D8E8663A19A9C40400319A0D /* InventoryMessageTests.swift in Sources */,
 				0A435A7519F2C63C00FE2689 /* FilterLoadMessageTests.swift in Sources */,

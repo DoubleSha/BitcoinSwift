@@ -384,47 +384,6 @@ class BitcoinDecodingTests: XCTestCase {
     stream.close()
   }
 
-  func testReadIPV4Address() {
-    let bytes: [UInt8] = [
-        0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0xff, 0xff,
-        0x01, 0x02, 0x03, 0x04]
-    let data = NSData(bytes: bytes, length: bytes.count)
-    let stream = NSInputStream(data: data)
-    stream.open()
-    if let IP = stream.readIPAddress() {
-      let expectedIP = IPAddress.IPV4(0x01020304)
-      XCTAssertEqual(IP, expectedIP)
-    } else {
-      XCTFail("Failed to parse IP")
-    }
-    XCTAssertFalse(stream.hasBytesAvailable)
-    stream.close()
-  }
-
-  func testReadIPV6Address() {
-    let bytes: [UInt8] = [
-        0x01, 0x02, 0x03, 0x04,
-        0x11, 0x12, 0x13, 0x14,
-        0x21, 0x22, 0x23, 0x24,
-        0x31, 0x32, 0x33, 0x34]
-    let data = NSData(bytes: bytes, length: bytes.count)
-    let stream = NSInputStream(data: data)
-    stream.open()
-    if let IP = stream.readIPAddress() {
-      let expectedIP = IPAddress.IPV6(0x01020304,
-                                      0x11121314,
-                                      0x21222324,
-                                      0x31323334)
-      XCTAssertEqual(IP, expectedIP)
-    } else {
-      XCTFail("Failed to parse IP")
-    }
-    XCTAssertFalse(stream.hasBytesAvailable)
-    stream.close()
-  }
-
   func testReadDateFrom32BitUnixTimestamp() {
     let bytes: [UInt8] = [0xe2, 0x15, 0x10, 0x4d]
     let data = NSData(bytes: bytes, length: bytes.count)

@@ -127,24 +127,6 @@ public extension NSMutableData {
     }
   }
 
-  public func appendIPAddress(IP: IPAddress) {
-    // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
-    // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
-    // Addresses are encoded using network byte order (big endian).
-    switch IP {
-      case .IPV4(let word): 
-        appendUInt32(0, endianness: .BigEndian)
-        appendUInt32(0, endianness: .BigEndian)
-        appendUInt32(0xffff, endianness: .BigEndian)
-        appendUInt32(word, endianness: .BigEndian)
-      case .IPV6(let word0, let word1, let word2, let word3): 
-        appendUInt32(word0, endianness: .BigEndian)
-        appendUInt32(word1, endianness: .BigEndian)
-        appendUInt32(word2, endianness: .BigEndian)
-        appendUInt32(word3, endianness: .BigEndian)
-    }
-  }
-
   public func appendDateAs32BitUnixTimestamp(date: NSDate, endianness: Endianness = .LittleEndian) {
     appendUInt32(UInt32(date.timeIntervalSince1970), endianness: endianness)
   }

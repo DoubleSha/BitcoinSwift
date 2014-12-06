@@ -52,7 +52,7 @@ extension PeerAddress: BitcoinSerializable {
       }
     }
     data.appendUInt64(services.rawValue)
-    data.appendIPAddress(IP)
+    data.appendData(IP.bitcoinData)
     data.appendUInt16(port, endianness: .BigEndian)  // Network byte order.
     return data
   }
@@ -73,7 +73,7 @@ extension PeerAddress: BitcoinSerializable {
       return nil
     }
     let services = PeerServices(rawValue: servicesRaw!)
-    let IP = stream.readIPAddress()
+    let IP = IPAddress.fromBitcoinStream(stream)
     if IP == nil {
       Logger.warn("Failed to parse IP from PeerAddress")
       return nil

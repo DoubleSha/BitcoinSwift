@@ -152,33 +152,6 @@ class BitcoinEncodingTests: XCTestCase {
     XCTAssertEqual(data, expectedData)
   }
 
-  func testAppendIPV4Address() {
-    var data = NSMutableData()
-    data.appendIPAddress(IPAddress.IPV4(0x01020304))
-    let IPBytes: [UInt8] = [
-        0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0xff, 0xff,
-        0x01, 0x02, 0x03, 0x04]
-    let expectedData = NSData(bytes: IPBytes, length: IPBytes.count)
-    XCTAssertEqual(data, expectedData)
-  }
-
-  func testAppendIPV6Address() {
-    var data = NSMutableData()
-    data.appendIPAddress(IPAddress.IPV6(0x01020304,
-                                        0x11121314,
-                                        0x21222324,
-                                        0x31323334))
-    let IPBytes: [UInt8] = [
-        0x01, 0x02, 0x03, 0x04,
-        0x11, 0x12, 0x13, 0x14,
-        0x21, 0x22, 0x23, 0x24,
-        0x31, 0x32, 0x33, 0x34]
-    let expectedData = NSData(bytes: IPBytes, length: IPBytes.count)
-    XCTAssertEqual(data, expectedData)
-  }
-
   func testAppendDateAs32BitUnixTimestamp() {
     let date = NSDate(timeIntervalSince1970: NSTimeInterval(0x4d1015e2))
     var data = NSMutableData()
