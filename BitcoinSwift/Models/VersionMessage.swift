@@ -68,9 +68,9 @@ extension VersionMessage: MessagePayload {
     var data = NSMutableData()
     data.appendUInt32(protocolVersion)
     data.appendUInt64(services.rawValue)
-    data.appendInt64(Int64(date.timeIntervalSince1970))
-    data.appendPeerAddress(receiverAddress, includeTimestamp: false)
-    data.appendPeerAddress(senderAddress, includeTimestamp: false)
+    data.appendDateAs64BitUnixTimestamp(date)
+    data.appendData(receiverAddress.bitcoinDataWithTimestamp(false))
+    data.appendData(senderAddress.bitcoinDataWithTimestamp(false))
     data.appendUInt64(nonce)
     data.appendVarString(userAgent)
     data.appendInt32(blockStartHeight)
@@ -96,12 +96,12 @@ extension VersionMessage: MessagePayload {
       return nil
     }
     let date = NSDate(timeIntervalSince1970: NSTimeInterval(timestamp!))
-    let receiverAddress = stream.readPeerAddress(includeTimestamp: false)
+    let receiverAddress = PeerAddress.fromBitcoinStream(stream, includeTimestamp: false)
     if receiverAddress == nil {
       Logger.warn("Failed to parse receiverAddress from VersionMessage")
       return nil
     }
-    let senderAddress = stream.readPeerAddress(includeTimestamp: false)
+    let senderAddress = PeerAddress.fromBitcoinStream(stream, includeTimestamp: false)
     if senderAddress == nil {
       Logger.warn("Failed to parse senderAddress from VersionMessage")
       return nil

@@ -30,6 +30,59 @@ public struct PeerAddress: Equatable {
     self.port = port
     self.timestamp = timestamp
   }
+}
 
-  // TODO: Make this conform to BitcoinSerializable.
+extension PeerAddress: BitcoinSerializable {
+
+  public var bitcoinData: NSData {
+    return bitcoinDataWithTimestamp(true)
+  }
+
+  public static func fromBitcoinStream(stream: NSInputStream) -> PeerAddress? {
+    return PeerAddress.fromBitcoinStream(stream, includeTimestamp: true)
+  }
+
+  public func bitcoinDataWithTimestamp(includeTimestamp: Bool) -> NSData {
+    var data = NSMutableData()
+    if includeTimestamp {
+      if let timestamp = timestamp {
+        data.appendDateAs32BitUnixTimestamp(timestamp)
+      } else {
+        data.appendDateAs32BitUnixTimestamp(NSDate())
+      }
+    }
+    data.appendUInt64(services.rawValue)
+    data.appendIPAddress(IP)
+    data.appendUInt16(port, endianness: .BigEndian)  // Network byte order.
+    return data
+  }
+
+  public static func fromBitcoinStream(stream: NSInputStream,
+                                       includeTimestamp: Bool) -> PeerAddress? {
+    var timestamp: NSDate? = nil
+    if includeTimestamp {
+      timestamp = stream.readDateFrom32BitUnixTimestamp()
+      if timestamp == nil {
+        Logger.warn("Failed to parse timestamp from PeerAddress")
+        return nil
+      }
+    }
+    let servicesRaw = stream.readUInt64()
+    if servicesRaw == nil {
+      Logger.warn("Failed to parse servicesRaw from PeerAddress")
+      return nil
+    }
+    let services = PeerServices(rawValue: servicesRaw!)
+    let IP = stream.readIPAddress()
+    if IP == nil {
+      Logger.warn("Failed to parse IP from PeerAddress")
+      return nil
+    }
+    let port = stream.readUInt16(endianness: .BigEndian)  // Network byte order.
+    if port == nil {
+      Logger.warn("Failed to parse port from PeerAddress")
+      return nil
+    }
+    return PeerAddress(services: services, IP: IP!, port: port!, timestamp: timestamp)
+  }
 }

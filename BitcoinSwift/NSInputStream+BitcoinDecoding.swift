@@ -249,31 +249,6 @@ public extension NSInputStream {
 
   // TODO: The functions below don't belong here. Move them somewhere else.
 
-  public func readPeerAddress(includeTimestamp: Bool = true) -> PeerAddress? {
-    var timestamp: NSDate? = nil
-    if includeTimestamp {
-      let rawTimestamp = readUInt32()
-      if rawTimestamp == nil {
-        return nil
-      }
-      timestamp = NSDate(timeIntervalSince1970: NSTimeInterval(rawTimestamp!))
-    }
-    let servicesRaw = readUInt64()
-    if servicesRaw == nil {
-      return nil
-    }
-    let services = PeerServices(rawValue: servicesRaw!)
-    let IP = readIPAddress()
-    if IP == nil {
-      return nil
-    }
-    let port = readUInt16(endianness: .BigEndian)  // Network byte order.
-    if port == nil {
-      return nil
-    }
-    return PeerAddress(services: services, IP: IP!, port: port!, timestamp: timestamp)
-  }
-
   public func readInventoryVector() -> InventoryVector? {
     let rawType = readUInt32()
     if rawType == nil {

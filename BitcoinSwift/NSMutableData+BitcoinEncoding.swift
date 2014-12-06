@@ -153,20 +153,7 @@ public extension NSMutableData {
     appendUInt64(UInt64(date.timeIntervalSince1970), endianness: endianness)
   }
 
-  // TODO: The functions below don't belong here. Move them somewhere else.
-
-  public func appendPeerAddress(peerAddress: PeerAddress, includeTimestamp: Bool = true) {
-    if includeTimestamp {
-      if let timestamp = peerAddress.timestamp {
-        appendUInt32(UInt32(timestamp.timeIntervalSince1970))
-      } else {
-        appendUInt32(UInt32(NSDate().timeIntervalSince1970))
-      }
-    }
-    appendUInt64(peerAddress.services.rawValue)
-    appendIPAddress(peerAddress.IP)
-    appendUInt16(peerAddress.port, endianness: .BigEndian)  // Network byte order.
-  }
+  // TODO: The function below doesn't belong here. Move it somewhere else.
 
   public func appendInventoryVector(inventoryVector: InventoryVector) {
     appendUInt32(inventoryVector.type.rawValue)

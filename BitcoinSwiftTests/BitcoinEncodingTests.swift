@@ -196,38 +196,4 @@ class BitcoinEncodingTests: XCTestCase {
     let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
     XCTAssertEqual(data, expectedData)
   }
-
-  func testAppendPeerAddressWithoutTimestamp() {
-    let services = PeerServices.NodeNetwork
-    let IP = IPAddress.IPV4(0x01020304)
-    let port: UInt16 = 8333
-    let peerAddress = PeerAddress(services: services, IP: IP, port: port)
-    var data = NSMutableData()
-    data.appendPeerAddress(peerAddress, includeTimestamp: false)
-    let expectedBytes: [UInt8] = [
-        0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
-        0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
-        0x20, 0x8d]                                     // port
-    let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
-    XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
-  }
-
-  func testAppendPeerAddressWithTimestamp() {
-    let timestamp = NSDate(timeIntervalSince1970: NSTimeInterval(0x4d1015e2))
-    let services = PeerServices.NodeNetwork
-    let IP = IPAddress.IPV4(0x01020304)
-    let port: UInt16 = 8333
-    let peerAddress = PeerAddress(services: services, IP: IP, port: port, timestamp: timestamp)
-    var data = NSMutableData()
-    data.appendPeerAddress(peerAddress)
-    let expectedBytes: [UInt8] = [
-        0xe2, 0x15, 0x10, 0x4d,                         // timestamp
-        0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // services
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // IP
-        0x00, 0x00, 0xff, 0xff, 0x01, 0x02, 0x03, 0x04, // IP
-        0x20, 0x8d]                                     // port
-    let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
-    XCTAssertEqual(data, expectedData, "\n[FAIL] Invalid data " + data.hexString())
-  }
 }

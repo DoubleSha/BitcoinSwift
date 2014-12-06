@@ -35,7 +35,7 @@ extension AddressMessage: MessagePayload {
     var data = NSMutableData()
     data.appendVarInt(peerAddresses.count)
     for peerAddress in peerAddresses {
-      data.appendPeerAddress(peerAddress)
+      data.appendData(peerAddress.bitcoinData)
     }
     return data
   }
@@ -56,7 +56,7 @@ extension AddressMessage: MessagePayload {
     }
     var peerAddresses: [PeerAddress] = []
     for _ in 0..<count! {
-      let peerAddress = stream.readPeerAddress()
+      let peerAddress = PeerAddress.fromBitcoinStream(stream)
       if peerAddress == nil {
         Logger.warn("Failed to parse peer address from AddressMessage")
         return nil
