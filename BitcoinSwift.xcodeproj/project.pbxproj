@@ -70,6 +70,10 @@
 		0A56A73419FCEB6C00F163BD /* FilteredBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56A73219FCEB6C00F163BD /* FilteredBlock.swift */; };
 		0A56A73619FCF40500F163BD /* FilteredBlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56A73519FCF40500F163BD /* FilteredBlockTests.swift */; };
 		0A56A73719FCF40500F163BD /* FilteredBlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56A73519FCF40500F163BD /* FilteredBlockTests.swift */; };
+		0A627FC21A33B5BF00170C31 /* SHA256Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FC11A33B5BF00170C31 /* SHA256Hash.swift */; };
+		0A627FC31A33B5BF00170C31 /* SHA256Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FC11A33B5BF00170C31 /* SHA256Hash.swift */; };
+		0A627FC51A33B81100170C31 /* SHA256HashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FC41A33B81100170C31 /* SHA256HashTests.swift */; };
+		0A627FC61A33B81100170C31 /* SHA256HashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FC41A33B81100170C31 /* SHA256HashTests.swift */; };
 		0A78124D19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78124E19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78125019C4D41300187B9A /* MessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124F19C4D41300187B9A /* MessageParser.swift */; };
@@ -281,6 +285,8 @@
 		0A5314E619D77E730090F82F /* TransactionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionTests.swift; sourceTree = "<group>"; };
 		0A56A73219FCEB6C00F163BD /* FilteredBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FilteredBlock.swift; path = Models/FilteredBlock.swift; sourceTree = "<group>"; };
 		0A56A73519FCF40500F163BD /* FilteredBlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilteredBlockTests.swift; sourceTree = "<group>"; };
+		0A627FC11A33B5BF00170C31 /* SHA256Hash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SHA256Hash.swift; path = Models/SHA256Hash.swift; sourceTree = "<group>"; };
+		0A627FC41A33B81100170C31 /* SHA256HashTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SHA256HashTests.swift; sourceTree = "<group>"; };
 		0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestOutputStreamDelegate.swift; sourceTree = "<group>"; };
 		0A78124F19C4D41300187B9A /* MessageParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParser.swift; sourceTree = "<group>"; };
 		0A78125219C4E45500187B9A /* MessageParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParserTests.swift; sourceTree = "<group>"; };
@@ -510,6 +516,7 @@
 				D8BA344319D76DB300A1232F /* PingMessageTests.swift */,
 				D845F45319D7A5FB00346A25 /* PongMessageTests.swift */,
 				0AF07C751A09ECBD00A0C9F1 /* RejectMessageTests.swift */,
+				0A627FC41A33B81100170C31 /* SHA256HashTests.swift */,
 				0A98B3A019B59584001C878D /* TestInputStreamDelegate.swift */,
 				0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */,
 				0A5314E619D77E730090F82F /* TransactionTests.swift */,
@@ -556,6 +563,7 @@
 				0AC17A7F19E508B2000E4942 /* PingMessage.swift */,
 				0AC17A8019E508B2000E4942 /* PongMessage.swift */,
 				0AF07C721A09EC9400A0C9F1 /* RejectMessage.swift */,
+				0A627FC11A33B5BF00170C31 /* SHA256Hash.swift */,
 				0AC17A8119E508B2000E4942 /* Transaction.swift */,
 				0AC17A8219E508B2000E4942 /* TransactionInput.swift */,
 				0AC17A8419E508B2000E4942 /* TransactionLockTime.swift */,
@@ -844,6 +852,7 @@
 				0AC17AAC19E508B2000E4942 /* TransactionInput.swift in Sources */,
 				0AC17AA019E508B2000E4942 /* NotFoundMessage.swift in Sources */,
 				0A2D51BC196E52EA009B6B25 /* DNSPeerDiscovery.swift in Sources */,
+				0A627FC21A33B5BF00170C31 /* SHA256Hash.swift in Sources */,
 				0AF07C731A09EC9400A0C9F1 /* RejectMessage.swift in Sources */,
 				0AC17A9419E508B2000E4942 /* GetHeadersMessage.swift in Sources */,
 				0AC17A9E19E508B2000E4942 /* MessageHeader.swift in Sources */,
@@ -910,6 +919,7 @@
 				0A98B3A119B59584001C878D /* TestInputStreamDelegate.swift in Sources */,
 				0A248C221954150800C4607E /* BitcoinAddressTests.swift in Sources */,
 				D8BA344419D76DB300A1232F /* PingMessageTests.swift in Sources */,
+				0A627FC51A33B81100170C31 /* SHA256HashTests.swift in Sources */,
 				0A34DF6B19664041007BBC35 /* MessageTests.swift in Sources */,
 				0A9EA98719B53363006E573F /* NSStream+Binding.swift in Sources */,
 				0AECD0DB19AAFFD600C11AC9 /* MessageHeaderTests.swift in Sources */,
@@ -946,6 +956,7 @@
 				0A78125119C4D41300187B9A /* MessageParser.swift in Sources */,
 				0AC17A8919E508B2000E4942 /* AddressMessage.swift in Sources */,
 				0AC17AA519E508B2000E4942 /* PeerServices.swift in Sources */,
+				0A627FC31A33B5BF00170C31 /* SHA256Hash.swift in Sources */,
 				0AF07C741A09EC9400A0C9F1 /* RejectMessage.swift in Sources */,
 				0AC17A9F19E508B2000E4942 /* MessageHeader.swift in Sources */,
 				0AC17A8B19E508B2000E4942 /* BitcoinAddress.swift in Sources */,
@@ -1012,6 +1023,7 @@
 				0A435A7B19F2CF2200FE2689 /* FilterAddMessageTests.swift in Sources */,
 				0AC8CF5419A9376B00D93585 /* HashingTests.swift in Sources */,
 				0A98B3A219B59584001C878D /* TestInputStreamDelegate.swift in Sources */,
+				0A627FC61A33B81100170C31 /* SHA256HashTests.swift in Sources */,
 				0A3F880419D74D8400E6E915 /* GetHeadersMessageTests.swift in Sources */,
 				0AC8CF5219A9376B00D93585 /* MessageTests.swift in Sources */,
 				0ADEA2A91A0E94DD00F3FB32 /* PongMessageTests.swift in Sources */,
