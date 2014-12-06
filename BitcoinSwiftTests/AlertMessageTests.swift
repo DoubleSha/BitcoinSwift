@@ -91,8 +91,10 @@ class AlertMessageTests: XCTestCase {
     if let testAlertMessage = AlertMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testAlertMessage, alertMessage)
     } else {
-      XCTFail("\n[FAIL] Failed to parse AlertMessage")
+      XCTFail("Failed to parse AlertMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 
   func testSignatureValidation() {

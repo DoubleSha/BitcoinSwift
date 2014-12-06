@@ -51,7 +51,9 @@ class InventoryMessageTests: XCTestCase {
       let expectedInventoryMessage = InventoryMessage(inventoryVectors: expectedInventoryVectors)
       XCTAssertEqual(inventoryMessage, expectedInventoryMessage)
     } else {
-      XCTFail("\n[FAIL] Failed to parse InventoryMessage")
+      XCTFail("Failed to parse InventoryMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

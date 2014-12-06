@@ -88,8 +88,10 @@ class GetHeadersMessageTests: XCTestCase {
       XCTAssertNotNil(getHeadersMessage.blockHashStop)
       XCTAssertEqual(getHeadersMessage.blockHashStop!, blockHashStop)
     } else {
-      XCTFail("\n[FAIL] Failed to parse GetHeadersMessage")
+      XCTFail("Failed to parse GetHeadersMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 
   func testGetHeadersMessageWithNoBlockHashStopEncoding() {
@@ -139,7 +141,9 @@ class GetHeadersMessageTests: XCTestCase {
       XCTAssertEqual(getHeadersMessage.blockLocatorHashes, [blockLocatorHash0, blockLocatorHash1])
       XCTAssertNil(getHeadersMessage.blockHashStop)
     } else {
-      XCTFail("\n[FAIL] Failed to parse GetHeadersMessage")
+      XCTFail("Failed to parse GetHeadersMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

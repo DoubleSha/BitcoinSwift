@@ -40,7 +40,9 @@ class MessageHeaderTests: XCTestCase {
     if let testHeader = Message.Header.fromBitcoinStream(stream) {
       XCTAssertEqual(testHeader, header)
     } else {
-      XCTFail("\n[FAIL] Failed to parse message header")
+      XCTFail("Failed to parse message header")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

@@ -47,7 +47,9 @@ class NotFoundMessageTests: XCTestCase {
     if let testNotFoundMessage = NotFoundMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testNotFoundMessage, notFoundMessage)
     } else {
-      XCTFail("\n[FAIL] Failed to parse NotFoundMessage")
+      XCTFail("Failed to parse NotFoundMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

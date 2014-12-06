@@ -31,7 +31,9 @@ class PongMessageTests: XCTestCase {
     if let testPongMessage = PongMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testPongMessage, pongMessage)
     } else {
-      XCTFail("\n[FAIL] Failed to parse PongMessage")
+      XCTFail("Failed to parse PongMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

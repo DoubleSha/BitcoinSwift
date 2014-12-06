@@ -54,25 +54,25 @@ class PeerAddressTests: XCTestCase {
                    peerAddressDataWithoutTimestamp)
   }
 
-  func testReadPeerAddressWithTimestamp() {
+  func testPeerAddressDecodingWithTimestamp() {
     let stream = NSInputStream(data: peerAddressDataWithTimestamp)
     stream.open()
     if let testPeerAddress = PeerAddress.fromBitcoinStream(stream) {
       XCTAssertEqual(testPeerAddress, peerAddressWithTimestamp)
     } else {
-      XCTFail("\n[FAIL] Failed to parse PeerAddress")
+      XCTFail("Failed to parse PeerAddress")
     }
     XCTAssertFalse(stream.hasBytesAvailable)
     stream.close()
   }
 
-  func testReadPeerAddressWithoutTimestamp() {
+  func testPeerAddressDecodingWithoutTimestamp() {
     let stream = NSInputStream(data: peerAddressDataWithoutTimestamp)
     stream.open()
     if let testPeerAddress = PeerAddress.fromBitcoinStream(stream, includeTimestamp: false) {
       XCTAssertEqual(testPeerAddress, peerAddressWithoutTimestamp)
     } else {
-      XCTFail("\n[FAIL] Failed to parse PeerAddress")
+      XCTFail("Failed to parse PeerAddress")
     }
     XCTAssertFalse(stream.hasBytesAvailable)
     stream.close()

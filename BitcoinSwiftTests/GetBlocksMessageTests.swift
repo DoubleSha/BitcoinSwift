@@ -64,8 +64,10 @@ class GetBlocksMessageTests: XCTestCase {
       XCTAssertNotNil(getBlocksMessage.blockHashStop)
       XCTAssertEqual(getBlocksMessage.blockHashStop!, blockHashStop)
     } else {
-      XCTFail("\n[FAIL] Failed to parse GetBlocksMessage")
+      XCTFail("Failed to parse GetBlocksMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 
   func testGetBlocksMessageWithNoBlockHashStopDecoding() {
@@ -92,8 +94,10 @@ class GetBlocksMessageTests: XCTestCase {
       XCTAssertEqual(getBlocksMessage.blockLocatorHashes, [blockLocatorHash0, blockLocatorHash1])
       XCTAssertNil(getBlocksMessage.blockHashStop)
     } else {
-      XCTFail("\n[FAIL] Failed to parse GetBlocksMessage")
+      XCTFail("Failed to parse GetBlocksMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 
   func testGetBlocksMessageEncoding() {

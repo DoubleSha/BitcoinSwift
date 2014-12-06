@@ -112,16 +112,18 @@ class TransactionTests: XCTestCase {
   }
 
   func testTransactionEncoding() {
+    XCTAssertEqual(transaction.bitcoinData, transactionData)
+  }
+
+  func testTransactionDecoding() {
     let stream = NSInputStream(data: transactionData)
     stream.open()
     if let testTransaction = Transaction.fromBitcoinStream(stream) {
       XCTAssertEqual(testTransaction, transaction)
     } else {
-      XCTFail("\n[FAIL] Failed to parse Transaction")
+      XCTFail("Failed to parse Transaction")
     }
-  }
-
-  func testTransactionDecoding() {
-    XCTAssertEqual(transaction.bitcoinData, transactionData)
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

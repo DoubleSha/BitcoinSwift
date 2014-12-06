@@ -69,7 +69,9 @@ class MessageTests: XCTestCase {
     if let testMessage = Message.fromBitcoinStream(stream) {
       XCTAssertEqual(testMessage, message)
     } else {
-      XCTFail("\n[FAIL] Failed to parse message")
+      XCTFail("Failed to parse message")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

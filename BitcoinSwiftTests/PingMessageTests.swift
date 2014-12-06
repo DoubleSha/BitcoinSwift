@@ -31,7 +31,9 @@ class PingMessageTests: XCTestCase {
     if let testPingMessage = PingMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testPingMessage, pingMessage)
     } else {
-      XCTFail("\n[FAIL] Failed to parse PingMessage")
+      XCTFail("Failed to parse PingMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

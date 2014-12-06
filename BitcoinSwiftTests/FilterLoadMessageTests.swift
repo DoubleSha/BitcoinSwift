@@ -42,7 +42,9 @@ class FilterLoadMessageTests: XCTestCase {
     if let testFilterLoadMessage = FilterLoadMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testFilterLoadMessage, filterLoadMessage)
     } else {
-      XCTFail("\n[FAIL] Failed to parse FilterLoadMessage")
+      XCTFail("Failed to parse FilterLoadMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

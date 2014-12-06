@@ -81,7 +81,9 @@ class FilteredBlockTests: XCTestCase {
     if let testFilteredBlock = FilteredBlock.fromBitcoinStream(stream) {
       XCTAssertEqual(testFilteredBlock, filteredBlock)
     } else {
-      XCTFail("\n[FAIL] Failed to parse FilteredBlock")
+      XCTFail("Failed to parse FilteredBlock")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

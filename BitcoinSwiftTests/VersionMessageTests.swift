@@ -59,7 +59,9 @@ class VersionMessageTests: XCTestCase {
     if let testVersionMessage = VersionMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testVersionMessage, versionMessage)
     } else {
-      XCTFail("\n[FAIL] Failed to parse VersionMessage")
+      XCTFail("Failed to parse VersionMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

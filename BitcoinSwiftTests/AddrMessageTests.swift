@@ -44,8 +44,10 @@ class AddressMessageTests: XCTestCase {
       XCTAssertEqual(addressMessage!.peerAddresses[0], expectedPeerAddresses[0])
       XCTAssertEqual(addressMessage!.peerAddresses[1], expectedPeerAddresses[1])
     } else {
-      XCTFail("\n[FAIL] Failed to parse AddressMessage")
+      XCTFail("Failed to parse AddressMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 
   func testAddressMessageEncoding() {

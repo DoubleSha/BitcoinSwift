@@ -36,7 +36,9 @@ class SHA256HashTests: XCTestCase {
     if let testSHA256Hash = SHA256Hash.fromBitcoinStream(stream) {
       XCTAssertEqual(testSHA256Hash, sha256Hash)
     } else {
-      XCTFail("\n[FAIL] Failed to parse SHA256Hash")
+      XCTFail("Failed to parse SHA256Hash")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

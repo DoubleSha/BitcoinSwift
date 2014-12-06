@@ -45,7 +45,9 @@ class GetDataMessageTests: XCTestCase {
     if let testGetDataMessage = GetDataMessage.fromBitcoinStream(stream) {
       XCTAssertEqual(testGetDataMessage, getDataMessage)
     } else {
-      XCTFail("\n[FAIL] Failed to parse GetDataMessage")
+      XCTFail("Failed to parse GetDataMessage")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 }

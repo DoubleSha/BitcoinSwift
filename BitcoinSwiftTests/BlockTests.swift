@@ -135,8 +135,10 @@ class BlockTests: XCTestCase {
     if let testBlock = Block.fromBitcoinStream(stream) {
       XCTAssertEqual(testBlock, block)
     } else {
-      XCTFail("\n[FAIL] Failed to parse Block")
+      XCTFail("Failed to parse Block")
     }
+    XCTAssertFalse(stream.hasBytesAvailable)
+    stream.close()
   }
 
   func testBlockHash() {
