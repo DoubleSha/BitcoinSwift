@@ -8,10 +8,10 @@
 
 import Foundation
 
-public func ==(lhs: GetBlocksMessage, rhs: GetBlocksMessage) -> Bool {
-  return lhs.protocolVersion == rhs.protocolVersion &&
-      lhs.blockLocatorHashes == rhs.blockLocatorHashes &&
-      lhs.blockHashStop == rhs.blockHashStop
+public func ==(left: GetBlocksMessage, right: GetBlocksMessage) -> Bool {
+  return left.protocolVersion == right.protocolVersion &&
+      left.blockLocatorHashes == right.blockLocatorHashes &&
+      left.blockHashStop == right.blockHashStop
 }
 
 /// Message payload object corresponding to the Message.Command.GetBlocks command. Return an inv

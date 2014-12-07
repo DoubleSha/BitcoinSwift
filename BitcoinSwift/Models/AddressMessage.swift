@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: AddressMessage, rhs: AddressMessage) -> Bool {
-  return lhs.peerAddresses == rhs.peerAddresses
+public func ==(left: AddressMessage, right: AddressMessage) -> Bool {
+  return left.peerAddresses == right.peerAddresses
 }
 
 /// Message payload object corresponding to the Message.Command.Address command.

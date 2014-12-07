@@ -8,11 +8,11 @@
 
 import Foundation
 
-public func ==(lhs: Transaction, rhs: Transaction) -> Bool {
-  return lhs.version == rhs.version &&
-      lhs.inputs == rhs.inputs &&
-      lhs.outputs == rhs.outputs &&
-      lhs.lockTime == rhs.lockTime
+public func ==(left: Transaction, right: Transaction) -> Bool {
+  return left.version == right.version &&
+      left.inputs == right.inputs &&
+      left.outputs == right.outputs &&
+      left.lockTime == right.lockTime
 }
 
 /// Represents a Bitcoin transaction.

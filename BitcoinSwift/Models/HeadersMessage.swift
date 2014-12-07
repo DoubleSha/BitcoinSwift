@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: HeadersMessage, rhs: HeadersMessage) -> Bool {
-  return lhs.headers == rhs.headers
+public func ==(left: HeadersMessage, right: HeadersMessage) -> Bool {
+  return left.headers == right.headers
 }
 
 public struct HeadersMessage: Equatable {

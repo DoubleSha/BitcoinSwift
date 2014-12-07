@@ -8,10 +8,10 @@
 
 import Foundation
 
-public func ==(lhs: GetHeadersMessage, rhs: GetHeadersMessage) -> Bool {
-  return lhs.protocolVersion == rhs.protocolVersion &&
-      lhs.blockLocatorHashes == rhs.blockLocatorHashes &&
-      lhs.blockHashStop == rhs.blockHashStop
+public func ==(left: GetHeadersMessage, right: GetHeadersMessage) -> Bool {
+  return left.protocolVersion == right.protocolVersion &&
+      left.blockLocatorHashes == right.blockLocatorHashes &&
+      left.blockHashStop == right.blockHashStop
 }
 
 /// Message payload object corresponding to the Message.Command.GetHeaders command. Return a headers

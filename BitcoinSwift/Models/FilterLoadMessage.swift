@@ -8,11 +8,11 @@
 
 import Foundation
 
-public func ==(lhs: FilterLoadMessage, rhs: FilterLoadMessage) -> Bool {
-  return lhs.filter == rhs.filter &&
-      lhs.numHashFunctions == rhs.numHashFunctions &&
-      lhs.tweak == rhs.tweak &&
-      lhs.flags == rhs.flags
+public func ==(left: FilterLoadMessage, right: FilterLoadMessage) -> Bool {
+  return left.filter == right.filter &&
+      left.numHashFunctions == right.numHashFunctions &&
+      left.tweak == right.tweak &&
+      left.flags == right.flags
 }
 
 /// Upon receiving a filterload command, the remote peer will immediately restrict the broadcast

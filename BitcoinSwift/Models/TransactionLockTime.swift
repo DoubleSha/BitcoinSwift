@@ -8,14 +8,14 @@
 
 import Foundation
 
-public func ==(lhs: Transaction.LockTime, rhs: Transaction.LockTime) -> Bool {
-  switch (lhs, rhs) {
+public func ==(left: Transaction.LockTime, right: Transaction.LockTime) -> Bool {
+  switch (left, right) {
     case (.AlwaysLocked, .AlwaysLocked): 
       return true
-    case (.BlockHeight(let lhsBlockHeight), .BlockHeight(let rhsBlockHeight)): 
-      return lhsBlockHeight == rhsBlockHeight
-    case (.Date(let lhsDate), .Date(let rhsDate)): 
-      return lhsDate == rhsDate
+    case (.BlockHeight(let leftBlockHeight), .BlockHeight(let rightBlockHeight)): 
+      return leftBlockHeight == rightBlockHeight
+    case (.Date(let leftDate), .Date(let rightDate)): 
+      return leftDate == rightDate
     default: 
       return false
   }

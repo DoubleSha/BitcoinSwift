@@ -15,8 +15,8 @@ public protocol MessagePayload: BitcoinSerializable {
   var command: Message.Command { get }
 }
 
-public func ==(lhs: Message, rhs: Message) -> Bool {
-  return lhs.header == rhs.header && lhs.payload == rhs.payload
+public func ==(left: Message, right: Message) -> Bool {
+  return left.header == right.header && left.payload == right.payload
 }
 
 /// Wrapper struct that contains the header and payload for sending a message.

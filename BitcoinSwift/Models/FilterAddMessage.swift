@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: FilterAddMessage, rhs: FilterAddMessage) -> Bool {
-  return lhs.filterData == rhs.filterData
+public func ==(left: FilterAddMessage, right: FilterAddMessage) -> Bool {
+  return left.filterData == right.filterData
 }
 
 /// The given data element will be added to the bloom filter. A filter must have previously been

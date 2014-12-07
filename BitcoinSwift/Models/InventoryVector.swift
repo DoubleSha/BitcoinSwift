@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: InventoryVector, rhs: InventoryVector) -> Bool {
-  return lhs.type == rhs.type && lhs.hash == rhs.hash
+public func ==(left: InventoryVector, right: InventoryVector) -> Bool {
+  return left.type == right.type && left.hash == right.hash
 }
 
 /// Inventory vectors are used for notifying other nodes about objects they have or data which is

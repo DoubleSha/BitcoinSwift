@@ -8,11 +8,11 @@
 
 import Foundation
 
-public func ==(lhs: FilteredBlock, rhs: FilteredBlock) -> Bool {
-  return lhs.header == rhs.header &&
-      lhs.totalNumTransactions == rhs.totalNumTransactions &&
-      lhs.hashes == rhs.hashes &&
-      lhs.flags == rhs.flags
+public func ==(left: FilteredBlock, right: FilteredBlock) -> Bool {
+  return left.header == right.header &&
+      left.totalNumTransactions == right.totalNumTransactions &&
+      left.hashes == right.hashes &&
+      left.flags == right.flags
 }
 
 /// Blocks served from a peer with a bloom filter loaded. Only includes merkle branches for

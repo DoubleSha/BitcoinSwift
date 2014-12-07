@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: GetDataMessage, rhs: GetDataMessage) -> Bool {
-  return lhs.inventoryVectors == rhs.inventoryVectors
+public func ==(left: GetDataMessage, right: GetDataMessage) -> Bool {
+  return left.inventoryVectors == right.inventoryVectors
 }
 
 /// Message payload object corresponding to the Message.Command.GetData command. Used in response

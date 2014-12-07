@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: Block, rhs: Block) -> Bool {
-  return lhs.header == rhs.header && lhs.transactions == rhs.transactions
+public func ==(left: Block, right: Block) -> Bool {
+  return left.header == right.header && left.transactions == right.transactions
 }
 
 /// Message payload object corresponding to the Message.Command.Block command. The block message

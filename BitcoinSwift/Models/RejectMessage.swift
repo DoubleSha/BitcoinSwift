@@ -8,11 +8,11 @@
 
 import Foundation
 
-public func ==(lhs: RejectMessage, rhs: RejectMessage) -> Bool {
-  return lhs.rejectedCommand == rhs.rejectedCommand &&
-      lhs.code == rhs.code &&
-      lhs.reason == rhs.reason &&
-      lhs.hash == rhs.hash
+public func ==(left: RejectMessage, right: RejectMessage) -> Bool {
+  return left.rejectedCommand == right.rejectedCommand &&
+      left.code == right.code &&
+      left.reason == right.reason &&
+      left.hash == right.hash
 }
 
 /// The reject message is sent when messages are rejected.

@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: PingMessage, rhs: PingMessage) -> Bool {
-  return lhs.nonce == rhs.nonce
+public func ==(left: PingMessage, right: PingMessage) -> Bool {
+  return left.nonce == right.nonce
 }
 
 /// The ping message is sent primarily to confirm that the TCP/IP connection is still valid. An

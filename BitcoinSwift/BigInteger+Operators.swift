@@ -6,52 +6,52 @@
 //  Copyright (c) 2014 DoubleSha. All rights reserved.
 //
 
-public func ==(lhs: BigInteger, rhs: BigInteger) -> Bool {
-  return lhs.isEqual(rhs)
+public func ==(left: BigInteger, right: BigInteger) -> Bool {
+  return left.isEqual(right)
 }
 
-public func <(lhs: BigInteger, rhs: BigInteger) -> Bool {
-  return lhs.lessThan(rhs)
+public func <(left: BigInteger, right: BigInteger) -> Bool {
+  return left.lessThan(right)
 }
 
-public func <=(lhs: BigInteger, rhs: BigInteger) -> Bool {
-  return lhs.lessThanOrEqual(rhs)
+public func <=(left: BigInteger, right: BigInteger) -> Bool {
+  return left.lessThanOrEqual(right)
 }
 
-public func >(lhs: BigInteger, rhs: BigInteger) -> Bool {
-  return lhs.greaterThan(rhs)
+public func >(left: BigInteger, right: BigInteger) -> Bool {
+  return left.greaterThan(right)
 }
 
-public func >=(lhs: BigInteger, rhs: BigInteger) -> Bool {
-  return lhs.greaterThanOrEqual(rhs)
+public func >=(left: BigInteger, right: BigInteger) -> Bool {
+  return left.greaterThanOrEqual(right)
 }
 
-public func +(lhs: BigInteger, rhs: BigInteger) -> BigInteger {
-  return lhs.add(rhs)
+public func +(left: BigInteger, right: BigInteger) -> BigInteger {
+  return left.add(right)
 }
 
-public func -(lhs: BigInteger, rhs: BigInteger) -> BigInteger {
-  return lhs.subtract(rhs)
+public func -(left: BigInteger, right: BigInteger) -> BigInteger {
+  return left.subtract(right)
 }
 
-public func *(lhs: BigInteger, rhs: BigInteger) -> BigInteger {
-  return lhs.multiply(rhs)
+public func *(left: BigInteger, right: BigInteger) -> BigInteger {
+  return left.multiply(right)
 }
 
-public func /(lhs: BigInteger, rhs: BigInteger) -> BigInteger {
-  return lhs.divide(rhs)
+public func /(left: BigInteger, right: BigInteger) -> BigInteger {
+  return left.divide(right)
 }
 
-public func %(lhs: BigInteger, rhs: BigInteger) -> BigInteger {
-  return lhs.modulo(rhs)
+public func %(left: BigInteger, right: BigInteger) -> BigInteger {
+  return left.modulo(right)
 }
 
-public func <<(lhs: BigInteger, rhs: Int) -> BigInteger {
-  return lhs.shiftLeft(Int32(rhs))
+public func <<(left: BigInteger, right: Int) -> BigInteger {
+  return left.shiftLeft(Int32(right))
 }
 
-public func >>(lhs: BigInteger, rhs: Int) -> BigInteger {
-  return lhs.shiftRight(Int32(rhs))
+public func >>(left: BigInteger, right: Int) -> BigInteger {
+  return left.shiftRight(Int32(right))
 }
 
 // TODO: Make this conform to IntegerArithmeticType? BitwiseOperationsType?

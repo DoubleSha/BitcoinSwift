@@ -8,20 +8,20 @@
 
 import Foundation
 
-public func ==(lhs: PeerServices, rhs: PeerServices) -> Bool {
-  return lhs.value == rhs.value
+public func ==(left: PeerServices, right: PeerServices) -> Bool {
+  return left.value == right.value
 }
 
-public func &(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
-  return PeerServices(rawValue: lhs.value & rhs.value)
+public func &(left: PeerServices, right: PeerServices) -> PeerServices {
+  return PeerServices(rawValue: left.value & right.value)
 }
 
-public func |(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
-  return PeerServices(rawValue: lhs.value | rhs.value)
+public func |(left: PeerServices, right: PeerServices) -> PeerServices {
+  return PeerServices(rawValue: left.value | right.value)
 }
 
-public func ^(lhs: PeerServices, rhs: PeerServices) -> PeerServices {
-  return PeerServices(rawValue: lhs.value ^ rhs.value)
+public func ^(left: PeerServices, right: PeerServices) -> PeerServices {
+  return PeerServices(rawValue: left.value ^ right.value)
 }
 
 public prefix func ~(other: PeerServices) -> PeerServices {

@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: NotFoundMessage, rhs: NotFoundMessage) -> Bool {
-  return lhs.inventoryVectors == rhs.inventoryVectors
+public func ==(left: NotFoundMessage, right: NotFoundMessage) -> Bool {
+  return left.inventoryVectors == right.inventoryVectors
 }
 
 /// Message payload object corresponding to the Message.Command.NotFound command. Is a response to 

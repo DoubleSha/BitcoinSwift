@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: AlertMessage, rhs: AlertMessage) -> Bool {
-  return lhs.alert == rhs.alert && lhs.signature == rhs.signature
+public func ==(left: AlertMessage, right: AlertMessage) -> Bool {
+  return left.alert == right.alert && left.signature == right.signature
 }
 
 /// An alert is sent between nodes to send a general notification message throughout the network.

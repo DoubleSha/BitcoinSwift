@@ -8,16 +8,16 @@
 
 import Foundation
 
-public func ==(lhs: IPAddress, rhs: IPAddress) -> Bool {
-  switch (lhs, rhs) {
-    case (.IPV4(let lhsWord), .IPV4(let rhsWord)): 
-      return lhsWord == rhsWord
-    case (.IPV6(let lhsWord0, let lhsWord1, let lhsWord2, let lhsWord3),
-          .IPV6(let rhsWord0, let rhsWord1, let rhsWord2, let rhsWord3)): 
-      return lhsWord0 == rhsWord0 &&
-          lhsWord1 == rhsWord1 &&
-          lhsWord2 == rhsWord2 &&
-          lhsWord3 == rhsWord3
+public func ==(left: IPAddress, right: IPAddress) -> Bool {
+  switch (left, right) {
+    case (.IPV4(let leftWord), .IPV4(let rightWord)): 
+      return leftWord == rightWord
+    case (.IPV6(let leftWord0, let leftWord1, let leftWord2, let leftWord3),
+          .IPV6(let rightWord0, let rightWord1, let rightWord2, let rightWord3)): 
+      return leftWord0 == rightWord0 &&
+          leftWord1 == rightWord1 &&
+          leftWord2 == rightWord2 &&
+          leftWord3 == rightWord3
     default: 
       return false
   }

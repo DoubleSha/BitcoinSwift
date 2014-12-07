@@ -8,13 +8,13 @@
 
 import Foundation
 
-public func ==(lhs: BlockHeader, rhs: BlockHeader) -> Bool {
-  return lhs.version == rhs.version &&
-      lhs.previousBlockHash == rhs.previousBlockHash &&
-      lhs.merkleRoot == rhs.merkleRoot &&
-      lhs.timestamp == rhs.timestamp &&
-      lhs.compactDifficulty == rhs.compactDifficulty &&
-      lhs.nonce == rhs.nonce
+public func ==(left: BlockHeader, right: BlockHeader) -> Bool {
+  return left.version == right.version &&
+      left.previousBlockHash == right.previousBlockHash &&
+      left.merkleRoot == right.merkleRoot &&
+      left.timestamp == right.timestamp &&
+      left.compactDifficulty == right.compactDifficulty &&
+      left.nonce == right.nonce
 }
 
 public struct BlockHeader: Equatable {

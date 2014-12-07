@@ -8,10 +8,10 @@
 
 import Foundation
 
-public func ==(lhs: Transaction.Input, rhs: Transaction.Input) -> Bool {
-  return lhs.outPoint == rhs.outPoint &&
-      lhs.scriptSignature == rhs.scriptSignature &&
-      lhs.sequence == rhs.sequence
+public func ==(left: Transaction.Input, right: Transaction.Input) -> Bool {
+  return left.outPoint == right.outPoint &&
+      left.scriptSignature == right.scriptSignature &&
+      left.sequence == right.sequence
 }
 
 public extension Transaction {

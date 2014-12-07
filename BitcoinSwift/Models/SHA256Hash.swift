@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: SHA256Hash, rhs: SHA256Hash) -> Bool {
-  return lhs.data == rhs.data
+public func ==(left: SHA256Hash, right: SHA256Hash) -> Bool {
+  return left.data == right.data
 }
 
 public struct SHA256Hash: Equatable {

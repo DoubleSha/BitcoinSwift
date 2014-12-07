@@ -8,11 +8,11 @@
 
 import Foundation
 
-public func ==(lhs: Message.Header, rhs: Message.Header) -> Bool {
-  return lhs.network == rhs.network &&
-      lhs.command == rhs.command &&
-      lhs.payloadLength == rhs.payloadLength &&
-      lhs.payloadChecksum == rhs.payloadChecksum
+public func ==(left: Message.Header, right: Message.Header) -> Bool {
+  return left.network == right.network &&
+      left.command == right.command &&
+      left.payloadLength == right.payloadLength &&
+      left.payloadChecksum == right.payloadChecksum
 }
 
 extension Message {

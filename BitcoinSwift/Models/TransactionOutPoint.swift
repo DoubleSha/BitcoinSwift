@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: Transaction.OutPoint, rhs: Transaction.OutPoint) -> Bool {
-  return lhs.transactionHash == rhs.transactionHash && lhs.index == rhs.index
+public func ==(left: Transaction.OutPoint, right: Transaction.OutPoint) -> Bool {
+  return left.transactionHash == right.transactionHash && left.index == right.index
 }
 
 public extension Transaction {

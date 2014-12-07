@@ -8,11 +8,11 @@
 
 import Foundation
 
-public func ==(lhs: PeerAddress, rhs: PeerAddress) -> Bool {
-  return lhs.services == rhs.services &&
-      lhs.IP == rhs.IP &&
-      lhs.port == rhs.port &&
-      lhs.timestamp == rhs.timestamp
+public func ==(left: PeerAddress, right: PeerAddress) -> Bool {
+  return left.services == right.services &&
+      left.IP == right.IP &&
+      left.port == right.port &&
+      left.timestamp == right.timestamp
 }
 
 /// Used to represent networks addresses of peers over the wire.

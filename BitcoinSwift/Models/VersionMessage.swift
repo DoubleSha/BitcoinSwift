@@ -8,16 +8,16 @@
 
 import Foundation
 
-public func ==(lhs: VersionMessage, rhs: VersionMessage) -> Bool {
-  return lhs.protocolVersion == rhs.protocolVersion &&
-      lhs.services == rhs.services &&
-      lhs.date == rhs.date &&
-      lhs.senderAddress == rhs.senderAddress &&
-      lhs.receiverAddress == rhs.receiverAddress &&
-      lhs.nonce == rhs.nonce &&
-      lhs.userAgent == rhs.userAgent &&
-      lhs.blockStartHeight == rhs.blockStartHeight &&
-      lhs.announceRelayedTransactions == rhs.announceRelayedTransactions
+public func ==(left: VersionMessage, right: VersionMessage) -> Bool {
+  return left.protocolVersion == right.protocolVersion &&
+      left.services == right.services &&
+      left.date == right.date &&
+      left.senderAddress == right.senderAddress &&
+      left.receiverAddress == right.receiverAddress &&
+      left.nonce == right.nonce &&
+      left.userAgent == right.userAgent &&
+      left.blockStartHeight == right.blockStartHeight &&
+      left.announceRelayedTransactions == right.announceRelayedTransactions
 }
 
 /// Message payload object corresponding to the Message.Command.Version command. When a node creates

@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: InventoryMessage, rhs: InventoryMessage) -> Bool {
-  return lhs.inventoryVectors == rhs.inventoryVectors
+public func ==(left: InventoryMessage, right: InventoryMessage) -> Bool {
+  return left.inventoryVectors == right.inventoryVectors
 }
 
 /// Message payload object corresponding to the Message.Command.Inventory command. Allows a node to

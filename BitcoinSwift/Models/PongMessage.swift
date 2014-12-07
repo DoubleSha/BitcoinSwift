@@ -8,8 +8,8 @@
 
 import Foundation
 
-public func ==(lhs: PongMessage, rhs: PongMessage) -> Bool {
-  return lhs.nonce == rhs.nonce
+public func ==(left: PongMessage, right: PongMessage) -> Bool {
+  return left.nonce == right.nonce
 }
 
 /// The pong message is sent in response to a ping message, generated using a nonce included in the 

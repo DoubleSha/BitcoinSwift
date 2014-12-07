@@ -8,22 +8,22 @@
 
 import Foundation
 
-public func ==(lhs: Alert, rhs: Alert) -> Bool {
+public func ==(left: Alert, right: Alert) -> Bool {
   // Xcode 6 has a bug where it can't handle long expressions. So break it up.
-  let a = lhs.version == rhs.version &&
-      lhs.relayUntilDate == rhs.relayUntilDate &&
-      lhs.expirationDate == rhs.expirationDate &&
-      lhs.ID == rhs.ID &&
-      lhs.cancelID == rhs.cancelID &&
-      lhs.cancelIDs == rhs.cancelIDs &&
-      lhs.minimumVersion == rhs.minimumVersion &&
-      lhs.maximumVersion == rhs.maximumVersion
+  let a = left.version == right.version &&
+      left.relayUntilDate == right.relayUntilDate &&
+      left.expirationDate == right.expirationDate &&
+      left.ID == right.ID &&
+      left.cancelID == right.cancelID &&
+      left.cancelIDs == right.cancelIDs &&
+      left.minimumVersion == right.minimumVersion &&
+      left.maximumVersion == right.maximumVersion
   return a &&
-      lhs.affectedUserAgents == rhs.affectedUserAgents &&
-      lhs.priority == rhs.priority &&
-      lhs.comment == rhs.comment &&
-      lhs.message == rhs.message &&
-      lhs.reserved == rhs.reserved
+      left.affectedUserAgents == right.affectedUserAgents &&
+      left.priority == right.priority &&
+      left.comment == right.comment &&
+      left.message == right.message &&
+      left.reserved == right.reserved
 }
 
 public struct Alert: Equatable {
