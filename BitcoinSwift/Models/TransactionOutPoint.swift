@@ -19,13 +19,12 @@ public extension Transaction {
   public struct OutPoint: Equatable {
 
     /// The hash of the transaction that contains this output.
-    public let transactionHash: NSData
+    public let transactionHash: SHA256Hash
 
     /// The index of this output within the transaction.
     public let index: UInt32
 
-    public init(transactionHash: NSData, index: UInt32) {
-      precondition(transactionHash.length == 32)
+    public init(transactionHash: SHA256Hash, index: UInt32) {
       self.transactionHash = transactionHash
       self.index = index
     }
@@ -36,13 +35,13 @@ public extension Transaction {
 
   public var bitcoinData: NSData {
     var data = NSMutableData()
-    data.appendData(transactionHash)
+    data.appendData(transactionHash.bitcoinData)
     data.appendUInt32(index)
     return data
   }
 
   public static func fromBitcoinStream(stream: NSInputStream) -> Transaction.OutPoint? {
-    let transactionHash = stream.readData(length: 32)
+    let transactionHash = SHA256Hash.fromBitcoinStream(stream)
     if transactionHash == nil {
       Logger.warn("Failed to parse transactionHash in Transaction.Input.Outpoint")
       return nil
