@@ -24,6 +24,11 @@ public struct SHA256Hash: Equatable {
     precondition(data.length == 32)
     self.data = data
   }
+
+  public init(bytes: [UInt8]) {
+    precondition(bytes.count == 32)
+    self.data = NSData(bytes: bytes, length: bytes.count)
+  }
 }
 
 extension SHA256Hash: BitcoinSerializable {

@@ -65,14 +65,9 @@ class GetBlocksMessageTests: XCTestCase {
         0x0a, 0x72, 0xd2, 0xe6, 0x63, 0x4a, 0x71, 0x6f,
         0x3c, 0x51, 0x92, 0x1e, 0xe4, 0x47, 0x4c, 0x25,
         0x33, 0x48, 0x0b, 0xa7, 0x44, 0xd8, 0xf7, 0x24]
-    let blockLocatorHash0Data = NSData(bytes: blockLocatorHash0Bytes,
-                                       length: blockLocatorHash0Bytes.count)
-    let blockLocatorHash1Data = NSData(bytes: blockLocatorHash1Bytes,
-                                       length: blockLocatorHash1Bytes.count)
-    let blockHashStopData = NSData(bytes: blockHashStopBytes, length: blockHashStopBytes.count)
-    let blockLocatorHash0 = SHA256Hash(data: blockLocatorHash0Data)
-    let blockLocatorHash1 = SHA256Hash(data: blockLocatorHash1Data)
-    let blockHashStop = SHA256Hash(data: blockHashStopData)
+    let blockLocatorHash0 = SHA256Hash(bytes: blockLocatorHash0Bytes)
+    let blockLocatorHash1 = SHA256Hash(bytes: blockLocatorHash1Bytes)
+    let blockHashStop = SHA256Hash(bytes: blockHashStopBytes)
     getBlocksMessageWithHashStop =
         GetBlocksMessage(protocolVersion: 70001,
                          blockLocatorHashes: [blockLocatorHash0, blockLocatorHash1],

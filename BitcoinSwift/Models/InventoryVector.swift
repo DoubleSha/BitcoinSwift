@@ -22,22 +22,11 @@ public struct InventoryVector: Equatable {
   }
 
   public let type: VectorType
-  public let hash: NSData
+  public let hash: SHA256Hash
 
-  public init(type: VectorType, hash: NSData) {
+  public init(type: VectorType, hash: SHA256Hash) {
     self.type = type
     self.hash = hash
-  }
-
-  public var description: String {
-    switch type {
-      case .Error:
-        return "ERROR \(hash.reversedData.hexString())"
-      case .Block:
-        return "BLOCK \(hash.reversedData.hexString())"
-      case .Transaction:
-        return "TRANSACTION \(hash.reversedData.hexString())"
-    }
   }
 }
 
@@ -46,7 +35,7 @@ extension InventoryVector: BitcoinSerializable {
   public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendUInt32(type.rawValue)
-    data.appendData(hash)
+    data.appendData(hash.bitcoinData)
     return data
   }
 
@@ -61,11 +50,25 @@ extension InventoryVector: BitcoinSerializable {
       Logger.warn("Invalid type \(rawType!) in InventoryVector")
       return nil
     }
-    let hash = stream.readData(length: 32)
+    let hash = SHA256Hash.fromBitcoinStream(stream)
     if hash == nil {
       Logger.warn("Failed to parse hash from InventoryVector")
       return nil
     }
     return InventoryVector(type: type!, hash: hash!)
+  }
+}
+
+extension InventoryVector: Printable {
+
+  public var description: String {
+    switch type {
+      case .Error:
+        return "ERROR \(hash)"
+      case .Block:
+        return "BLOCK \(hash)"
+      case .Transaction:
+        return "TRANSACTION \(hash)"
+    }
   }
 }

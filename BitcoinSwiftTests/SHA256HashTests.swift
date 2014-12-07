@@ -11,27 +11,28 @@ import XCTest
 
 class SHA256HashTests: XCTestCase {
 
-  // Hash is encoded little-endian.
   let hashBytes: [UInt8] = [
-      0x6d, 0xbd, 0xdb, 0x08, 0x5b, 0x1d, 0x8a, 0xf7,
-      0x51, 0x84, 0xf0, 0xbc, 0x01, 0xfa, 0xd5, 0x8d,
-      0x12, 0x66, 0xe9, 0xb6, 0x3b, 0x50, 0x88, 0x19,
-      0x90, 0xe4, 0xb4, 0x0d, 0x6a, 0xee, 0x36, 0x29]
+      0x29, 0x36, 0xee, 0x6a, 0x0d, 0xb4, 0xe4, 0x90,
+      0x19, 0x88, 0x50, 0x3b, 0xb6, 0xe9, 0x66, 0x12,
+      0x8d, 0xd5, 0xfa, 0x01, 0xbc, 0xf0, 0x84, 0x51,
+      0xf7, 0x8a, 0x1d, 0x5b, 0x08, 0xdb, 0xbd, 0x6d]
 
   var hashData: NSData!
   var sha256Hash: SHA256Hash!
 
   override func setUp() {
     hashData = NSData(bytes: hashBytes, length: hashBytes.count)
-    sha256Hash = SHA256Hash(data: hashData.reversedData)
+    sha256Hash = SHA256Hash(bytes: hashBytes)
   }
 
   func testSHA256HashEncoding() {
-    XCTAssertEqual(sha256Hash.bitcoinData, hashData)
+    // Bitcoin encodes hashes as little-endian on the wire.
+    XCTAssertEqual(sha256Hash.bitcoinData, hashData.reversedData)
   }
 
   func testSHA256HashDecoding() {
-    let stream = NSInputStream(data: hashData)
+    // Bitcoin encodes hashes as little-endian on the wire.
+    let stream = NSInputStream(data: hashData.reversedData)
     stream.open()
     if let testSHA256Hash = SHA256Hash.fromBitcoinStream(stream) {
       XCTAssertEqual(testSHA256Hash, sha256Hash)
