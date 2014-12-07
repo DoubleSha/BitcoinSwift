@@ -24,13 +24,13 @@ public struct FilteredBlock: Equatable {
   /// Number of transactions in the block (including unmatched ones).
   public let totalNumTransactions: UInt32
   /// Hashes in depth-first order.
-  public let hashes: [NSData]
+  public let hashes: [SHA256Hash]
   // Flag bits, packed per 8 in a byte, least significant bit first.
   public let flags: [UInt8]
 
   public init(header: BlockHeader,
               totalNumTransactions: UInt32,
-              hashes: [NSData],
+              hashes: [SHA256Hash],
               flags: [UInt8]) {
     self.header = header
     self.totalNumTransactions = totalNumTransactions
@@ -51,7 +51,7 @@ extension FilteredBlock: MessagePayload {
     data.appendUInt32(totalNumTransactions)
     data.appendVarInt(hashes.count)
     for hash in hashes {
-      data.appendData(hash)
+      data.appendData(hash.bitcoinData)
     }
     data.appendVarInt(flags.count)
     for flag in flags {
@@ -76,9 +76,9 @@ extension FilteredBlock: MessagePayload {
       Logger.warn("Failed to parse hashesCount from FilteredBlock")
       return nil
     }
-    var hashes: [NSData] = []
+    var hashes: [SHA256Hash] = []
     for i in 0..<hashesCount! {
-      let hash = stream.readData(length: 32)
+      let hash = SHA256Hash.fromBitcoinStream(stream)
       if hash == nil {
         Logger.warn("Failed to parse hash \(i) from FilteredBlock")
         return nil

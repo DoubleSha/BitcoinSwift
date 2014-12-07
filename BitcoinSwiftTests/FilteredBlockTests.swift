@@ -65,7 +65,9 @@ class FilteredBlockTests: XCTestCase {
         0x3f, 0xf8, 0x4a, 0x5c, 0x41, 0xd9, 0xd3, 0xfe,
         0xbe, 0x7c, 0x77, 0x0f, 0xdc, 0xc9, 0x6b, 0x2c,
         0x3f, 0xf6, 0x0a, 0xbe, 0x18, 0x4f, 0x19, 0x63]
-    let transactionHash = NSData(bytes: transactionHashBytes, length: transactionHashBytes.count)
+    let transactionHashData = NSData(bytes: transactionHashBytes,
+                                     length: transactionHashBytes.count)
+    let transactionHash = SHA256Hash(data: transactionHashData.reversedData)
     filteredBlock = FilteredBlock(header: header,
                                   totalNumTransactions: 1,
                                   hashes: [transactionHash],
