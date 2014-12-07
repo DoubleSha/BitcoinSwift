@@ -72,13 +72,13 @@ public class PeerController {
                           announceRelayedTransactions: false)
   }
 
-  private var genesisBlockHash: NSData {
+  private var genesisBlockHash: SHA256Hash {
     let bytes: [UInt8] = [
         0x00, 0x00, 0x00, 0x00, 0x00, 0x19, 0xd6, 0x68,
         0x9c, 0x08, 0x5a, 0xe1, 0x65, 0x83, 0x1e, 0x93,
         0x4f, 0xf7, 0x63, 0xae, 0x46, 0xa2, 0xa6, 0xc1,
         0x72, 0xb3, 0xf1, 0xb6, 0x0a, 0x8c, 0xe2, 0x6f]
-    return NSData(bytes: bytes, length: bytes.count).reversedData
+    return SHA256Hash(data: NSData(bytes: bytes, length: bytes.count))
   }
 }
 
@@ -116,7 +116,7 @@ extension PeerController: PeerConnectionDelegate {
                 Double(self.peerVersion!.blockStartHeight) * 100
             Logger.info("Received \(headersMessage.headers.count) block headers. " +
                 "\(Int(percentComplete))% complete")
-            let lastHeaderHash = headersMessage.headers.last!.hash.bitcoinData
+            let lastHeaderHash = headersMessage.headers.last!.hash
             let getHeadersMessage = GetHeadersMessage(protocolVersion: 70002,
                                                       blockLocatorHashes: [lastHeaderHash])
             self.connection?.sendMessageWithPayload(getHeadersMessage)
