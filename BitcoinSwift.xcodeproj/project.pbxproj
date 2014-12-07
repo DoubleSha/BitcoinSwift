@@ -78,6 +78,8 @@
 		0A627FC91A33C01E00170C31 /* PeerAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FC71A33C01E00170C31 /* PeerAddressTests.swift */; };
 		0A627FCB1A33CB7200170C31 /* IPAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */; };
 		0A627FCC1A33CB7200170C31 /* IPAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */; };
+		0A627FD11A33CFE900170C31 /* InventoryMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FD01A33CFE900170C31 /* InventoryMessageTests.swift */; };
+		0A627FD21A33CFE900170C31 /* InventoryMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FD01A33CFE900170C31 /* InventoryMessageTests.swift */; };
 		0A78124D19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78124E19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78125019C4D41300187B9A /* MessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124F19C4D41300187B9A /* MessageParser.swift */; };
@@ -207,8 +209,6 @@
 		D8BA343B19D7368800A1232F /* GetDataMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D810F30819B50155009EE349 /* GetDataMessageTests.swift */; };
 		D8BA343F19D74E0E00A1232F /* NotFoundMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BA343E19D74E0E00A1232F /* NotFoundMessageTests.swift */; };
 		D8BA344419D76DB300A1232F /* PingMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BA344319D76DB300A1232F /* PingMessageTests.swift */; };
-		D8E8663919A9C40300319A0D /* InventoryMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E8663619A95E2B00319A0D /* InventoryMessageTests.swift */; };
-		D8E8663A19A9C40400319A0D /* InventoryMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E8663619A95E2B00319A0D /* InventoryMessageTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -293,6 +293,7 @@
 		0A627FC41A33B81100170C31 /* SHA256HashTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SHA256HashTests.swift; sourceTree = "<group>"; };
 		0A627FC71A33C01E00170C31 /* PeerAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerAddressTests.swift; sourceTree = "<group>"; };
 		0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPAddressTests.swift; sourceTree = "<group>"; };
+		0A627FD01A33CFE900170C31 /* InventoryMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InventoryMessageTests.swift; sourceTree = "<group>"; };
 		0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestOutputStreamDelegate.swift; sourceTree = "<group>"; };
 		0A78124F19C4D41300187B9A /* MessageParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParser.swift; sourceTree = "<group>"; };
 		0A78125219C4E45500187B9A /* MessageParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParserTests.swift; sourceTree = "<group>"; };
@@ -352,7 +353,6 @@
 		D845F45319D7A5FB00346A25 /* PongMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PongMessageTests.swift; sourceTree = "<group>"; };
 		D8BA343E19D74E0E00A1232F /* NotFoundMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotFoundMessageTests.swift; sourceTree = "<group>"; };
 		D8BA344319D76DB300A1232F /* PingMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PingMessageTests.swift; sourceTree = "<group>"; };
-		D8E8663619A95E2B00319A0D /* InventoryMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InventoryMessageTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -510,7 +510,7 @@
 				D810F30819B50155009EE349 /* GetDataMessageTests.swift */,
 				0A3F880219D74D8400E6E915 /* GetHeadersMessageTests.swift */,
 				0A52ACFC1953AAA00041541B /* HashingTests.swift */,
-				D8E8663619A95E2B00319A0D /* InventoryMessageTests.swift */,
+				0A627FD01A33CFE900170C31 /* InventoryMessageTests.swift */,
 				0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */,
 				0AECD0DA19AAFFD600C11AC9 /* MessageHeaderTests.swift */,
 				0A78125219C4E45500187B9A /* MessageParserTests.swift */,
@@ -916,13 +916,13 @@
 				0A1AFF4919B4283F0032F488 /* PeerConnectionTests.swift in Sources */,
 				0A5314E719D77E730090F82F /* TransactionTests.swift in Sources */,
 				0AF07C761A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */,
+				0A627FD11A33CFE900170C31 /* InventoryMessageTests.swift in Sources */,
 				0A78125919C4E4B700187B9A /* DummyMessage.swift in Sources */,
 				D8BA343B19D7368800A1232F /* GetDataMessageTests.swift in Sources */,
 				0A110DEB19E9088200CBFCAC /* AlertMessageTests.swift in Sources */,
 				0A9AD043199DE2C700ECEA92 /* AddrMessageTests.swift in Sources */,
 				0A627FCB1A33CB7200170C31 /* IPAddressTests.swift in Sources */,
 				0A78125319C4E45500187B9A /* MessageParserTests.swift in Sources */,
-				D8E8663919A9C40300319A0D /* InventoryMessageTests.swift in Sources */,
 				0A52ACFD1953AAA00041541B /* HashingTests.swift in Sources */,
 				D845F45419D7A5FB00346A25 /* PongMessageTests.swift in Sources */,
 				0A98B3A119B59584001C878D /* TestInputStreamDelegate.swift in Sources */,
@@ -1022,13 +1022,13 @@
 				0ADEA2A81A0E94D900F3FB32 /* PingMessageTests.swift in Sources */,
 				0A5314E819D77E730090F82F /* TransactionTests.swift in Sources */,
 				0A1AFF4A19B4283F0032F488 /* PeerConnectionTests.swift in Sources */,
+				0A627FD21A33CFE900170C31 /* InventoryMessageTests.swift in Sources */,
 				0A5314F519D8A1130090F82F /* NotFoundMessageTests.swift in Sources */,
 				0AF07C771A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */,
 				0A78125819C4E4B700187B9A /* DummyMessage.swift in Sources */,
 				0AC8CF5A19A9376B00D93585 /* AddrMessageTests.swift in Sources */,
 				0A627FCC1A33CB7200170C31 /* IPAddressTests.swift in Sources */,
 				0A78125419C4E45500187B9A /* MessageParserTests.swift in Sources */,
-				D8E8663A19A9C40400319A0D /* InventoryMessageTests.swift in Sources */,
 				0A435A7519F2C63C00FE2689 /* FilterLoadMessageTests.swift in Sources */,
 				0AF06B6A19D8F484001EEE96 /* BlockTests.swift in Sources */,
 				0A435A7B19F2CF2200FE2689 /* FilterAddMessageTests.swift in Sources */,

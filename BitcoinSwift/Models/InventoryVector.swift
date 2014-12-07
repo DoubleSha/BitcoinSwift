@@ -39,6 +39,33 @@ public struct InventoryVector: Equatable {
         return "TRANSACTION \(hash.reversedData.hexString())"
     }
   }
+}
 
-  // TODO: Make this conform to BitcoinSerializable.
+extension InventoryVector: BitcoinSerializable {
+
+  public var bitcoinData: NSData {
+    var data = NSMutableData()
+    data.appendUInt32(type.rawValue)
+    data.appendData(hash)
+    return data
+  }
+
+  public static func fromBitcoinStream(stream: NSInputStream) -> InventoryVector? {
+    let rawType = stream.readUInt32()
+    if rawType == nil {
+      Logger.warn("Failed to parse type from InventoryVector")
+      return nil
+    }
+    let type = VectorType(rawValue: rawType!)
+    if type == nil {
+      Logger.warn("Invalid type \(rawType!) in InventoryVector")
+      return nil
+    }
+    let hash = stream.readData(length: 32)
+    if hash == nil {
+      Logger.warn("Failed to parse hash from InventoryVector")
+      return nil
+    }
+    return InventoryVector(type: type!, hash: hash!)
+  }
 }

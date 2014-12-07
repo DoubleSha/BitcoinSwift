@@ -36,7 +36,7 @@ extension InventoryMessage: MessagePayload {
     var data = NSMutableData()
     data.appendVarInt(inventoryVectors.count)
     for inventoryVector in inventoryVectors {
-      data.appendInventoryVector(inventoryVector)
+      data.appendData(inventoryVector.bitcoinData)
     }
     return data
   }
@@ -57,7 +57,7 @@ extension InventoryMessage: MessagePayload {
     }
     var inventoryVectors: [InventoryVector] = []
     for _ in 0..<inventoryCount! {
-      let inventoryVector = stream.readInventoryVector()
+      let inventoryVector = InventoryVector.fromBitcoinStream(stream)
       if inventoryVector == nil {
         Logger.warn("Failed to parse inventory vector from InventoryMessage")
         return nil

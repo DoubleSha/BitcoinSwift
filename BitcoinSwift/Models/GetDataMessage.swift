@@ -37,7 +37,7 @@ extension GetDataMessage: MessagePayload {
     var data = NSMutableData()
     data.appendVarInt(inventoryVectors.count)
     for inventoryVector in inventoryVectors {
-      data.appendInventoryVector(inventoryVector)
+      data.appendData(inventoryVector.bitcoinData)
     }
     return data
   }
@@ -58,7 +58,7 @@ extension GetDataMessage: MessagePayload {
     }
     var inventoryVectors: [InventoryVector] = []
     for i in 0..<inventoryCount! {
-      let inventoryVector = stream.readInventoryVector()
+      let inventoryVector = InventoryVector.fromBitcoinStream(stream)
       if inventoryVector == nil {
         Logger.warn("Failed to parse inventory vector \(i) from GetDataMessage")
         return nil

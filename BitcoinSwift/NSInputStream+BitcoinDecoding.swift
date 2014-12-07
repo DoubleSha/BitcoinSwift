@@ -229,22 +229,4 @@ public extension NSInputStream {
     }
     return NSDate(timeIntervalSince1970: NSTimeInterval(rawTimestamp!))
   }
-
-  // TODO: The functions below don't belong here. Move them somewhere else.
-
-  public func readInventoryVector() -> InventoryVector? {
-    let rawType = readUInt32()
-    if rawType == nil {
-      return nil
-    }
-    let hash = readData(length: 32)
-    if hash == nil {
-      return nil
-    }
-    let type = InventoryVector.VectorType(rawValue: rawType!)
-    if type == nil {
-      return nil
-    }
-    return InventoryVector(type: type!, hash: hash!)
-  }
 }

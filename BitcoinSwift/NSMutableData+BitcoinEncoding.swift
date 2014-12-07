@@ -134,11 +134,4 @@ public extension NSMutableData {
   public func appendDateAs64BitUnixTimestamp(date: NSDate, endianness: Endianness = .LittleEndian) {
     appendUInt64(UInt64(date.timeIntervalSince1970), endianness: endianness)
   }
-
-  // TODO: The function below doesn't belong here. Move it somewhere else.
-
-  public func appendInventoryVector(inventoryVector: InventoryVector) {
-    appendUInt32(inventoryVector.type.rawValue)
-    self.appendData(inventoryVector.hash)
-  }
 }
