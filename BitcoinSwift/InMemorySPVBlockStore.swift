@@ -10,7 +10,7 @@ import Foundation
 
 public class InMemorySPVBlockStore: SPVBlockStore {
 
-  private var blockHeadersByHash = Dictionary<NSData, BlockHeader>()
+  private var blockHeadersByHash = Dictionary<SHA256Hash, BlockHeader>()
 
   public init() {}
 
@@ -18,7 +18,7 @@ public class InMemorySPVBlockStore: SPVBlockStore {
     return nil
   }
 
-  public func blockHeaderWithHash(hash: NSData) -> BlockHeader? {
+  public func blockHeaderWithHash(hash: SHA256Hash) -> BlockHeader? {
     return blockHeadersByHash[hash]
   }
 

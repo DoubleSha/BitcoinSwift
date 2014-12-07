@@ -12,6 +12,9 @@ public protocol PeerControllerDelegate: class {
   func blockChainSyncComplete()
 }
 
+// TODO: Clean this up. This is ugly and hacked right now. I just threw something together to
+// demo header sync'ing with the dlheader.swift script.
+
 public class PeerController {
 
   private let hostname: String
@@ -113,7 +116,7 @@ extension PeerController: PeerConnectionDelegate {
                 Double(self.peerVersion!.blockStartHeight) * 100
             Logger.info("Received \(headersMessage.headers.count) block headers. " +
                 "\(Int(percentComplete))% complete")
-            let lastHeaderHash = headersMessage.headers.last!.hash.reversedData
+            let lastHeaderHash = headersMessage.headers.last!.hash.bitcoinData
             let getHeadersMessage = GetHeadersMessage(protocolVersion: 70002,
                                                       blockLocatorHashes: [lastHeaderHash])
             self.connection?.sendMessageWithPayload(getHeadersMessage)

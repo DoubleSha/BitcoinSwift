@@ -11,7 +11,7 @@ import Foundation
 public protocol SPVBlockStore {
 
   var head: BlockHeader? { get }
-  func blockHeaderWithHash(hash: NSData) -> BlockHeader?
+  func blockHeaderWithHash(hash: SHA256Hash) -> BlockHeader?
   func addBlockHeader(blockHeader: BlockHeader)
   func removeBlockHeader(blockHeader: BlockHeader)
 }

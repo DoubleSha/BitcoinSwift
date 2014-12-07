@@ -20,17 +20,18 @@ public func ==(left: BlockHeader, right: BlockHeader) -> Bool {
 public struct BlockHeader: Equatable {
 
   public let version: UInt32
-  public let previousBlockHash: NSData
-  public let merkleRoot: NSData
+  public let previousBlockHash: SHA256Hash
+  public let merkleRoot: SHA256Hash
   public let timestamp: NSDate
   public let compactDifficulty: UInt32
   public let nonce: UInt32
 
   static private let largestDifficulty = BigInteger(1) << 256
+  private var cachedHash: SHA256Hash?
 
   public init(version: UInt32,
-              previousBlockHash: NSData,
-              merkleRoot: NSData,
+              previousBlockHash: SHA256Hash,
+              merkleRoot: SHA256Hash,
               timestamp: NSDate,
               compactDifficulty: UInt32,
               nonce: UInt32) {
@@ -42,11 +43,11 @@ public struct BlockHeader: Equatable {
     self.nonce = nonce
   }
 
-  /// hash is calculated from the information in the block header. It does not include the
-  /// transactions.
+  /// Calculated from the information in the block header. It does not include the transactions.
   /// https://en.bitcoin.it/wiki/Block_hashing_algorithm
-  public var hash: NSData {
-    return bitcoinData.SHA256Hash().SHA256Hash().reversedData
+  public var hash: SHA256Hash {
+    // TODO: Don't recalculate this every time.
+    return SHA256Hash(data: bitcoinData.SHA256Hash().SHA256Hash().reversedData)
   }
 
   /// The difficulty used to create this block. This is the uncompressed form of the
@@ -71,8 +72,8 @@ extension BlockHeader: BitcoinSerializable {
   public var bitcoinData: NSData {
     var data = NSMutableData()
     data.appendUInt32(version)
-    data.appendData(previousBlockHash)
-    data.appendData(merkleRoot)
+    data.appendData(previousBlockHash.bitcoinData)
+    data.appendData(merkleRoot.bitcoinData)
     data.appendDateAs32BitUnixTimestamp(timestamp)
     data.appendUInt32(compactDifficulty)
     data.appendUInt32(nonce)
@@ -85,12 +86,12 @@ extension BlockHeader: BitcoinSerializable {
       Logger.warn("Failed to parse version from BlockHeader")
       return nil
     }
-    let previousBlockHash = stream.readData(length: 32)
+    let previousBlockHash = SHA256Hash.fromBitcoinStream(stream)
     if previousBlockHash == nil {
       Logger.warn("Failed to parse previousBlockHash from BlockHeader")
       return nil
     }
-    let merkleRoot = stream.readData(length: 32)
+    let merkleRoot = SHA256Hash.fromBitcoinStream(stream)
     if merkleRoot == nil {
       Logger.warn("Failed to parse merkleRoot from BlockHeader")
       return nil

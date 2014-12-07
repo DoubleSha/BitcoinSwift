@@ -68,20 +68,21 @@ class BlockTests: XCTestCase {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-    let previousBlockHash = NSData(bytes: previousBlockHashBytes,
-                                   length: previousBlockHashBytes.count)
+    let previousBlockHash = SHA256Hash(data: NSData(bytes: previousBlockHashBytes,
+                                                    length: previousBlockHashBytes.count))
     let merkleRootBytes: [UInt8] = [
         0x3b, 0xa3, 0xed, 0xfd, 0x7a, 0x7b, 0x12, 0xb2,
         0x7a, 0xc7, 0x2c, 0x3e, 0x67, 0x76, 0x8f, 0x61,
         0x7f, 0xc8, 0x1b, 0xc3, 0x88, 0x8a, 0x51, 0x32,
         0x3a, 0x9f, 0xb8, 0xaa, 0x4b, 0x1e, 0x5e, 0x4a]
-    let merkleRoot = NSData(bytes: merkleRootBytes, length: merkleRootBytes.count)
+    let merkleRootData = NSData(bytes: merkleRootBytes, length: merkleRootBytes.count)
+    let merkleRoot = SHA256Hash(data: merkleRootData.reversedData)
     let header = BlockHeader(version: 1,
-                              previousBlockHash: previousBlockHash,
-                              merkleRoot: merkleRoot,
-                              timestamp: NSDate(timeIntervalSince1970: 1231006505),
-                              compactDifficulty: 0x1d00ffff,
-                              nonce: 0x7c2bac1d)
+                             previousBlockHash: previousBlockHash,
+                             merkleRoot: merkleRoot,
+                             timestamp: NSDate(timeIntervalSince1970: 1231006505),
+                             compactDifficulty: 0x1d00ffff,
+                             nonce: 0x7c2bac1d)
     let outPointTxHashBytes: [UInt8] = [
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -147,8 +148,8 @@ class BlockTests: XCTestCase {
         0x9c, 0x08, 0x5a, 0xe1, 0x65, 0x83, 0x1e, 0x93,
         0x4f, 0xf7, 0x63, 0xae, 0x46, 0xa2, 0xa6, 0xc1,
         0x72, 0xb3, 0xf1, 0xb6, 0x0a, 0x8c, 0xe2, 0x6f]
-    let expectedBlockHash = NSData(bytes: expectedBlockHashBytes,
-                                   length: expectedBlockHashBytes.count)
+    let expectedBlockHash = SHA256Hash(data: NSData(bytes: expectedBlockHashBytes,
+                                                    length: expectedBlockHashBytes.count))
     XCTAssertEqual(block.hash, expectedBlockHash)
   }
 }

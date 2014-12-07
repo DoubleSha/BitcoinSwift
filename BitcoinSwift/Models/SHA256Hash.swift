@@ -39,3 +39,17 @@ extension SHA256Hash: BitcoinSerializable {
     return SHA256Hash(data: hashData!.reversedData)
   }
 }
+
+extension SHA256Hash: Printable {
+
+  public var description: String {
+    return data.hexString()
+  }
+}
+
+extension SHA256Hash: Hashable {
+
+  public var hashValue: Int {
+    return data.hashValue
+  }
+}

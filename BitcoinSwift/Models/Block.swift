@@ -27,7 +27,7 @@ public struct Block: Equatable {
     self.transactions = transactions
   }
 
-  public var hash: NSData {
+  public var hash: SHA256Hash {
     return header.hash
   }
 }

@@ -43,14 +43,16 @@ class FilteredBlockTests: XCTestCase {
         0x2c, 0x1c, 0xaf, 0xf0, 0x1d, 0x1a, 0xec, 0xc8,
         0x63, 0x0d, 0x30, 0x62, 0x5d, 0x10, 0xe8, 0xb4,
         0xb8, 0xb0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-    let previousBlockHash = NSData(bytes: previousBlockHashBytes,
-                                   length: previousBlockHashBytes.count)
+    let previousBlockHashData = NSData(bytes: previousBlockHashBytes,
+                                       length: previousBlockHashBytes.count)
+    let previousBlockHash = SHA256Hash(data: previousBlockHashData.reversedData)
     let merkleRootBytes: [UInt8] = [
         0xb5, 0x0c, 0xc0, 0x69, 0xd6, 0xa3, 0xe3, 0x3e,
         0x3f, 0xf8, 0x4a, 0x5c, 0x41, 0xd9, 0xd3, 0xfe,
         0xbe, 0x7c, 0x77, 0x0f, 0xdc, 0xc9, 0x6b, 0x2c,
         0x3f, 0xf6, 0x0a, 0xbe, 0x18, 0x4f, 0x19, 0x63]
-    let merkleRoot = NSData(bytes: merkleRootBytes, length: merkleRootBytes.count)
+    let merkleRootData = NSData(bytes: merkleRootBytes, length: merkleRootBytes.count)
+    let merkleRoot = SHA256Hash(data: merkleRootData.reversedData)
     let timestamp = NSDate(timeIntervalSince1970: NSTimeInterval(1293625703))
     let header = BlockHeader(version: 1,
                              previousBlockHash: previousBlockHash,
