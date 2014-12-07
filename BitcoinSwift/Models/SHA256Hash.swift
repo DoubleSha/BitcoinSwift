@@ -16,6 +16,10 @@ public struct SHA256Hash: Equatable {
 
   public let data: NSData
 
+  public init() {
+    self.data = NSMutableData(length: 32)!
+  }
+
   public init(data: NSData) {
     precondition(data.length == 32)
     self.data = data

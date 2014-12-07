@@ -21,10 +21,12 @@ public func ==(left: GetBlocksMessage, right: GetBlocksMessage) -> Bool {
 public struct GetBlocksMessage: Equatable {
 
   public let protocolVersion: UInt32
-  public let blockLocatorHashes: [NSData]
-  public let blockHashStop: NSData?
+  public let blockLocatorHashes: [SHA256Hash]
+  public let blockHashStop: SHA256Hash?
 
-  public init(protocolVersion: UInt32, blockLocatorHashes: [NSData], blockHashStop: NSData? = nil) {
+  public init(protocolVersion: UInt32,
+              blockLocatorHashes: [SHA256Hash],
+              blockHashStop: SHA256Hash? = nil) {
     precondition(blockLocatorHashes.count > 0, "Must include at least one blockHash")
     self.protocolVersion = protocolVersion
     self.blockLocatorHashes = blockLocatorHashes
@@ -43,12 +45,12 @@ extension GetBlocksMessage: MessagePayload {
     data.appendUInt32(protocolVersion)
     data.appendVarInt(blockLocatorHashes.count)
     for blockLocatorHash in blockLocatorHashes {
-      data.appendData(blockLocatorHash)
+      data.appendData(blockLocatorHash.bitcoinData)
     }
     if let hashStop = blockHashStop {
-      data.appendData(hashStop)
+      data.appendData(hashStop.bitcoinData)
     } else {
-      data.appendData(NSMutableData(length: 32)!)
+      data.appendData(SHA256Hash().bitcoinData)
     }
     return data
   }
@@ -64,22 +66,21 @@ extension GetBlocksMessage: MessagePayload {
       Logger.warn("Failed to parse hashCount from GetBlocksMessage")
       return nil
     }
-    var blockLocatorHashes: [NSData] = []
-    for _ in 0..<hashCount! {
-      let blockLocatorHash = stream.readData(length: 32)
+    var blockLocatorHashes: [SHA256Hash] = []
+    for i in 0..<hashCount! {
+      let blockLocatorHash = SHA256Hash.fromBitcoinStream(stream)
       if blockLocatorHash == nil {
-        Logger.warn("Failed to parse blockLocatorHash from GetBlocksMessage")
+        Logger.warn("Failed to parse blockLocatorHash \(i) from GetBlocksMessage")
         return nil
       }
       blockLocatorHashes.append(blockLocatorHash!)
     }
-    var blockHashStop = stream.readData(length: 32)
+    var blockHashStop = SHA256Hash.fromBitcoinStream(stream)
     if blockHashStop == nil {
       Logger.warn("Failed to parse blockHashStop from GetBlocksMessage")
       return nil
     }
-    let zeroHash = NSMutableData(length: 32)
-    if blockHashStop == zeroHash {
+    if blockHashStop == SHA256Hash() {
       // blockHashStop will be 0 to get as many blocks as possible (max 500 blocks).
       blockHashStop = nil
     }
