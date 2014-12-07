@@ -29,12 +29,6 @@ class RejectMessageTests: XCTestCase {
       0xbe, 0x7c, 0x77, 0x0f, 0xdc, 0xc9, 0x6b, 0x2c,
       0x3f, 0xf6, 0x0a, 0xbe, 0x18, 0x4f, 0x19, 0x63]   // transaction hash
 
-  let transactionHashBytes: [UInt8] = [
-      0xb5, 0x0c, 0xc0, 0x69, 0xd6, 0xa3, 0xe3, 0x3e,
-      0x3f, 0xf8, 0x4a, 0x5c, 0x41, 0xd9, 0xd3, 0xfe,
-      0xbe, 0x7c, 0x77, 0x0f, 0xdc, 0xc9, 0x6b, 0x2c,
-      0x3f, 0xf6, 0x0a, 0xbe, 0x18, 0x4f, 0x19, 0x63]
-
   var rejectMessageWithoutHashData: NSData!
   var rejectMessageWithoutHash: RejectMessage!
 
@@ -42,15 +36,19 @@ class RejectMessageTests: XCTestCase {
   var rejectMessageWithHash: RejectMessage!
 
   override func setUp() {
+    let transactionHashBytes: [UInt8] = [
+        0x63, 0x19, 0x4f, 0x18, 0xbe, 0x0a, 0xf6, 0x3f,
+        0x2c, 0x6b, 0xc9, 0xdc, 0x0f, 0x77, 0x7c, 0xbe,
+        0xfe, 0xd3, 0xd9, 0x41, 0x5c, 0x4a, 0xf8, 0x3f,
+        0x3e, 0xe3, 0xa3, 0xd6, 0x69, 0xc0, 0x0c, 0xb5]
+    let transactionHash = SHA256Hash(bytes: transactionHashBytes)
     rejectMessageWithoutHashData = NSData(bytes: rejectMessageWithoutHashBytes,
                                           length: rejectMessageWithoutHashBytes.count)
     rejectMessageWithoutHash = RejectMessage(rejectedCommand: .Version,
                                              code: .Malformed,
                                              reason: "reason")
-
     rejectMessageWithHashData = NSData(bytes: rejectMessageWithHashBytes,
                                        length: rejectMessageWithHashBytes.count)
-    let transactionHash = NSData(bytes: transactionHashBytes, length: transactionHashBytes.count)
     rejectMessageWithHash = RejectMessage(rejectedCommand: .Version,
                                           code: .Dust,
                                           reason: "reason",

@@ -33,9 +33,12 @@ public struct RejectMessage: Equatable {
   public let rejectedCommand: Message.Command
   public let code: Code
   public let reason: String
-  public let hash: NSData?
+  public let hash: SHA256Hash?
 
-  public init(rejectedCommand: Message.Command, code: Code, reason: String, hash: NSData? = nil) {
+  public init(rejectedCommand: Message.Command,
+              code: Code,
+              reason: String,
+              hash: SHA256Hash? = nil) {
     self.rejectedCommand = rejectedCommand
     self.code = code
     self.reason = reason
@@ -55,7 +58,7 @@ extension RejectMessage: MessagePayload {
     data.appendUInt8(code.rawValue)
     data.appendVarString(reason)
     if let hash = self.hash {
-      data.appendData(hash)
+      data.appendData(hash.bitcoinData)
     }
     return data
   }
@@ -86,9 +89,9 @@ extension RejectMessage: MessagePayload {
       println("WARN: Failed to parse reason from RejectMessage")
       return nil
     }
-    var hash: NSData? = nil
+    var hash: SHA256Hash? = nil
     if stream.hasBytesAvailable {
-      hash = stream.readData(length: 32)
+      hash = SHA256Hash.fromBitcoinStream(stream)
       if hash == nil {
         println("WARN: Failed to parse hash from RejectMessage")
         return nil
