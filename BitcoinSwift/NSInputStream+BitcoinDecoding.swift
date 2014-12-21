@@ -10,7 +10,8 @@ import Foundation
 
 public extension NSInputStream {
 
-  // TODO: Read Ints in a generic way instead of copy-pasting.
+  // TODO: Swift now natively suports endianness. Use that in all the methods below because it's
+  // probably much more efficient.
 
   public func readUInt8() -> UInt8? {
     var int: UInt8 = 0
