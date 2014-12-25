@@ -12,5 +12,6 @@
 
 - (NSData *)SHA256Hash;
 - (NSData *)RIPEMD160Hash;
+- (NSData *)HMACSHA512WithKey:(NSData *)key;
 
 @end

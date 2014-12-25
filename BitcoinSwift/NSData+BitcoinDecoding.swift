@@ -33,7 +33,7 @@ public extension NSData {
     return NSData(bytes: bytes, length: bytes.count)
   }
 
-  public func UInt8Array() -> [UInt8] {
+  public var UInt8Array: [UInt8] {
     var UInt8Array = [UInt8](count: self.length, repeatedValue: 0)
     getBytes(&UInt8Array, length: self.length)
     return UInt8Array

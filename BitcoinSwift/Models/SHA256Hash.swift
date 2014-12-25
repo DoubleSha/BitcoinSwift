@@ -52,7 +52,7 @@ extension SHA256Hash: BitcoinSerializable {
 extension SHA256Hash: Printable {
 
   public var description: String {
-    return data.hexString()
+    return data.hexString
   }
 }
 

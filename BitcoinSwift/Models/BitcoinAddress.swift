@@ -24,6 +24,6 @@ public struct BitcoinAddress {
     var checksum = addressBytes.SHA256Hash().SHA256Hash()
         .subdataWithRange(NSRange(location: 0, length: 4))
     addressBytes.appendData(checksum)
-    address = addressBytes.base58String()
+    address = addressBytes.base58String
   }
 }

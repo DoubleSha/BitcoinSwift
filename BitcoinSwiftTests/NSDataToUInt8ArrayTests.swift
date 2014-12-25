@@ -14,6 +14,6 @@ class NSDataToUInt8ArrayTests: XCTestCase {
   func testConvertNSDataToUInt8Array() {
     let data = NSData(bytes: [0, 1, 2, 3] as [UInt8], length: 4)
     let expectedBytes: [UInt8] = [0, 1, 2, 3]
-    XCTAssertEqual(data.UInt8Array(), expectedBytes)
+    XCTAssertEqual(data.UInt8Array, expectedBytes)
   }
 }

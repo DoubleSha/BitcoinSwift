@@ -32,7 +32,7 @@ public struct Message: Equatable {
     public var magicBytes: [UInt8] {
       let data = NSMutableData()
       data.appendUInt32(rawValue)
-      return data.UInt8Array()
+      return data.UInt8Array
     }
   }
 

@@ -12,9 +12,11 @@
 #import <openssl/ecdsa.h>
 #import <openssl/obj_mac.h>
 
+#import "BigInteger+objc.h"
+
 @interface ECKey()
 
-@property(nonatomic, assign) EC_KEY *ECKey;
+@property(nonatomic, assign) EC_KEY *key;
 
 @end
 
@@ -26,17 +28,39 @@
 - (instancetype)init {
   self = [super init];
   if (self) {
-    _ECKey = EC_KEY_new_by_curve_name(NID_secp256k1);
-    NSAssert(_ECKey, @"Failed to create ECKey");
-    NSAssert(EC_KEY_generate_key(_ECKey), @"Failed to generate ECKey");
-    EC_KEY_set_conv_form(_ECKey, POINT_CONVERSION_COMPRESSED);
+    _key = EC_KEY_new_by_curve_name(NID_secp256k1);
+    NSAssert(_key, @"Failed to create ECKey");
+    NSAssert(EC_KEY_generate_key(_key), @"Failed to generate ECKey");
+    EC_KEY_set_conv_form(_key, POINT_CONVERSION_COMPRESSED);
+  }
+  return self;
+}
+
+- (instancetype)initWithPrivateKey:(NSData *)privateKey {
+  self = [super init];
+  if (self) {
+    _key = EC_KEY_new_by_curve_name(NID_secp256k1);
+    NSAssert(_key, @"Failed to create ECKey");
+    const unsigned char *bytes = privateKey.bytes;
+    d2i_ECPrivateKey(&_key, &bytes, privateKey.length);
+  }
+  return self;
+}
+
+- (instancetype)initWithPublicKey:(NSData *)publicKey {
+  self = [super init];
+  if (self) {
+    _key = EC_KEY_new_by_curve_name(NID_secp256k1);
+    NSAssert(_key, @"Failed to create ECKey");
+    const unsigned char *bytes = publicKey.bytes;
+    o2i_ECPublicKey(&_key, &bytes, publicKey.length);
   }
   return self;
 }
 
 - (void)dealloc {
-  if (_ECKey) {
-    EC_KEY_free(_ECKey);
+  if (_key) {
+    EC_KEY_free(_key);
   }
 }
 
@@ -44,13 +68,13 @@
   if (_publicKey) {
     return _publicKey;
   }
-  int publicKeyLength = i2o_ECPublicKey(_ECKey, NULL);
+  int publicKeyLength = i2o_ECPublicKey(_key, NULL);
   if (!publicKeyLength) {
     return nil;
   }
   unsigned char publicKeyBytes[publicKeyLength];
   unsigned char *publicKeyBytesP = publicKeyBytes;
-  if (i2o_ECPublicKey(_ECKey, &publicKeyBytesP) != publicKeyLength) {
+  if (i2o_ECPublicKey(_key, &publicKeyBytesP) != publicKeyLength) {
     return nil;
   }
   _publicKey = [NSData dataWithBytes:publicKeyBytes length:publicKeyLength];
@@ -61,13 +85,13 @@
   if (_privateKey) {
     return _privateKey;
   }
-  int privateKeyLength = i2d_ECPrivateKey(_ECKey, NULL);
+  int privateKeyLength = i2d_ECPrivateKey(_key, NULL);
   if (!privateKeyLength) {
     return nil;
   }
   unsigned char privateKeyBytes[privateKeyLength];
   unsigned char *privateKeyBytesP = privateKeyBytes;
-  if (i2d_ECPrivateKey(_ECKey, &privateKeyBytesP) != privateKeyLength) {
+  if (i2d_ECPrivateKey(_key, &privateKeyBytesP) != privateKeyLength) {
     return nil;
   }
   _privateKey = [NSData dataWithBytes:privateKeyBytes length:privateKeyLength];
@@ -76,13 +100,13 @@
 
 - (NSData *)signatureForHash:(NSData *)hash {
   NSAssert([hash length] == 32, @"signatureForHash: only supports 256-bit hashes");
-  ECDSA_SIG *signature = ECDSA_do_sign([hash bytes], (int)[hash length], _ECKey);
+  ECDSA_SIG *signature = ECDSA_do_sign([hash bytes], (int)[hash length], _key);
   if (!signature) {
     return nil;
   }
   BN_CTX *ctx = BN_CTX_new();
   BN_CTX_start(ctx);
-  const EC_GROUP *group = EC_KEY_get0_group(_ECKey);
+  const EC_GROUP *group = EC_KEY_get0_group(_key);
   BIGNUM *order = BN_CTX_get(ctx);
   BIGNUM *halforder = BN_CTX_get(ctx);
   EC_GROUP_get_order(group, order, ctx);
@@ -111,9 +135,17 @@
                             (int)[hash length],
                             [signature bytes],
                             (int)[signature length],
-                            _ECKey);
+                            _key);
   // -1 = error, 0 = bad sig, 1 = good.
   return result == 1;
+}
+
++ (BigInteger *)curveOrder {
+  BIGNUM *order = BN_new();
+  EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);
+  EC_GROUP_get_order(group, order, NULL);
+  EC_GROUP_free(group);
+  return [[BigInteger alloc] initWithBIGNUM:order];
 }
 
 @end

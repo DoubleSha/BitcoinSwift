@@ -35,7 +35,7 @@ public class Logger {
   private class var currentTimeString: String {
     var time = time_t(NSDate().timeIntervalSince1970)
     var timeStruct = gmtime(&time)
-    var timeBuffer: [Int8] = Array<Int8>(count: 20, repeatedValue: 0)
+    var timeBuffer = [Int8](count: 20, repeatedValue: 0)
     strftime(&timeBuffer, 20, "%Y-%m-%d %H:%M:%S", timeStruct)
     return NSString(CString: timeBuffer, encoding: NSASCIIStringEncoding)!
   }

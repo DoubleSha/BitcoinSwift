@@ -35,6 +35,11 @@ class BigIntegerTests: XCTestCase {
     XCTAssertEqual(BigInteger(25) % BigInteger(6), BigInteger(1))
   }
 
+  func testAddModulo() {
+    XCTAssertEqual(BigInteger(25).add(BigInteger(5), modulo:BigInteger(10)), BigInteger(0))
+    XCTAssertEqual(BigInteger(25).add(BigInteger(6), modulo:BigInteger(10)), BigInteger(1))
+  }
+
   func testLeftShift() {
     XCTAssertEqual(BigInteger(1) << 2, BigInteger(4))
   }

@@ -373,7 +373,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
     if messageSendQueue.count > 0 && pendingSendBytes.count == 0 {
       let message = messageSendQueue.removeAtIndex(0)
       Logger.debug("Sending \(message.header.command.rawValue) message")
-      pendingSendBytes += message.bitcoinData.UInt8Array()
+      pendingSendBytes += message.bitcoinData.UInt8Array
     }
     if pendingSendBytes.count > 0 {
       let bytesWritten = outputStream.write(pendingSendBytes, maxLength: pendingSendBytes.count)

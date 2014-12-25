@@ -8,6 +8,7 @@
 
 #import "NSData+Hashing.h"
 
+#import <openssl/hmac.h>
 #import <openssl/ripemd.h>
 #import <openssl/sha.h>
 
@@ -29,6 +30,17 @@
   RIPEMD160_Update(&ctx, self.bytes, self.length);
   RIPEMD160_Final(hash, &ctx);
   return [NSData dataWithBytes:hash length:20];
+}
+
+- (NSData *)HMACSHA512WithKey:(NSData *)key {
+  unsigned char *digest = HMAC(EVP_sha512(),
+                               key.bytes,
+                               (int) key.length,
+                               self.bytes,
+                               (int) self.length,
+                               NULL,
+                               NULL);
+  return [NSData dataWithBytes:digest length:64];;
 }
 
 @end
