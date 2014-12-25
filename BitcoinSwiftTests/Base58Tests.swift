@@ -26,8 +26,9 @@ class Base58Tests: XCTestCase {
 
   let base58String = "16UwLL9Risc3QfPqBUvKofHmBQ7wMtjvM"
   let base58StringWithLeadingZeros = "111111Cy3N8mvNoTsRECfT9Ywzm3EDs4"
-  let invalidBase58Strings = ["3N8mvN034", "3N8mvNI34", "3N8mvNO34",
-                              "3N8mvNl34", "3N8mvN+34", "3N8mvN-34"]
+  let invalidBase58Strings = [
+      "3N8mvN034", "3N8mvNI34", "3N8mvNO34",
+      "3N8mvNl34", "3N8mvN+34", "3N8mvN-34"]
 
   override func setUp() {
     base58Data = NSData(bytes: base58Bytes, length: base58Bytes.count)
