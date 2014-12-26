@@ -41,8 +41,19 @@
   if (self) {
     _key = EC_KEY_new_by_curve_name(NID_secp256k1);
     NSAssert(_key, @"Failed to create ECKey");
-    const unsigned char *bytes = privateKey.bytes;
-    d2i_ECPrivateKey(&_key, &bytes, privateKey.length);
+    BN_CTX *ctx = BN_CTX_new();
+    const EC_GROUP *group = EC_KEY_get0_group(_key);
+    EC_POINT *publicKey = EC_POINT_new(group);
+    BIGNUM *privateKeyBn = BN_new();
+    BN_bin2bn(privateKey.bytes, (int) privateKey.length, privateKeyBn);
+    EC_POINT_mul(group, publicKey, privateKeyBn, NULL, NULL, ctx);
+    EC_KEY_set_private_key(_key, privateKeyBn);
+    EC_KEY_set_public_key(_key, publicKey);
+    EC_KEY_set_conv_form(_key, POINT_CONVERSION_COMPRESSED);
+    BN_clear_free(privateKeyBn);
+    EC_POINT_free(publicKey);
+    BN_CTX_free(ctx);
+    NSAssert(EC_KEY_check_key(_key), @"Invalid key");
   }
   return self;
 }
@@ -85,16 +96,13 @@
   if (_privateKey) {
     return _privateKey;
   }
-  int privateKeyLength = i2d_ECPrivateKey(_key, NULL);
-  if (!privateKeyLength) {
+  const BIGNUM *privateKeyBn = EC_KEY_get0_private_key(_key);
+  if (privateKeyBn == nil) {
     return nil;
   }
-  unsigned char privateKeyBytes[privateKeyLength];
-  unsigned char *privateKeyBytesP = privateKeyBytes;
-  if (i2d_ECPrivateKey(_key, &privateKeyBytesP) != privateKeyLength) {
-    return nil;
-  }
-  _privateKey = [NSData dataWithBytes:privateKeyBytes length:privateKeyLength];
+  NSMutableData *privateKey = [[NSMutableData alloc] initWithLength:BN_num_bytes(privateKeyBn)];
+  BN_bn2bin(privateKeyBn, privateKey.mutableBytes);
+  _privateKey = privateKey;
   return _privateKey;
 }
 

@@ -54,8 +54,8 @@ public class ExtendedECKey : ECKey {
     }
     // TODO: Use securely allocated data here.
     let indexHash = data.HMACSHA512WithKey(chainCode)
-    let indexHashLInt = BigInteger(secureData:
-        indexHash.subdataWithRange(NSRange(location: 0, length: 32)))
+    let indexHashLInt =
+        BigInteger(secureData: indexHash.subdataWithRange(NSRange(location: 0, length: 32)))
     let curveOrder = ECKey.curveOrder()
     if indexHashLInt >= curveOrder {
       return nil
