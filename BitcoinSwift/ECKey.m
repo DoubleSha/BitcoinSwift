@@ -51,7 +51,7 @@
     EC_KEY_set_public_key(_key, publicKey);
     EC_KEY_set_conv_form(_key, POINT_CONVERSION_COMPRESSED);
     BN_clear_free(privateKeyBn);
-    EC_POINT_free(publicKey);
+    EC_POINT_clear_free(publicKey);
     BN_CTX_free(ctx);
     NSAssert(EC_KEY_check_key(_key), @"Invalid key");
   }
