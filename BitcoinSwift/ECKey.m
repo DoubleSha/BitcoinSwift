@@ -30,8 +30,10 @@
   if (self) {
     _key = EC_KEY_new_by_curve_name(NID_secp256k1);
     NSAssert(_key, @"Failed to create ECKey");
+    // TODO: Use hmac-drbg to create the key instead of OpenSSL's generate_key function.
     NSAssert(EC_KEY_generate_key(_key), @"Failed to generate ECKey");
     EC_KEY_set_conv_form(_key, POINT_CONVERSION_COMPRESSED);
+    NSAssert(EC_KEY_check_key(_key), @"Invalid key");
   }
   return self;
 }
@@ -44,16 +46,23 @@
     BN_CTX *ctx = BN_CTX_new();
     const EC_GROUP *group = EC_KEY_get0_group(_key);
     EC_POINT *publicKey = EC_POINT_new(group);
-    BIGNUM *privateKeyBn = BN_new();
-    BN_bin2bn(privateKey.bytes, (int) privateKey.length, privateKeyBn);
-    EC_POINT_mul(group, publicKey, privateKeyBn, NULL, NULL, ctx);
-    EC_KEY_set_private_key(_key, privateKeyBn);
-    EC_KEY_set_public_key(_key, publicKey);
+    // Allocate the intermediate private key bn on the stack so it can't be paged to disk.
+    BIGNUM privateKeyBn;
+    BN_init(&privateKeyBn);
+    BN_bin2bn(privateKey.bytes, (int) privateKey.length, &privateKeyBn);
+    if (!EC_POINT_mul(group, publicKey, &privateKeyBn, NULL, NULL, ctx) ||
+        !EC_KEY_set_private_key(_key, &privateKeyBn) ||
+        !EC_KEY_set_public_key(_key, publicKey) ||
+        !EC_KEY_check_key(_key)) {
+      BN_clear(&privateKeyBn);
+      EC_POINT_clear_free(publicKey);
+      BN_CTX_free(ctx);
+      return nil;
+    }
     EC_KEY_set_conv_form(_key, POINT_CONVERSION_COMPRESSED);
-    BN_clear_free(privateKeyBn);
+    BN_clear(&privateKeyBn);
     EC_POINT_clear_free(publicKey);
     BN_CTX_free(ctx);
-    NSAssert(EC_KEY_check_key(_key), @"Invalid key");
   }
   return self;
 }
@@ -65,6 +74,7 @@
     NSAssert(_key, @"Failed to create ECKey");
     const unsigned char *bytes = publicKey.bytes;
     o2i_ECPublicKey(&_key, &bytes, publicKey.length);
+    NSAssert(EC_KEY_check_key(_key), @"Invalid key");
   }
   return self;
 }
@@ -83,12 +93,13 @@
   if (!publicKeyLength) {
     return nil;
   }
-  unsigned char publicKeyBytes[publicKeyLength];
-  unsigned char *publicKeyBytesP = publicKeyBytes;
-  if (i2o_ECPublicKey(_key, &publicKeyBytesP) != publicKeyLength) {
+  // TODO: Allocate this securely.
+  NSMutableData *publicKey = [[NSMutableData alloc] initWithLength:publicKeyLength];
+  unsigned char *publicKeyBytes = publicKey.mutableBytes;
+  if (i2o_ECPublicKey(_key, &publicKeyBytes) != publicKeyLength) {
     return nil;
   }
-  _publicKey = [NSData dataWithBytes:publicKeyBytes length:publicKeyLength];
+  _publicKey = publicKey;
   return _publicKey;
 }
 
@@ -100,6 +111,7 @@
   if (privateKeyBn == nil) {
     return nil;
   }
+  // TODO: Allocate this securely.
   NSMutableData *privateKey = [[NSMutableData alloc] initWithLength:BN_num_bytes(privateKeyBn)];
   BN_bn2bin(privateKeyBn, privateKey.mutableBytes);
   _privateKey = privateKey;
@@ -126,23 +138,23 @@
   BN_CTX_end(ctx);
   BN_CTX_free(ctx);
   unsigned int signatureLength = i2d_ECDSA_SIG(signature, NULL);
-  unsigned char signatureBytes[signatureLength];
-  unsigned char *signatureBytesP = signatureBytes;
-  if (i2d_ECDSA_SIG(signature, &signatureBytesP) != signatureLength) {
+  NSMutableData *signatureData = [[NSMutableData alloc] initWithLength:signatureLength];
+  unsigned char *signatureBytes = signatureData.mutableBytes;
+  if (i2d_ECDSA_SIG(signature, &signatureBytes) != signatureLength) {
     ECDSA_SIG_free(signature);
     return nil;
   }
   ECDSA_SIG_free(signature);
-  return [NSData dataWithBytes:signatureBytes length:signatureLength];
+  return signatureData;
 }
 
 - (BOOL)verifySignature:(NSData *)signature forHash:(NSData *)hash {
   NSAssert([hash length] == 32, @"verifySignature: forHash: only supports 256-bit hashes");
   int result = ECDSA_verify(0,
-                            [hash bytes],
-                            (int)[hash length],
-                            [signature bytes],
-                            (int)[signature length],
+                            hash.bytes,
+                            (int)hash.length,
+                            signature.bytes,
+                            (int)signature.length,
                             _key);
   // -1 = error, 0 = bad sig, 1 = good.
   return result == 1;
