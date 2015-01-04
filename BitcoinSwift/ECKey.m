@@ -30,7 +30,6 @@
   if (self) {
     _key = EC_KEY_new_by_curve_name(NID_secp256k1);
     NSAssert(_key, @"Failed to create ECKey");
-    // TODO: Use hmac-drbg to create the key instead of OpenSSL's generate_key function.
     NSAssert(EC_KEY_generate_key(_key), @"Failed to generate ECKey");
     EC_KEY_set_conv_form(_key, POINT_CONVERSION_COMPRESSED);
     NSAssert(EC_KEY_check_key(_key), @"Invalid key");
@@ -140,6 +139,7 @@
   unsigned int signatureLength = i2d_ECDSA_SIG(signature, NULL);
   NSMutableData *signatureData = [[NSMutableData alloc] initWithLength:signatureLength];
   unsigned char *signatureBytes = signatureData.mutableBytes;
+  // TODO: Use hmac-drbg to create the signature.
   if (i2d_ECDSA_SIG(signature, &signatureBytes) != signatureLength) {
     ECDSA_SIG_free(signature);
     return nil;
