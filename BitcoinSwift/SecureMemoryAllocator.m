@@ -8,6 +8,8 @@
 
 #import "SecureMemoryAllocator.h"
 
+#import "MemoryLockController.h"
+
 static void *secureAllocate(CFIndex allocSize, CFOptionFlags hint, void *info);
 static void secureDeallocate(void *ptr, void *info);
 static void *secureReallocate(void *ptr, CFIndex newSize, CFOptionFlags hint, void *info);
@@ -17,6 +19,7 @@ static void *secureReallocate(void *ptr, CFIndex newSize, CFOptionFlags hint, vo
 // Keeps track of the size of objects we have allocated so we know how many bytes to clear when the
 // object is deallocated.
 @property(nonatomic, strong) NSMutableDictionary *memorySizes;
+@property(nonatomic, strong) MemoryLockController *memoryLockController;
 
 @end
 
@@ -41,6 +44,7 @@ static void *secureReallocate(void *ptr, CFIndex newSize, CFOptionFlags hint, vo
   self = [super init];
   if (self) {
     _memorySizes = [[NSMutableDictionary alloc] init];
+    _memoryLockController = [MemoryLockController instance];
   }
   return self;
 }
@@ -61,16 +65,19 @@ static void *secureReallocate(void *ptr, CFIndex newSize, CFOptionFlags hint, vo
   if (memory == NULL) {
     return nil;
   }
+  [_memoryLockController lockMemory:memory size:(int) allocSize];
   _memorySizes[[NSValue valueWithPointer:memory]] = [NSNumber numberWithInteger:allocSize];
   return memory;
 }
 
 - (void)deallocateMemory:(void *)ptr info:(void *)info {
   NSAssert(ptr != NULL, @"Cannot deallocate null pointer");
-  NSNumber *size = (NSNumber *)_memorySizes[[NSValue valueWithPointer:ptr]];
+  NSValue *ptrValue = [NSValue valueWithPointer:ptr];
+  NSNumber *size = (NSNumber *)_memorySizes[ptrValue];
   NSAssert(size != nil, @"Cannot deallocate unknown pointer");
   memset(ptr, 0, size.intValue);
-  [_memorySizes removeObjectForKey:[NSValue valueWithPointer:ptr]];
+  [_memorySizes removeObjectForKey:ptrValue];
+  [_memoryLockController unlockMemory:ptr size:size.intValue];
   free(ptr);
 }
 

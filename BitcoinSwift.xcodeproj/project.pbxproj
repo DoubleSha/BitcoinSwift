@@ -117,6 +117,10 @@
 		0AB30D2F1A58A91C0079D9C9 /* SecureMemoryAllocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB30D2B1A58A91C0079D9C9 /* SecureMemoryAllocator.m */; };
 		0AB631931A58C99100B2ABD6 /* SecureDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB631921A58C99100B2ABD6 /* SecureDataTests.swift */; };
 		0AB631941A58C99100B2ABD6 /* SecureDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB631921A58C99100B2ABD6 /* SecureDataTests.swift */; };
+		0AB631971A58DF6800B2ABD6 /* MemoryLockController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AB631951A58DF6800B2ABD6 /* MemoryLockController.h */; };
+		0AB631981A58DF6800B2ABD6 /* MemoryLockController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AB631951A58DF6800B2ABD6 /* MemoryLockController.h */; };
+		0AB631991A58DF6800B2ABD6 /* MemoryLockController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB631961A58DF6800B2ABD6 /* MemoryLockController.m */; };
+		0AB6319A1A58DF6800B2ABD6 /* MemoryLockController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB631961A58DF6800B2ABD6 /* MemoryLockController.m */; };
 		0ABA36441960EC0A00C6D098 /* BitcoinEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABA36431960EC0A00C6D098 /* BitcoinEncodingTests.swift */; };
 		0AC17A8819E508B2000E4942 /* AddressMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC17A7019E508B2000E4942 /* AddressMessage.swift */; };
 		0AC17A8919E508B2000E4942 /* AddressMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC17A7019E508B2000E4942 /* AddressMessage.swift */; };
@@ -326,6 +330,8 @@
 		0AB30D2A1A58A91C0079D9C9 /* SecureMemoryAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureMemoryAllocator.h; sourceTree = "<group>"; };
 		0AB30D2B1A58A91C0079D9C9 /* SecureMemoryAllocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureMemoryAllocator.m; sourceTree = "<group>"; };
 		0AB631921A58C99100B2ABD6 /* SecureDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureDataTests.swift; sourceTree = "<group>"; };
+		0AB631951A58DF6800B2ABD6 /* MemoryLockController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemoryLockController.h; sourceTree = "<group>"; };
+		0AB631961A58DF6800B2ABD6 /* MemoryLockController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MemoryLockController.m; sourceTree = "<group>"; };
 		0ABA36431960EC0A00C6D098 /* BitcoinEncodingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinEncodingTests.swift; sourceTree = "<group>"; };
 		0AC17A7019E508B2000E4942 /* AddressMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddressMessage.swift; path = Models/AddressMessage.swift; sourceTree = "<group>"; };
 		0AC17A7119E508B2000E4942 /* BitcoinAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BitcoinAddress.swift; path = Models/BitcoinAddress.swift; sourceTree = "<group>"; };
@@ -482,6 +488,8 @@
 				0A35BA3A1A46904600152FE5 /* ExtendedECKey.swift */,
 				0AE7573A1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift */,
 				0A34D5DC19E7B181003A3B89 /* Logger.swift */,
+				0AB631951A58DF6800B2ABD6 /* MemoryLockController.h */,
+				0AB631961A58DF6800B2ABD6 /* MemoryLockController.m */,
 				0A78124F19C4D41300187B9A /* MessageParser.swift */,
 				0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */,
 				0A52ACF81953A7690041541B /* NSData+Hashing.h */,
@@ -624,6 +632,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A83CDF91A49F1D70074A4CE /* BigInteger+objc.h in Headers */,
+				0AB631971A58DF6800B2ABD6 /* MemoryLockController.h in Headers */,
 				0AE757421A2AB4EE0084FD6F /* BigInteger.h in Headers */,
 				0AB30D2C1A58A91C0079D9C9 /* SecureMemoryAllocator.h in Headers */,
 				0A52ACF91953A7690041541B /* NSData+Hashing.h in Headers */,
@@ -637,6 +646,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A83CDFA1A49F1D70074A4CE /* BigInteger+objc.h in Headers */,
+				0AB631981A58DF6800B2ABD6 /* MemoryLockController.h in Headers */,
 				0AE757431A2AB4EE0084FD6F /* BigInteger.h in Headers */,
 				0AB30D2D1A58A91C0079D9C9 /* SecureMemoryAllocator.h in Headers */,
 				0AC8CF3319A9368D00D93585 /* BitcoinSwift.h in Headers */,
@@ -917,6 +927,7 @@
 				0A56A73319FCEB6C00F163BD /* FilteredBlock.swift in Sources */,
 				0A1BDCC319A1A7A6008ED01F /* PeerController.swift in Sources */,
 				0AC17AAA19E508B2000E4942 /* Transaction.swift in Sources */,
+				0AB631991A58DF6800B2ABD6 /* MemoryLockController.m in Sources */,
 				0A0514851A4CBB3D006E1377 /* String+Reverse.swift in Sources */,
 				0A435A7719F2CB6700FE2689 /* FilterAddMessage.swift in Sources */,
 				0A9439A61A49FB2F009992CE /* ExtendedECKey.swift in Sources */,
@@ -1029,6 +1040,7 @@
 				0AC17AAF19E508B2000E4942 /* TransactionOutPoint.swift in Sources */,
 				0A56A73419FCEB6C00F163BD /* FilteredBlock.swift in Sources */,
 				0AC17AA119E508B2000E4942 /* NotFoundMessage.swift in Sources */,
+				0AB6319A1A58DF6800B2ABD6 /* MemoryLockController.m in Sources */,
 				0A0514861A4CBB3D006E1377 /* String+Reverse.swift in Sources */,
 				0AC17AAB19E508B2000E4942 /* Transaction.swift in Sources */,
 				0A435A7819F2CB6700FE2689 /* FilterAddMessage.swift in Sources */,
