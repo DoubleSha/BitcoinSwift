@@ -9,7 +9,7 @@
 #import "MemoryLockController.h"
 
 #import <sys/mman.h>
-#import <sys/sysctl.h>
+#import <sys/unistd.h>
 
 @interface MemoryLockController()
 
@@ -28,7 +28,7 @@
   self = [super init];
   if (self) {
     _lockedPageRefs = [[NSMutableDictionary alloc] init];
-    _pageSize = [self systemPageSize];
+    _pageSize = getpagesize();
     NSAssert(!(_pageSize & (_pageSize - 1)), @"Page size must be a power of two (%zu)", _pageSize);
     _pageMask = ~(_pageSize - 1);
   }
@@ -79,20 +79,6 @@
     munlock((void *) pageAddr, _pageSize);
     _lockedPageRefs[page] = [NSNumber numberWithInt:(refCount.intValue - 1)];
   }
-}
-
-#pragma mark Private Methods
-
-- (size_t)systemPageSize {
-  int mib[2];
-  mib[0] = CTL_HW;
-  mib[1] = HW_PAGESIZE;
-  size_t pageSize;
-  size_t length;
-  length = sizeof(pageSize);
-  int result = sysctl(mib, 2, &pageSize, &length, NULL, 0);
-  NSAssert(result >= 0, @"Failed to get system page size in MemoryLockController");
-  return pageSize;
 }
 
 @end
