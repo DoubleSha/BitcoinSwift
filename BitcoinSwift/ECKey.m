@@ -101,9 +101,9 @@
 }
 
 - (NSData *)signatureForHash:(NSData *)hash {
-  NSAssert([hash length] == 32, @"signatureForHash: only supports 256-bit hashes");
+  NSAssert(hash.length == 32, @"signatureForHash: only supports 256-bit hashes");
   EC_KEY *key = [self ECKeyWithPrivateKey:_privateKey];
-  ECDSA_SIG *signature = ECDSA_do_sign([hash bytes], (int)[hash length], key);
+  ECDSA_SIG *signature = ECDSA_do_sign([hash bytes], (int)hash.length, key);
   EC_KEY_free(key);
   if (!signature) {
     return nil;
@@ -135,7 +135,7 @@
 }
 
 - (BOOL)verifySignature:(NSData *)signature forHash:(NSData *)hash {
-  NSAssert([hash length] == 32, @"verifySignature: forHash: only supports 256-bit hashes");
+  NSAssert(hash.length == 32, @"verifySignature: forHash: only supports 256-bit hashes");
   EC_KEY *key = [self ECKeyWithPublicKey:self.publicKey];
   int result = ECDSA_verify(0,
                             hash.bytes,
