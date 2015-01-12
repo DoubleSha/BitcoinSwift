@@ -65,7 +65,7 @@ static void *secureReallocate(void *ptr, CFIndex newSize, CFOptionFlags hint, vo
   if (memory == NULL) {
     return nil;
   }
-  [_memoryLockController lockMemory:memory size:(int) allocSize];
+  [_memoryLockController lockMemory:memory size:(int)allocSize];
   _memorySizes[[NSValue valueWithPointer:memory]] = [NSNumber numberWithInteger:allocSize];
   return memory;
 }
@@ -96,7 +96,7 @@ static void *secureReallocate(void *ptr, CFIndex newSize, CFOptionFlags hint, vo
   if (newPtr == nil) {
     return nil;
   }
-  int cpySize = size.intValue < newSize ? size.intValue : (int) newSize;
+  int cpySize = size.intValue < newSize ? size.intValue : (int)newSize;
   memcpy(newPtr, ptr, cpySize);
   [self deallocateMemory:ptr info:info];
   return newPtr;

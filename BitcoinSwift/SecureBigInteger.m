@@ -36,8 +36,8 @@
   BN_init(&result);
   BN_init(&bn);
   BN_init(&otherBn);
-  BN_bin2bn(_secureData.mutableBytes, (int) _secureData.length, &bn);
-  BN_bin2bn(other.secureData.mutableBytes, (int) other.secureData.length, &otherBn);
+  BN_bin2bn(_secureData.mutableBytes, (int)_secureData.length, &bn);
+  BN_bin2bn(other.secureData.mutableBytes, (int)other.secureData.length, &otherBn);
   BN_mod_add(&result, &bn, &otherBn, modulo.bn, ctx);
   SecureData *resultData = [[SecureData alloc] initWithLength:BN_num_bytes(&result)];
   BN_bn2bin(&result, resultData.mutableBytes);
@@ -52,7 +52,7 @@
   // Allocate intermediate bignums on the stack so there is no chance they can be paged to disk.
   BIGNUM bn;
   BN_init(&bn);
-  BN_bin2bn(_secureData.mutableBytes, (int) _secureData.mutableData.length, &bn);
+  BN_bin2bn(_secureData.mutableBytes, (int)_secureData.mutableData.length, &bn);
   BOOL isEqual = BN_cmp(&bn, other.bn) == 0;
   BN_clear(&bn);
   return isEqual;
@@ -62,7 +62,7 @@
   // Allocate intermediate bignums on the stack so there is no chance they can be paged to disk.
   BIGNUM bn;
   BN_init(&bn);
-  BN_bin2bn(_secureData.mutableBytes, (int) _secureData.mutableData.length, &bn);
+  BN_bin2bn(_secureData.mutableBytes, (int)_secureData.mutableData.length, &bn);
   BOOL isEqual = BN_cmp(&bn, other.bn) > 0;
   BN_clear(&bn);
   return isEqual;
@@ -72,7 +72,7 @@
   // Allocate intermediate bignums on the stack so there is no chance they can be paged to disk.
   BIGNUM bn;
   BN_init(&bn);
-  BN_bin2bn(_secureData.mutableBytes, (int) _secureData.mutableData.length, &bn);
+  BN_bin2bn(_secureData.mutableBytes, (int)_secureData.mutableData.length, &bn);
   BOOL isEqual = BN_cmp(&bn, other.bn) >= 0;
   BN_clear(&bn);
   return isEqual;
@@ -82,7 +82,7 @@
   // Allocate intermediate bignums on the stack so there is no chance they can be paged to disk.
   BIGNUM bn;
   BN_init(&bn);
-  BN_bin2bn(_secureData.mutableBytes, (int) _secureData.mutableData.length, &bn);
+  BN_bin2bn(_secureData.mutableBytes, (int)_secureData.mutableData.length, &bn);
   BOOL isEqual = BN_cmp(&bn, other.bn) < 0;
   BN_clear(&bn);
   return isEqual;

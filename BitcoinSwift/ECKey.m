@@ -25,9 +25,6 @@
 
 @implementation ECKey
 
-@synthesize publicKey = _publicKey;
-@synthesize privateKey = _privateKey;
-
 + (int)privateKeyLength {
   return 32;
 }

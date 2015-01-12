@@ -1,5 +1,5 @@
 //
-//  SecureData.swift
+//  SecureData+swift.swift
 //  BitcoinSwift
 //
 //  Created by Kevin Greene on 12/30/14.

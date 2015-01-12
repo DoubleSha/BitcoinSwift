@@ -37,9 +37,9 @@
   NSAssert(digest.length == 64, @"Invalid output length for HMACSHA512");
   HMAC(EVP_sha512(),
        key.bytes,
-       (int) key.length,
+       (int)key.length,
        self.bytes,
-       (int) self.length,
+       (int)self.length,
        [digest mutableBytes],
        &length);
 }
