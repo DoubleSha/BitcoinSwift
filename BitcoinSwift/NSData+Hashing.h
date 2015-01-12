@@ -10,8 +10,13 @@
 
 @interface NSData (Hashing)
 
+/// Returns the SHA-256 hash of self.
 - (NSData *)SHA256Hash;
+
+/// Returns the RIPEMD-160 hash of self.
 - (NSData *)RIPEMD160Hash;
-- (NSData *)HMACSHA512WithKey:(NSData *)key;
+
+/// Performs the HMAC512-SHA256 algorithm on self using key and stores the result in digest.
+- (void)HMACSHA512WithKey:(NSData *)key digest:(NSMutableData *)digest;
 
 @end

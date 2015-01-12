@@ -13,7 +13,6 @@
 @interface BigInteger()
 
 @property(nonatomic, assign) BIGNUM *bn;
-@property(nonatomic, assign) BOOL secure;
 
 @end
 
@@ -22,15 +21,6 @@
 - (instancetype)init {
   self = [super init];
   if (self) {
-    _bn = BN_new();
-  }
-  return self;
-}
-
-- (instancetype)initWithSecure:(BOOL)secure {
-  self = [super init];
-  if (self) {
-    _secure = secure;
     _bn = BN_new();
   }
   return self;
@@ -60,18 +50,6 @@
   return self;
 }
 
-- (instancetype)initWithSecureData:(NSData *)data {
-  self = [super init];
-  if (self) {
-    _secure = YES;
-    _bn = BN_new();
-    if (data) {
-      BN_bin2bn([data bytes], (int)[data length], _bn);
-    }
-  }
-  return self;
-}
-
 - (instancetype)initWithCompactData:(NSData *)compactData {
   self = [super init];
   if (self) {
@@ -84,11 +62,7 @@
 }
 
 - (void)dealloc {
-  if (_secure) {
-    BN_clear_free(_bn);
-  } else {
-    BN_free(_bn);
-  }
+  BN_clear_free(_bn);
 }
 
 - (unsigned int)UIntValue {
@@ -116,20 +90,20 @@
 }
 
 - (BigInteger *)add:(BigInteger *)other {
-  BigInteger *result = [[BigInteger alloc] initWithSecure:_secure || other.secure];
+  BigInteger *result = [[BigInteger alloc] init];
   BN_add(result.bn, _bn, other.bn);
   return result;
 }
 
 - (BigInteger *)subtract:(BigInteger *)other {
-  BigInteger *result = [[BigInteger alloc] initWithSecure:_secure || other.secure];
+  BigInteger *result = [[BigInteger alloc] init];
   BN_sub(result.bn, _bn, other.bn);
   return result;
 }
 
 - (BigInteger *)multiply:(BigInteger *)other {
   BN_CTX *ctx = BN_CTX_new();
-  BigInteger *result = [[BigInteger alloc] initWithSecure:_secure || other.secure];
+  BigInteger *result = [[BigInteger alloc] init];
   BN_mul(result.bn, _bn, other.bn, ctx);
   BN_CTX_free(ctx);
   return result;
@@ -137,7 +111,7 @@
 
 - (BigInteger *)divide:(BigInteger *)other {
   BN_CTX *ctx = BN_CTX_new();
-  BigInteger *result = [[BigInteger alloc] initWithSecure:_secure || other.secure];
+  BigInteger *result = [[BigInteger alloc] init];
   BN_div(result.bn, NULL, _bn, other.bn, ctx);
   BN_CTX_free(ctx);
   return result;
@@ -145,7 +119,7 @@
 
 - (BigInteger *)modulo:(BigInteger *)other {
   BN_CTX *ctx = BN_CTX_new();
-  BigInteger *result = [[BigInteger alloc] initWithSecure:_secure || other.secure];
+  BigInteger *result = [[BigInteger alloc] init];
   BN_mod(result.bn, _bn, other.bn, ctx);
   BN_CTX_free(ctx);
   return result;
@@ -153,20 +127,20 @@
 
 - (BigInteger *)add:(BigInteger *)other modulo:(BigInteger *)modulo {
   BN_CTX *ctx = BN_CTX_new();
-  BigInteger *result = [[BigInteger alloc] initWithSecure:_secure || other.secure || modulo.secure];
+  BigInteger *result = [[BigInteger alloc] init];
   BN_mod_add(result.bn, _bn, other.bn, modulo.bn, ctx);
   BN_CTX_free(ctx);
   return result;
 }
 
 - (BigInteger *)shiftLeft:(int)bits {
-  BigInteger *result = [[BigInteger alloc] initWithSecure:_secure];
+  BigInteger *result = [[BigInteger alloc] init];
   BN_lshift(result.bn, _bn, bits);
   return result;
 }
 
 - (BigInteger *)shiftRight:(int)bits {
-  BigInteger *result = [[BigInteger alloc] initWithSecure:_secure];
+  BigInteger *result = [[BigInteger alloc] init];
   BN_rshift(result.bn, _bn, bits);
   return result;
 }

@@ -16,11 +16,9 @@
 @property(nonatomic, readonly) unsigned int UIntValue;
 
 - (instancetype)init;
-- (instancetype)initWithSecure:(BOOL)secure;
 - (instancetype)init:(int)value;
 - (instancetype)initWithIntegerLiteral:(int)value;
 - (instancetype)initWithData:(NSData *)data;
-- (instancetype)initWithSecureData:(NSData *)data;
 - (instancetype)initWithCompactData:(NSData *)compactData;
 
 - (BigInteger *)add:(BigInteger *)other;

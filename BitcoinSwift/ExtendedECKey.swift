@@ -14,28 +14,34 @@ import Foundation
 /// BIP 32: https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
 public class ExtendedECKey : ECKey {
 
-  public let chainCode: NSData
+  public let chainCode: SecureData
   public let index: UInt32
 
   /// Creates a new master extended key (both private and public).
-  /// Can return nil in the unlikely case the randomly generated private key is invalid. If nil is
-  /// returned, retry.
   public class func masterKey() -> ExtendedECKey? {
-    let randomData = NSMutableData(length: 32)!
-    let result = SecRandomCopyBytes(kSecRandomDefault,
-                                    UInt(randomData.length),
-                                    UnsafeMutablePointer<UInt8>(randomData.mutableBytes))
-    assert(result == 0)
-    return ExtendedECKey.masterKeyWithSeed(randomData)
+    var masterKey: ExtendedECKey? = nil
+    var tries = 0
+    while masterKey == nil {
+      let randomData = SecureData(length: 32)
+      let result = SecRandomCopyBytes(kSecRandomDefault,
+                                      UInt(randomData.length),
+                                      UnsafeMutablePointer<UInt8>(randomData.mutableBytes))
+      assert(result == 0)
+      masterKey = ExtendedECKey.masterKeyWithSeed(randomData)
+      assert(++tries < 5)
+    }
+    return masterKey!
   }
 
-  public class func masterKeyWithSeed(seed: NSData) -> ExtendedECKey? {
-    // TODO: Use securely allocated data here.
-    let indexHash = seed.HMACSHA512WithKey(ExtendedECKey.masterKeySeed())
-    let privateKey = indexHash.subdataWithRange(NSRange(location: 0, length: 32))
-    let chainCode = indexHash.subdataWithRange(NSRange(location: 32, length: 32))
-    let privateKeyInt = BigInteger(secureData: privateKey)
-    if privateKeyInt == BigInteger(0) || privateKeyInt >= ECKey.curveOrder() {
+  /// Can return nil in the (very very very very) unlikely case the randomly generated private key
+  /// is invalid. If nil is returned, retry.
+  public class func masterKeyWithSeed(seed: SecureData) -> ExtendedECKey? {
+    let indexHash = seed.HMACSHA512WithKeyData(ExtendedECKey.masterKeySeed())
+    let privateKey = indexHash[0..<32]
+    let chainCode = indexHash[32..<64]
+    let privateKeyInt = SecureBigInteger(secureData: privateKey)
+    if privateKeyInt.isEqual(BigInteger(0)) ||
+        privateKeyInt.greaterThanOrEqual(ECKey.curveOrder()) {
       return nil
     }
     return ExtendedECKey(privateKey: privateKey, chainCode: chainCode)
@@ -43,31 +49,37 @@ public class ExtendedECKey : ECKey {
 
   /// Creates a new child key derived from self with index.
   public func childKeyWithIndex(index: UInt32) -> ExtendedECKey? {
-    var data = NSMutableData()
+    var data = SecureData()
     if indexIsHardened(index) {
       data.appendBytes([0] as [UInt8], length: 1)
-      data.appendData(privateKey)
+      data.appendSecureData(privateKey)
       data.appendUInt32(index, endianness: .BigEndian)
     } else {
       data.appendData(publicKey)
       data.appendUInt32(index, endianness: .BigEndian)
     }
-    // TODO: Use securely allocated data here.
-    let indexHash = data.HMACSHA512WithKey(chainCode)
-    let indexHashLInt =
-        BigInteger(secureData: indexHash.subdataWithRange(NSRange(location: 0, length: 32)))
+    var indexHash = data.HMACSHA512WithKey(chainCode)
+    let indexHashLInt = SecureBigInteger(secureData: indexHash[0..<32])
     let curveOrder = ECKey.curveOrder()
-    if indexHashLInt >= curveOrder {
+    if indexHashLInt.greaterThanOrEqual(curveOrder) {
       return nil
     }
-    let childPrivateKeyInt = indexHashLInt.add(BigInteger(secureData: privateKey),
+    let childPrivateKeyInt = indexHashLInt.add(SecureBigInteger(secureData: privateKey),
                                                modulo:curveOrder)
-    if childPrivateKeyInt == BigInteger(0) {
+    if childPrivateKeyInt.isEqual(BigInteger(0)) {
       return nil
     }
-    let childPrivateKey = childPrivateKeyInt.data
-    assert(childPrivateKey.length == 32)
-    let childChainCode = indexHash.subdataWithRange(NSRange(location: 32, length: 32))
+    // The BigInteger might result in data whose length is less than expected, so we pad with 0's.
+    var childPrivateKey = SecureData()
+    let offset = ECKey.privateKeyLength() - Int32(childPrivateKeyInt.secureData.length)
+    assert(offset >= 0)
+    if offset > 0 {
+      let offsetBytes = [UInt8](count: Int(offset), repeatedValue: 0)
+      childPrivateKey.appendBytes(offsetBytes, length: UInt(offsetBytes.count))
+    }
+    childPrivateKey.appendSecureData(childPrivateKeyInt.secureData)
+    assert(Int32(childPrivateKey.length) == ECKey.privateKeyLength())
+    let childChainCode = indexHash[32..<64]
     return ExtendedECKey(privateKey: childPrivateKey, chainCode: childChainCode, index: index)
   }
 
@@ -99,26 +111,10 @@ public class ExtendedECKey : ECKey {
     return 0x80000000
   }
 
-  private init(privateKey: NSData, chainCode: NSData, index: UInt32 = 0) {
+  private init(privateKey: SecureData, chainCode: SecureData, index: UInt32 = 0) {
     self.chainCode = chainCode
     self.index = index
     super.init(privateKey: privateKey)
-  }
-
-  private init(publicKey: NSData, chainCode: NSData, index: UInt32 = 0) {
-    self.chainCode = chainCode
-    self.index = index
-    super.init(publicKey: publicKey)
-  }
-
-  private convenience init(privateKey: NSData, chainCode: NSData, hardenedIndex: UInt32) {
-    let index = hardenedIndex + ExtendedECKey.hardenedIndexOffset()
-    self.init(privateKey: privateKey, chainCode: chainCode, index: index)
-  }
-
-  private convenience init(publicKey: NSData, chainCode: NSData, hardenedIndex: UInt32) {
-    let index = hardenedIndex + ExtendedECKey.hardenedIndexOffset()
-    self.init(publicKey: publicKey, chainCode: chainCode, index: hardenedIndex)
   }
 
   private func indexIsHardened(index: UInt32) -> Bool {

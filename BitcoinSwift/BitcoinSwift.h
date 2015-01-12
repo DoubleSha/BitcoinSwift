@@ -19,4 +19,6 @@ FOUNDATION_EXPORT const unsigned char BitcoinSwiftVersionString[];
 #import <BitcoinSwift/BigInteger.h>
 #import <BitcoinSwift/ECKey.h>
 #import <BitcoinSwift/NSData+Hashing.h>
+#import <BitcoinSwift/SecureBigInteger.h>
+#import <BitcoinSwift/SecureData.h>
 #import <BitcoinSwift/SecureMemoryAllocator.h>

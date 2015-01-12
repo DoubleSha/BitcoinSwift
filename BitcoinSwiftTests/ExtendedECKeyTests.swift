@@ -29,9 +29,11 @@ class ExtendedECKeyTests: XCTestCase {
   var masterKey1: ExtendedECKey!
 
   override func setUp() {
-    let masterKey0Seed = NSData(bytes: masterKey0SeedBytes, length: masterKey0SeedBytes.count)
+    let masterKey0Seed = SecureData(bytes: masterKey0SeedBytes,
+                                    length: UInt(masterKey0SeedBytes.count))
     masterKey0 = ExtendedECKey.masterKeyWithSeed(masterKey0Seed)
-    let masterKey1Seed = NSData(bytes: masterKey1SeedBytes, length: masterKey1SeedBytes.count)
+    let masterKey1Seed = SecureData(bytes: masterKey1SeedBytes,
+                                    length: UInt(masterKey1SeedBytes.count))
     masterKey1 = ExtendedECKey.masterKeyWithSeed(masterKey1Seed)
   }
 
@@ -47,7 +49,7 @@ class ExtendedECKeyTests: XCTestCase {
         0x1a, 0xef, 0xac, 0x8e, 0x2c, 0x93, 0xc9, 0xc5,
         0xb2, 0x14, 0x31, 0x38, 0x17, 0xcd, 0xb0, 0x1a,
         0x14, 0x94, 0xb9, 0x17, 0xc8, 0x43, 0x6b, 0x35]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     XCTAssertEqual(masterKey0.publicKey, publicKey)
     XCTAssertEqual(masterKey0.privateKey, privateKey)
   }
@@ -64,7 +66,7 @@ class ExtendedECKeyTests: XCTestCase {
         0xdd, 0x93, 0xb4, 0xec, 0xed, 0xe8, 0xd1, 0x6e,
         0xd4, 0x08, 0xce, 0x14, 0x9b, 0x6c, 0xd8, 0x0b,
         0x07, 0x15, 0xa2, 0xd9, 0x11, 0xa0, 0xaf, 0xea]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey0.childKeyWithHardenedIndex(0) {
       XCTAssertEqual(key.publicKey, publicKey)
       XCTAssertEqual(key.privateKey, privateKey)
@@ -85,7 +87,7 @@ class ExtendedECKeyTests: XCTestCase {
         0x1e, 0xa8, 0xb5, 0x03, 0x0f, 0xad, 0xaa, 0x8e,
         0x53, 0x8b, 0x02, 0x0f, 0x0a, 0x38, 0x74, 0x21,
         0xa1, 0x2d, 0xe9, 0x31, 0x9d, 0xc9, 0x33, 0x68]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey0.childKeyWithHardenedIndex(0)?.childKeyWithIndex(1) {
       XCTAssertEqual(key.publicKey, publicKey)
       XCTAssertEqual(key.privateKey, privateKey)
@@ -106,7 +108,7 @@ class ExtendedECKeyTests: XCTestCase {
         0xd8, 0x8e, 0x6a, 0x89, 0xfa, 0x14, 0x83, 0xe0,
         0x2e, 0x35, 0x09, 0x2a, 0xf6, 0x0c, 0x04, 0x2b,
         0x1d, 0xf2, 0xff, 0x59, 0xfa, 0x42, 0x4d, 0xca]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey0.childKeyWithHardenedIndex(0)?.childKeyWithIndex(1)?
         .childKeyWithHardenedIndex(2) {
       XCTAssertEqual(key.publicKey, publicKey)
@@ -128,7 +130,7 @@ class ExtendedECKeyTests: XCTestCase {
         0x19, 0x54, 0xc5, 0xc7, 0xc0, 0xeb, 0xab, 0x2f,
         0x9b, 0xdf, 0xd9, 0x6a, 0x17, 0x56, 0x3e, 0xf2,
         0x8a, 0x6a, 0x4b, 0x1a, 0x2a, 0x76, 0x4e, 0xf4]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey0.childKeyWithHardenedIndex(0)?.childKeyWithIndex(1)?
         .childKeyWithHardenedIndex(2)?.childKeyWithIndex(2) {
       XCTAssertEqual(key.publicKey, publicKey)
@@ -150,7 +152,7 @@ class ExtendedECKeyTests: XCTestCase {
         0xde, 0x6d, 0x81, 0x68, 0x57, 0xe0, 0x12, 0xc5,
         0x45, 0x50, 0x51, 0xca, 0xd6, 0x66, 0x08, 0x50,
         0xe5, 0x83, 0x72, 0xa6, 0xc3, 0xe6, 0xe7, 0xc8]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey0.childKeyWithHardenedIndex(0)?.childKeyWithIndex(1)?
         .childKeyWithHardenedIndex(2)?.childKeyWithIndex(2)?.childKeyWithIndex(1000000000) {
       XCTAssertEqual(key.publicKey, publicKey)
@@ -172,7 +174,7 @@ class ExtendedECKeyTests: XCTestCase {
         0x63, 0xf5, 0x10, 0x20, 0xad, 0x3e, 0xcc, 0xa4,
         0xf0, 0x85, 0x02, 0x80, 0xcf, 0x43, 0x6c, 0x70,
         0xc7, 0x27, 0x92, 0x3f, 0x6d, 0xb4, 0x6c, 0x3e]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     XCTAssertEqual(masterKey1.publicKey, publicKey)
     XCTAssertEqual(masterKey1.privateKey, privateKey)
   }
@@ -189,7 +191,7 @@ class ExtendedECKeyTests: XCTestCase {
         0xe0, 0x42, 0x8f, 0x53, 0x79, 0x8f, 0x0a, 0xb8,
         0xaa, 0x1b, 0xd3, 0x78, 0x73, 0x99, 0x90, 0x41,
         0x70, 0x3c, 0x74, 0x2f, 0x15, 0xac, 0x7e, 0x1e]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey1.childKeyWithIndex(0) {
       XCTAssertEqual(key.publicKey, publicKey)
       XCTAssertEqual(key.privateKey, privateKey)
@@ -210,7 +212,7 @@ class ExtendedECKeyTests: XCTestCase {
         0xe9, 0xc2, 0xf4, 0xf0, 0xf4, 0xff, 0x03, 0x40,
         0x81, 0x43, 0x92, 0x33, 0x06, 0x93, 0xce, 0x95,
         0xa5, 0x8f, 0xe1, 0x8f, 0xd5, 0x2e, 0x6e, 0x93]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey1.childKeyWithIndex(0)?.childKeyWithHardenedIndex(2147483647) {
       XCTAssertEqual(key.publicKey, publicKey)
       XCTAssertEqual(key.privateKey, privateKey)
@@ -231,7 +233,7 @@ class ExtendedECKeyTests: XCTestCase {
         0xe4, 0xbe, 0xa3, 0x70, 0x98, 0x46, 0x3c, 0x23,
         0x61, 0x3d, 0xa3, 0x20, 0x20, 0xd6, 0x04, 0x50,
         0x6d, 0xa8, 0xc0, 0x51, 0x8e, 0x1d, 0xa4, 0xb7]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey1.childKeyWithIndex(0)?.childKeyWithHardenedIndex(2147483647)?
         .childKeyWithIndex(1) {
       XCTAssertEqual(key.publicKey, publicKey)
@@ -253,7 +255,7 @@ class ExtendedECKeyTests: XCTestCase {
         0xfe, 0x32, 0x8b, 0x4c, 0x83, 0xa1, 0xc3, 0x3b,
         0x8e, 0x5f, 0xf4, 0x8f, 0x50, 0x87, 0x27, 0x3f,
         0x04, 0xef, 0xa8, 0x3b, 0x24, 0x7d, 0x6a, 0x2d]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey1.childKeyWithIndex(0)?.childKeyWithHardenedIndex(2147483647)?
         .childKeyWithIndex(1)?.childKeyWithHardenedIndex(2147483646) {
       XCTAssertEqual(key.publicKey, publicKey)
@@ -275,7 +277,7 @@ class ExtendedECKeyTests: XCTestCase {
         0xf2, 0xfd, 0x82, 0xb6, 0xd9, 0x18, 0x34, 0x1c,
         0xbe, 0xf4, 0x28, 0x66, 0x1e, 0xf0, 0x1a, 0xb9,
         0x7c, 0x28, 0xa4, 0x84, 0x21, 0x25, 0xac, 0x23]
-    let privateKey = NSData(bytes: privateKeyBytes, length: privateKeyBytes.count)
+    let privateKey = SecureData(bytes: privateKeyBytes, length: UInt(privateKeyBytes.count))
     if let key = masterKey1.childKeyWithIndex(0)?.childKeyWithHardenedIndex(2147483647)?
         .childKeyWithIndex(1)?.childKeyWithHardenedIndex(2147483646)?.childKeyWithIndex(2) {
       XCTAssertEqual(key.publicKey, publicKey)

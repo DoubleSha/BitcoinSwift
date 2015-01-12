@@ -32,15 +32,16 @@
   return [NSData dataWithBytes:hash length:20];
 }
 
-- (NSData *)HMACSHA512WithKey:(NSData *)key {
-  unsigned char *digest = HMAC(EVP_sha512(),
-                               key.bytes,
-                               (int) key.length,
-                               self.bytes,
-                               (int) self.length,
-                               NULL,
-                               NULL);
-  return [NSData dataWithBytes:digest length:64];;
+- (void)HMACSHA512WithKey:(NSData *)key digest:(NSMutableData *)digest {
+  unsigned int length = 64;
+  NSAssert(digest.length == 64, @"Invalid output length for HMACSHA512");
+  HMAC(EVP_sha512(),
+       key.bytes,
+       (int) key.length,
+       self.bytes,
+       (int) self.length,
+       [digest mutableBytes],
+       &length);
 }
 
 @end
