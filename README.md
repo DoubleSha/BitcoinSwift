@@ -7,7 +7,7 @@ BitcoinSwift is a framework for iOS and OSX Bitcoin wallet developers. It is an 
 
 Please dive in and feel free to get your hands dirty. If you want to contribute, just send an email to the mailing list or ping me directly. Cypherpunks write code.
 
-Mailing list: https://groups.google.com/forum/#!forum/bitcoinswift
+Mailing list: https://groups.google.com/forum/#!forum/bitcoinswift  
 IRC (freenode): #bitcoinswift
 
 
