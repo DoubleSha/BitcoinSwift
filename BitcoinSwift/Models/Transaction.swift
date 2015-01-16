@@ -15,6 +15,10 @@ public func ==(left: Transaction, right: Transaction) -> Bool {
       left.lockTime == right.lockTime
 }
 
+public protocol TransactionParameters {
+  var transactionVersion: UInt32 { get }
+}
+
 /// Represents a Bitcoin transaction.
 /// https://en.bitcoin.it/wiki/Protocol_specification#tx
 public struct Transaction: Equatable {
@@ -33,6 +37,16 @@ public struct Transaction: Equatable {
     self.inputs = inputs
     self.outputs = outputs
     self.lockTime = lockTime
+  }
+
+  public init(params: TransactionParameters,
+              inputs: [Input],
+              outputs: [Output],
+              lockTime: LockTime = .AlwaysLocked) {
+    self.init(version: params.transactionVersion,
+              inputs: inputs,
+              outputs: outputs,
+              lockTime: lockTime)
   }
 }
 

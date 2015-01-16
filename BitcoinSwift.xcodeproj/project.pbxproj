@@ -65,6 +65,12 @@
 		0A5314F519D8A1130090F82F /* NotFoundMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8BA343E19D74E0E00A1232F /* NotFoundMessageTests.swift */; };
 		0A56949B1A633B4000C5DE2F /* SecureBigIntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56949A1A633B4000C5DE2F /* SecureBigIntegerTests.swift */; };
 		0A56949C1A633B4000C5DE2F /* SecureBigIntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56949A1A633B4000C5DE2F /* SecureBigIntegerTests.swift */; };
+		0A5694A11A68D91D00C5DE2F /* BitcoinMainNetParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5694A01A68D91D00C5DE2F /* BitcoinMainNetParameters.swift */; };
+		0A5694A21A68D91D00C5DE2F /* BitcoinMainNetParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5694A01A68D91D00C5DE2F /* BitcoinMainNetParameters.swift */; };
+		0A5694A41A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5694A31A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift */; };
+		0A5694A51A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5694A31A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift */; };
+		0A5694A71A68DB0800C5DE2F /* BitcoinParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5694A61A68DB0800C5DE2F /* BitcoinParameters.swift */; };
+		0A5694A81A68DB0800C5DE2F /* BitcoinParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5694A61A68DB0800C5DE2F /* BitcoinParameters.swift */; };
 		0A56A73319FCEB6C00F163BD /* FilteredBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56A73219FCEB6C00F163BD /* FilteredBlock.swift */; };
 		0A56A73419FCEB6C00F163BD /* FilteredBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56A73219FCEB6C00F163BD /* FilteredBlock.swift */; };
 		0A56A73619FCF40500F163BD /* FilteredBlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A56A73519FCF40500F163BD /* FilteredBlockTests.swift */; };
@@ -312,6 +318,9 @@
 		0A52ACFC1953AAA00041541B /* HashingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashingTests.swift; sourceTree = "<group>"; };
 		0A5314E619D77E730090F82F /* TransactionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionTests.swift; sourceTree = "<group>"; };
 		0A56949A1A633B4000C5DE2F /* SecureBigIntegerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureBigIntegerTests.swift; sourceTree = "<group>"; };
+		0A5694A01A68D91D00C5DE2F /* BitcoinMainNetParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinMainNetParameters.swift; sourceTree = "<group>"; };
+		0A5694A31A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinTestNetParamaters.swift; sourceTree = "<group>"; };
+		0A5694A61A68DB0800C5DE2F /* BitcoinParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinParameters.swift; sourceTree = "<group>"; };
 		0A56A73219FCEB6C00F163BD /* FilteredBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FilteredBlock.swift; path = Models/FilteredBlock.swift; sourceTree = "<group>"; };
 		0A56A73519FCF40500F163BD /* FilteredBlockTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilteredBlockTests.swift; sourceTree = "<group>"; };
 		0A627FC11A33B5BF00170C31 /* SHA256Hash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SHA256Hash.swift; path = Models/SHA256Hash.swift; sourceTree = "<group>"; };
@@ -494,6 +503,9 @@
 				0A83CDF81A49F1D70074A4CE /* BigInteger+objc.h */,
 				0A83CDFB1A49F27F0074A4CE /* BigInteger+objc.m */,
 				0A84E5F71A2B054E0070238D /* BigInteger+Operators.swift */,
+				0A5694A01A68D91D00C5DE2F /* BitcoinMainNetParameters.swift */,
+				0A5694A61A68DB0800C5DE2F /* BitcoinParameters.swift */,
+				0A5694A31A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift */,
 				0A4BBC451A0DCDD000838450 /* BitcoinSerializable.swift */,
 				0A52ACD0195397080041541B /* BitcoinSwift.h */,
 				0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */,
@@ -944,6 +956,7 @@
 				0A110DDF19E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
 				0AC17AA819E508B2000E4942 /* PongMessage.swift in Sources */,
 				0A435A7119F2C4FB00FE2689 /* FilterLoadMessage.swift in Sources */,
+				0A5694A41A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift in Sources */,
 				0A1C534A19EE480000D27206 /* MemPoolMessage.swift in Sources */,
 				0A83CDFC1A49F27F0074A4CE /* BigInteger+objc.m in Sources */,
 				0AE757441A2AB4EE0084FD6F /* BigInteger.m in Sources */,
@@ -958,12 +971,14 @@
 				0A435A7719F2CB6700FE2689 /* FilterAddMessage.swift in Sources */,
 				0A9439A61A49FB2F009992CE /* ExtendedECKey.swift in Sources */,
 				0A1C534D19EE538700D27206 /* HeadersMessage.swift in Sources */,
+				0A5694A11A68D91D00C5DE2F /* BitcoinMainNetParameters.swift in Sources */,
 				0AC17A9819E508B2000E4942 /* InventoryVector.swift in Sources */,
 				0A52ACFB1953A79B0041541B /* NSData+Hashing.m in Sources */,
 				0AC17A9A19E508B2000E4942 /* IPAddress.swift in Sources */,
 				0AC17AB419E508B3000E4942 /* VersionAckMessage.swift in Sources */,
 				0AC17AB619E508B3000E4942 /* VersionMessage.swift in Sources */,
 				0AC17A8819E508B2000E4942 /* AddressMessage.swift in Sources */,
+				0A5694A71A68DB0800C5DE2F /* BitcoinParameters.swift in Sources */,
 				0AC17A9219E508B2000E4942 /* GetDataMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1060,6 +1075,7 @@
 				0AC8CF4019A9369F00D93585 /* DNSPeerDiscovery.swift in Sources */,
 				0A110DE019E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
 				0AC8CF3B19A9369F00D93585 /* NSMutableData+BitcoinEncoding.swift in Sources */,
+				0A5694A51A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift in Sources */,
 				0A435A7219F2C4FB00FE2689 /* FilterLoadMessage.swift in Sources */,
 				0A1C534B19EE480000D27206 /* MemPoolMessage.swift in Sources */,
 				0A83CDFD1A49F27F0074A4CE /* BigInteger+objc.m in Sources */,
@@ -1074,12 +1090,14 @@
 				0AC17AAB19E508B2000E4942 /* Transaction.swift in Sources */,
 				0A435A7819F2CB6700FE2689 /* FilterAddMessage.swift in Sources */,
 				0A9439A51A49FB2E009992CE /* ExtendedECKey.swift in Sources */,
+				0A5694A21A68D91D00C5DE2F /* BitcoinMainNetParameters.swift in Sources */,
 				0A1C534E19EE538700D27206 /* HeadersMessage.swift in Sources */,
 				0AC17AB719E508B3000E4942 /* VersionMessage.swift in Sources */,
 				0AC8CF4319A9369F00D93585 /* PeerController.swift in Sources */,
 				0AC17A9919E508B2000E4942 /* InventoryVector.swift in Sources */,
 				0AC17AB519E508B3000E4942 /* VersionAckMessage.swift in Sources */,
 				0AC17AB319E508B3000E4942 /* TransactionOutput.swift in Sources */,
+				0A5694A81A68DB0800C5DE2F /* BitcoinParameters.swift in Sources */,
 				0AC8CF3519A9369F00D93585 /* NSData+Hashing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
