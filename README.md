@@ -23,8 +23,8 @@ Initial block header synching, with InMemorySPVBlockStore. See PeerController.
 Roadmap (in order of priority)
 ============
 
-KeyStore for storing private keys in the OSX/iOS keychain.  
 Transaction building and signing.  
+KeyStore for storing private keys in the OSX/iOS keychain.  
 Persistent SPVBlockStore using CoreData.  
 Wallet for tracking balance and transaction history.  
 Full SPV support with bloom filtering.  
