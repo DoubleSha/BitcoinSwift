@@ -40,6 +40,7 @@ public struct Message: Equatable {
   /// Available commands are defined in the spec here: 
   /// https://en.bitcoin.it/wiki/Protocol_specification#Message_types
   public enum Command: String {
+
     case Version = "version"
     case VersionAck = "verack"
     case Address = "addr"

@@ -18,7 +18,23 @@ public class BitcoinMainNetParameters: BitcoinParameters {
     return Static.instance
   }
 
+  // MARK: - TransactionParameters
+
   public var transactionVersion: UInt32 {
     return 1
+  }
+
+  // MARK: - AddressParameters
+
+  public var supportedAddressHeaders: [UInt8] {
+    return [publicKeyAddressHeader, P2SHAddressHeader]
+  }
+
+  public var publicKeyAddressHeader: UInt8 {
+    return 0
+  }
+
+  public var P2SHAddressHeader: UInt8 {
+    return 5
   }
 }

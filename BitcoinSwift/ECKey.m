@@ -25,12 +25,16 @@
 
 @implementation ECKey
 
-+ (int)privateKeyLength {
++ (const int)privateKeyLength {
   return 32;
 }
 
-+ (int)publicKeyLength {
++ (const int)compressedPublicKeyLength {
   return 33;
+}
+
++ (const int)uncompressedPublicKeyLength {
+  return 65;
 }
 
 + (BigInteger *)curveOrder {
@@ -73,10 +77,15 @@
 }
 
 - (instancetype)initWithPublicKey:(NSData *)publicKey {
-  NSAssert(publicKey != nil && publicKey.length == [ECKey publicKeyLength], @"Invalid publicKey");
+  NSAssert(publicKey != nil && (publicKey.length == [ECKey compressedPublicKeyLength] ||
+           publicKey.length == [ECKey uncompressedPublicKeyLength]), @"Invalid publicKey");
   self = [super init];
   if (self) {
-    _publicKey = publicKey;
+    if (publicKey.length == [ECKey compressedPublicKeyLength]) {
+      _publicKey = publicKey;
+    } else {
+      _publicKey = [self compressedPublicKeyFromUncompressedPublicKey:publicKey];
+    }
   }
   return self;
 }
@@ -86,18 +95,13 @@
     return _publicKey;
   }
   EC_POINT *publicKeyPoint = [self publicKeyPointFromPrivateKey:_privateKey];
-  const EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);
-  BIGNUM publicKeyBn;
-  BN_init(&publicKeyBn);
-  EC_POINT_point2bn(group, publicKeyPoint, POINT_CONVERSION_COMPRESSED, &publicKeyBn, NULL);
-  NSMutableData *publicKey = [[NSMutableData alloc] initWithLength:[ECKey publicKeyLength]];
-  NSUInteger offset = publicKey.length - BN_num_bytes(&publicKeyBn);
-  NSAssert(offset < publicKey.length, @"Invalid offset");
-  BN_bn2bin(&publicKeyBn, publicKey.mutableBytes + offset);
-  BN_clear(&publicKeyBn);
+  _publicKey = [self publicKeyFromECPoint:publicKeyPoint compressed:YES];
   EC_POINT_clear_free(publicKeyPoint);
-  _publicKey = publicKey;
   return _publicKey;
+}
+
+- (NSData *)uncompressedPublicKey {
+  return [self uncompressedPublicKeyFromCompressedPublicKey:self.publicKey];
 }
 
 - (NSData *)signatureForHash:(NSData *)hash {
@@ -146,6 +150,57 @@
   EC_KEY_free(key);
   // -1 = error, 0 = bad sig, 1 = good.
   return result == 1;
+}
+
+#pragma mark Private Methods
+
+- (NSData *)publicKeyFromECPoint:(EC_POINT *)publicKeyPoint compressed:(BOOL)compressed {
+  EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);
+  BIGNUM publicKeyBn;
+  BN_init(&publicKeyBn);
+  point_conversion_form_t pointConversionForm = compressed ? POINT_CONVERSION_COMPRESSED :
+      POINT_CONVERSION_UNCOMPRESSED;
+  EC_POINT_point2bn(group, publicKeyPoint, pointConversionForm, &publicKeyBn, NULL);
+  int length = compressed ? [ECKey compressedPublicKeyLength] : [ECKey uncompressedPublicKeyLength];
+  NSMutableData *publicKey = [[NSMutableData alloc] initWithLength:length];
+  NSUInteger offset = publicKey.length - BN_num_bytes(&publicKeyBn);
+  NSAssert(offset < publicKey.length, @"Invalid offset");
+  BN_bn2bin(&publicKeyBn, publicKey.mutableBytes + offset);
+  BN_clear(&publicKeyBn);
+  EC_GROUP_free(group);
+  return publicKey;
+}
+
+- (NSData *)uncompressedPublicKeyFromCompressedPublicKey:(NSData *)compressedPublicKey {
+  NSAssert(compressedPublicKey.length == [ECKey compressedPublicKeyLength],
+           @"Invalid compressed public key length");
+  EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);
+  BIGNUM publicKeyBn;
+  BN_init(&publicKeyBn);
+  BN_bin2bn(compressedPublicKey.bytes, (int)compressedPublicKey.length, &publicKeyBn);
+  EC_POINT *publicKeyPoint = EC_POINT_new(group);
+  EC_POINT_bn2point(group, &publicKeyBn, publicKeyPoint, NULL);
+  NSData *uncompressedPublicKey = [self publicKeyFromECPoint:publicKeyPoint compressed:NO];
+  EC_POINT_clear_free(publicKeyPoint);
+  BN_clear(&publicKeyBn);
+  EC_GROUP_free(group);
+  return uncompressedPublicKey;
+}
+
+- (NSData *)compressedPublicKeyFromUncompressedPublicKey:(NSData *)uncompressedPublicKey {
+  NSAssert(uncompressedPublicKey.length == [ECKey uncompressedPublicKeyLength],
+           @"Invalid uncompressed public key length");
+  EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);
+  BIGNUM publicKeyBn;
+  BN_init(&publicKeyBn);
+  BN_bin2bn(uncompressedPublicKey.bytes, (int)uncompressedPublicKey.length, &publicKeyBn);
+  EC_POINT *publicKeyPoint = EC_POINT_new(group);
+  EC_POINT_bn2point(group, &publicKeyBn, publicKeyPoint, NULL);
+  NSData *compressedPublicKey = [self publicKeyFromECPoint:publicKeyPoint compressed:YES];
+  EC_POINT_clear_free(publicKeyPoint);
+  BN_clear(&publicKeyBn);
+  EC_GROUP_free(group);
+  return compressedPublicKey;
 }
 
 - (EC_POINT *)publicKeyPointFromPrivateKey:(SecureData *)privateKey {
