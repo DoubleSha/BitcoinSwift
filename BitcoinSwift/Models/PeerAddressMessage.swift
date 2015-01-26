@@ -1,5 +1,5 @@
 //
-//  AddressMessage.swift
+//  PeerAddressMessage.swift
 //  BitcoinSwift
 //
 //  Created by Kevin Greene on 8/14/14.
@@ -8,14 +8,14 @@
 
 import Foundation
 
-public func ==(left: AddressMessage, right: AddressMessage) -> Bool {
+public func ==(left: PeerAddressMessage, right: PeerAddressMessage) -> Bool {
   return left.peerAddresses == right.peerAddresses
 }
 
 /// Message payload object corresponding to the Message.Command.Address command.
 /// Provides information on known nodes of the network.
 /// https://en.bitcoin.it/wiki/Protocol_specification#addr
-public struct AddressMessage: Equatable {
+public struct PeerAddressMessage: Equatable {
 
   public let peerAddresses: [PeerAddress]
 
@@ -25,7 +25,7 @@ public struct AddressMessage: Equatable {
   }
 }
 
-extension AddressMessage: MessagePayload {
+extension PeerAddressMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.Address
@@ -40,29 +40,29 @@ extension AddressMessage: MessagePayload {
     return data
   }
 
-  public static func fromBitcoinStream(stream: NSInputStream) -> AddressMessage? {
+  public static func fromBitcoinStream(stream: NSInputStream) -> PeerAddressMessage? {
     let count = stream.readVarInt()
     if count == nil {
-      Logger.warn("Failed to parse count from AddressMessage")
+      Logger.warn("Failed to parse count from PeerAddressMessage")
       return nil
     }
     if count! == 0 {
-      Logger.warn("Failed to parse AddressMessage. count is zero")
+      Logger.warn("Failed to parse PeerAddressMessage. count is zero")
       return nil
     }
     if count! > 1000 {
-      Logger.warn("Failed to parse AddressMessage. count is greater than 1000")
+      Logger.warn("Failed to parse PeerAddressMessage. count is greater than 1000")
       return nil
     }
     var peerAddresses: [PeerAddress] = []
     for _ in 0..<count! {
       let peerAddress = PeerAddress.fromBitcoinStream(stream)
       if peerAddress == nil {
-        Logger.warn("Failed to parse peer address from AddressMessage")
+        Logger.warn("Failed to parse peer address from PeerAddressMessage")
         return nil
       }
       peerAddresses.append(peerAddress!)
     }
-    return AddressMessage(peerAddresses: peerAddresses)
+    return PeerAddressMessage(peerAddresses: peerAddresses)
   }
 }

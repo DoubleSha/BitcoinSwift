@@ -1,5 +1,5 @@
 //
-//  GetAddressMessage.swift
+//  GetPeerAddressMessage.swift
 //  BitcoinSwift
 //
 //  Created by Kevin Greene on 10/12/14.
@@ -12,7 +12,7 @@ import Foundation
 /// help with finding potential nodes in the network. The response to receiving this message is to
 /// transmit one or more addr messages with one or more peers from a database of known active peers.
 /// https://en.bitcoin.it/wiki/Protocol_specification#getaddr
-public struct GetAddressMessage: MessagePayload {
+public struct GetPeerAddressMessage: MessagePayload {
 
   public var command: Message.Command {
     return Message.Command.GetAddress
@@ -23,8 +23,8 @@ public struct GetAddressMessage: MessagePayload {
     return NSData()
   }
 
-  public static func fromBitcoinStream(stream: NSInputStream) ->GetAddressMessage? {
+  public static func fromBitcoinStream(stream: NSInputStream) ->GetPeerAddressMessage? {
     // A getaddr message has no payload.
-    return GetAddressMessage()
+    return GetPeerAddressMessage()
   }
 }

@@ -27,7 +27,7 @@ public protocol PeerConnectionDelegate: class {
 }
 
 public enum PeerConnectionMessage {
-  case AddressMessage(BitcoinSwift.AddressMessage)
+  case PeerAddressMessage(BitcoinSwift.PeerAddressMessage)
   case InventoryMessage(BitcoinSwift.InventoryMessage)
   case GetDataMessage(BitcoinSwift.GetDataMessage)
   case NotFoundMessage(BitcoinSwift.NotFoundMessage)
@@ -36,7 +36,7 @@ public enum PeerConnectionMessage {
   case Transaction(BitcoinSwift.Transaction)
   case Block(BitcoinSwift.Block)
   case HeadersMessage(BitcoinSwift.HeadersMessage)
-  case GetAddressMessage(BitcoinSwift.GetAddressMessage)
+  case GetPeerAddressMessage(BitcoinSwift.GetPeerAddressMessage)
   case MemPoolMessage(BitcoinSwift.MemPoolMessage)
   case PingMessage(BitcoinSwift.PingMessage)
   case PongMessage(BitcoinSwift.PongMessage)
@@ -233,8 +233,8 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           didConnect()
         }
       case .Address:
-        if let addressMessage = AddressMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.AddressMessage(addressMessage)
+        if let peerAddressMessage = PeerAddressMessage.fromBitcoinStream(payloadStream) {
+          let message = PeerConnectionMessage.PeerAddressMessage(peerAddressMessage)
           delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .Inventory:
@@ -278,8 +278,8 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .GetAddress:
-        if let getAddressMessage = GetAddressMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.GetAddressMessage(getAddressMessage)
+        if let getPeerAddressMessage = GetPeerAddressMessage.fromBitcoinStream(payloadStream) {
+          let message = PeerConnectionMessage.GetPeerAddressMessage(getPeerAddressMessage)
           delegate?.peerConnection(self, didReceiveMessage: message)
         }
       case .MemPool:
