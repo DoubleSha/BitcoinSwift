@@ -26,6 +26,7 @@
 
 - (instancetype)init;
 - (instancetype)initWithLength:(NSUInteger)length;
+- (instancetype)initWithData:(NSData *)data;
 - (instancetype)initWithBytes:(const void *)bytes length:(NSUInteger)length;
 
 - (void)appendBytes:(const void *)bytes length:(NSUInteger)length;

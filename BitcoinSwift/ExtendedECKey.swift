@@ -18,11 +18,12 @@ public class ExtendedECKey : ECKey {
   public let index: UInt32
 
   /// Creates a new master extended key (both private and public).
-  public class func masterKey() -> ExtendedECKey? {
+  /// Returns the key and the randomly-generated seed used to create the key.
+  public class func masterKey() -> (key: ExtendedECKey, seed: SecureData)? {
     var masterKey: ExtendedECKey? = nil
+    let randomData = SecureData(length: UInt(ECKey.privateKeyLength()))
     var tries = 0
     while masterKey == nil {
-      let randomData = SecureData(length: 32)
       let result = SecRandomCopyBytes(kSecRandomDefault,
                                       UInt(randomData.length),
                                       UnsafeMutablePointer<UInt8>(randomData.mutableBytes))
@@ -30,7 +31,7 @@ public class ExtendedECKey : ECKey {
       masterKey = ExtendedECKey.masterKeyWithSeed(randomData)
       assert(++tries < 5)
     }
-    return masterKey!
+    return (masterKey!, randomData)
   }
 
   /// Can return nil in the (very very very very) unlikely case the randomly generated private key

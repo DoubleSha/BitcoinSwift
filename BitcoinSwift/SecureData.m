@@ -36,6 +36,14 @@
   return self;
 }
 
+- (instancetype)initWithData:(NSData *)data {
+  self = [self initWithLength:data.length];
+  if (self) {
+    memcpy(_mutableData.mutableBytes, data.bytes, data.length);
+  }
+  return self;
+}
+
 - (instancetype)initWithBytes:(const void *)bytes length:(NSUInteger)length {
   self = [self initWithLength:length];
   if (self) {
