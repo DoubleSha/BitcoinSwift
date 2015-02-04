@@ -34,7 +34,7 @@ public class OSKeyChainSecureDataStore: SecureDataStore {
     if status != noErr {
       return nil
     }
-    let data = result.memory!.takeRetainedValue() as NSData
+    let data = result.memory!.takeUnretainedValue() as NSData
     let secureData = SecureData(data: data)
     result.dealloc(1)
     return secureData
@@ -53,11 +53,11 @@ public class OSKeyChainSecureDataStore: SecureDataStore {
     return SecItemAdd(item, nil) == noErr
   }
 
-  public func deleteDataForKey(key: String) {
+  public func deleteDataForKey(key: String) -> Bool {
     var query = NSMutableDictionary()
     query.setObject("\(kSecClassGenericPassword)", forKey: "\(kSecClass)")
     query.setObject(service, forKey: "\(kSecAttrService)")
     query.setObject(key, forKey: "\(kSecAttrAccount)")
-    assert(SecItemDelete(query) == noErr)
+    return SecItemDelete(query) == noErr
   }
 }

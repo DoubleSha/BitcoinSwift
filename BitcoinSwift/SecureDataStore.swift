@@ -20,5 +20,5 @@ public protocol SecureDataStore {
 
   /// Deletes the data for the given key. This must only be called if a value exists for the given
   /// key.
-  func deleteDataForKey(key: String)
+  func deleteDataForKey(key: String) -> Bool
 }
