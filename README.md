@@ -15,6 +15,7 @@ Features
 ============
 
 Secure BIP32 key hierarchy. See ExtendedECKey.  
+Key store for storing private keys in the OSX/iOS keychain. See OSKeyChainSecureDataStore.  
 All bitcoin protocol messages are supported.  
 The low-level networking layer is finished. See PeerConnection.  
 Initial block header sync, with InMemorySPVBlockStore. See PeerController.  
@@ -24,7 +25,6 @@ Roadmap (in order of priority)
 ============
 
 Transaction building and signing.  
-KeyStore for storing private keys in the OSX/iOS keychain.  
 Persistent SPVBlockStore using CoreData.  
 Wallet for tracking balance and transaction history.  
 Full SPV support with bloom filtering.  
