@@ -25,7 +25,7 @@ public struct FilteredBlock: Equatable {
   public let totalNumTransactions: UInt32
   /// Hashes in depth-first order.
   public let hashes: [SHA256Hash]
-  // Flag bits, packed per 8 in a byte, least significant bit first.
+  /// Flag bits, packed per 8 in a byte, least significant bit first.
   public let flags: [UInt8]
 
   public init(header: BlockHeader,
