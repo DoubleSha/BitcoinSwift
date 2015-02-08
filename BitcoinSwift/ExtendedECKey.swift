@@ -19,7 +19,7 @@ public class ExtendedECKey : ECKey {
 
   /// Creates a new master extended key (both private and public).
   /// Returns the key and the randomly-generated seed used to create the key.
-  public class func masterKey() -> (key: ExtendedECKey, seed: SecureData)? {
+  public class func masterKey() -> (key: ExtendedECKey, seed: SecureData) {
     var masterKey: ExtendedECKey? = nil
     let randomData = SecureData(length: UInt(ECKey.privateKeyLength()))
     var tries = 0
