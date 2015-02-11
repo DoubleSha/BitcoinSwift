@@ -214,8 +214,8 @@
 		0ADEA2A91A0E94DD00F3FB32 /* PongMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D845F45319D7A5FB00346A25 /* PongMessageTests.swift */; };
 		0AE757381A2A674B0084FD6F /* BlockChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE757371A2A674B0084FD6F /* BlockChainStore.swift */; };
 		0AE757391A2A674B0084FD6F /* BlockChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE757371A2A674B0084FD6F /* BlockChainStore.swift */; };
-		0AE7573B1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7573A1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift */; };
-		0AE7573C1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7573A1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift */; };
+		0AE7573B1A2A6A8B0084FD6F /* InMemoryBlockChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7573A1A2A6A8B0084FD6F /* InMemoryBlockChainStore.swift */; };
+		0AE7573C1A2A6A8B0084FD6F /* InMemoryBlockChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7573A1A2A6A8B0084FD6F /* InMemoryBlockChainStore.swift */; };
 		0AE7573E1A2A71D50084FD6F /* BlockChainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7573D1A2A71D50084FD6F /* BlockChainHeader.swift */; };
 		0AE7573F1A2A71D50084FD6F /* BlockChainHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE7573D1A2A71D50084FD6F /* BlockChainHeader.swift */; };
 		0AE757421A2AB4EE0084FD6F /* BigInteger.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AE757401A2AB4EE0084FD6F /* BigInteger.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -399,7 +399,7 @@
 		0AC8CF1B19A934C800D93585 /* BitcoinSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BitcoinSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AC8CF2519A934C800D93585 /* BitcoinSwiftOSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitcoinSwiftOSXTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AE757371A2A674B0084FD6F /* BlockChainStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockChainStore.swift; sourceTree = "<group>"; };
-		0AE7573A1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemorySPVBlockStore.swift; sourceTree = "<group>"; };
+		0AE7573A1A2A6A8B0084FD6F /* InMemoryBlockChainStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryBlockChainStore.swift; sourceTree = "<group>"; };
 		0AE7573D1A2A71D50084FD6F /* BlockChainHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlockChainHeader.swift; path = Models/BlockChainHeader.swift; sourceTree = "<group>"; };
 		0AE757401A2AB4EE0084FD6F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		0AE757411A2AB4EE0084FD6F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
@@ -534,7 +534,7 @@
 				0A52ACE81953979F0041541B /* ECKey.m */,
 				0A34DF641961197D007BBC35 /* Endianness.swift */,
 				0A35BA3A1A46904600152FE5 /* ExtendedECKey.swift */,
-				0AE7573A1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift */,
+				0AE7573A1A2A6A8B0084FD6F /* InMemoryBlockChainStore.swift */,
 				0A34D5DC19E7B181003A3B89 /* Logger.swift */,
 				0AB631951A58DF6800B2ABD6 /* MemoryLockController.h */,
 				0AB631961A58DF6800B2ABD6 /* MemoryLockController.m */,
@@ -952,7 +952,7 @@
 				0A26BA4919F0EFAB00278622 /* FilterClearMessage.swift in Sources */,
 				0A4789D31A8B0C6000F2F883 /* CoreDataBlockChainStore.swift in Sources */,
 				0A1C534719EB132E00D27206 /* GetPeerAddressMessage.swift in Sources */,
-				0AE7573B1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift in Sources */,
+				0AE7573B1A2A6A8B0084FD6F /* InMemoryBlockChainStore.swift in Sources */,
 				0A4BBC461A0DCDD000838450 /* BitcoinSerializable.swift in Sources */,
 				0AC17A8C19E508B2000E4942 /* Block.swift in Sources */,
 				0AC17AB019E508B2000E4942 /* TransactionLockTime.swift in Sources */,
@@ -1077,7 +1077,7 @@
 				0A26BA4A19F0EFAB00278622 /* FilterClearMessage.swift in Sources */,
 				0A4789D41A8B0C6000F2F883 /* CoreDataBlockChainStore.swift in Sources */,
 				0A1C534819EB132E00D27206 /* GetPeerAddressMessage.swift in Sources */,
-				0AE7573C1A2A6A8B0084FD6F /* InMemorySPVBlockStore.swift in Sources */,
+				0AE7573C1A2A6A8B0084FD6F /* InMemoryBlockChainStore.swift in Sources */,
 				0A4BBC471A0DCDD000838450 /* BitcoinSerializable.swift in Sources */,
 				0AECD0D319AACA5400C11AC9 /* Thread.swift in Sources */,
 				0AC17A9319E508B2000E4942 /* GetDataMessage.swift in Sources */,

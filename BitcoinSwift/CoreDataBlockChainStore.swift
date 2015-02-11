@@ -9,6 +9,7 @@
 import CoreData
 import Foundation
 
+/// Stores the blockchain using CoreData.
 public class CoreDataBlockChainStore: BlockChainStore {
 
   private var context: NSManagedObjectContext!
