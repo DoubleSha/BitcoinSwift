@@ -37,4 +37,10 @@ public class BitcoinMainNetParameters: BitcoinParameters {
   public var P2SHAddressHeader: UInt8 {
     return 5
   }
+
+  // MARK: - BlockChainStoreParameters
+
+  public var blockChainStoreFileName: String {
+    return "blockchain"
+  }
 }

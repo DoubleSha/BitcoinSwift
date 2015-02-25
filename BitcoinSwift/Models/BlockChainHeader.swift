@@ -8,8 +8,14 @@
 
 import Foundation
 
+public func ==(left: BlockChainHeader, right: BlockChainHeader) -> Bool {
+  return left.blockHeader == right.blockHeader &&
+      left.height == right.height &&
+      left.chainWork == right.chainWork
+}
+
 /// Represents a block header that has been added to a blockchain.
-public struct BlockChainHeader {
+public struct BlockChainHeader: Equatable {
 
   let blockHeader: BlockHeader
 

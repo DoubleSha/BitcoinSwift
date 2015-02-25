@@ -8,4 +8,5 @@
 
 import Foundation
 
-public protocol BitcoinParameters: TransactionParameters, AddressParameters {}
+public protocol BitcoinParameters: TransactionParameters, AddressParameters,
+    BlockChainStoreParameters {}

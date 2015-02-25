@@ -11,28 +11,32 @@ import Foundation
 /// Stores the blockchain in memory.
 public class InMemoryBlockChainStore: BlockChainStore {
 
+  private var _head: BlockChainHeader? = nil
   private var blockChainHeadersByHash = Dictionary<SHA256Hash, BlockChainHeader>()
 
-  public var height: Int {
-    return 0
+  // MARK: - BlockChainStore
+
+  public func height() -> (height: UInt32?, error: NSError?) {
+    return (height: _head?.height, error: nil)
   }
 
-  public var head: BlockChainHeader? {
-    return nil
+  public func head() -> (head: BlockChainHeader?, error: NSError?) {
+    return (head: _head, error: nil)
   }
 
-  public func blockChainHeaderWithHash(hash: SHA256Hash)
-      -> (blockChainHeader: BlockChainHeader?, error: NSError?) {
-    return (blockChainHeader: blockChainHeadersByHash[hash], error: nil)
-  }
-
-  public func addBlockChainHeader(blockChainHeader: BlockChainHeader) -> NSError? {
+  public func addBlockChainHeaderAsNewHead(blockChainHeader: BlockChainHeader) -> NSError? {
     blockChainHeadersByHash[blockChainHeader.blockHeader.hash] = blockChainHeader
+    _head = blockChainHeader
     return nil
   }
 
   public func deleteBlockChainHeaderWithHash(hash: SHA256Hash) -> NSError? {
     blockChainHeadersByHash[hash] = nil
     return nil
+  }
+
+  public func blockChainHeaderWithHash(hash: SHA256Hash)
+      -> (blockChainHeader: BlockChainHeader?, error: NSError?) {
+    return (blockChainHeader: blockChainHeadersByHash[hash], error: nil)
   }
 }
