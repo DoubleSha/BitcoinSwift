@@ -14,6 +14,7 @@ class HashingTests: XCTestCase {
   var data: NSData!
 
   override func setUp() {
+    super.setUp()
     let bytes = "abc".cStringUsingEncoding(NSASCIIStringEncoding)!
     data = NSData(bytes: bytes, length: 3)
   }

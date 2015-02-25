@@ -22,6 +22,7 @@ class FilterLoadMessageTests: XCTestCase {
   var filterLoadMessage: FilterLoadMessage!
 
   override func setUp() {
+    super.setUp()
     filterLoadMessageData = NSData(bytes: filterLoadMessageBytes,
                                    length: filterLoadMessageBytes.count)
     let filterBytes: [UInt8] = [0x01, 0x02, 0x03]

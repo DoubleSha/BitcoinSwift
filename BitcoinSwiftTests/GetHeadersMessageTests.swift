@@ -50,6 +50,7 @@ class GetHeadersMessageTests: XCTestCase {
   var getHeadersMessageWithoutHashStop: GetHeadersMessage!
 
   override func setUp() {
+    super.setUp()
     let blockLocatorHash0Bytes: [UInt8] = [
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         0x15, 0x64, 0xe4, 0x24, 0x80, 0xf3, 0xae, 0x48,

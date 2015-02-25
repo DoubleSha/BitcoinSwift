@@ -31,6 +31,7 @@ class VersionMessageTests: XCTestCase {
   var versionMessage: VersionMessage!
 
   override func setUp() {
+    super.setUp()
     versionMessageData = NSData(bytes: versionMessageBytes, length: versionMessageBytes.count)
     let senderPeerAddress = PeerAddress(services: PeerServices.NodeNetwork,
                                         IP: IPAddress.IPV4(0x0a000002),

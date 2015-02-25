@@ -21,6 +21,7 @@ class SHA256HashTests: XCTestCase {
   var sha256Hash: SHA256Hash!
 
   override func setUp() {
+    super.setUp()
     hashData = NSData(bytes: hashBytes, length: hashBytes.count)
     sha256Hash = SHA256Hash(bytes: hashBytes)
   }

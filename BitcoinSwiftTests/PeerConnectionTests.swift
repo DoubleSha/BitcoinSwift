@@ -54,6 +54,7 @@ class PeerConnectionTests: XCTestCase {
   private var connectionDidConnectExpectation: XCTestExpectation?
 
   override func setUp() {
+    super.setUp()
     let (inputStream, connOutputStream) = NSStream.boundStreamsWithBufferSize(1024)
     self.inputStream = inputStream
     let (connInputStream, outputStream) = NSStream.boundStreamsWithBufferSize(1024)

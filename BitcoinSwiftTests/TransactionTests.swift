@@ -58,6 +58,7 @@ class TransactionTests: XCTestCase {
   var transaction: Transaction!
 
   override func setUp() {
+    super.setUp()
     transactionData = NSData(bytes: transactionBytes, length: transactionBytes.count)
     let outPointTxHashBytes: [UInt8] = [
         0x29, 0x36, 0xee, 0x6a, 0x0d, 0xb4, 0xe4, 0x90,

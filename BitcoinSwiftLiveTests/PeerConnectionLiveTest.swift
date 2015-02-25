@@ -13,6 +13,7 @@ class PeerConnectionLiveTest: XCTestCase, PeerConnectionDelegate {
   var connectedExpectation: XCTestExpectation!
 
   override func setUp() {
+    super.setUp()
     connectedExpectation = expectationWithDescription("connected")
   }
 

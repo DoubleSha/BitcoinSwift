@@ -23,6 +23,7 @@ class MessageHeaderTests: XCTestCase {
   var header: Message.Header!
 
   override func setUp() {
+    super.setUp()
     headerData = NSData(bytes: headerBytes, length: headerBytes.count)
     header = Message.Header(network: network,
                             command: command,

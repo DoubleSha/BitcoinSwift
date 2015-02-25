@@ -30,6 +30,7 @@ class PeerAddressTests: XCTestCase {
   var peerAddressWithoutTimestamp: PeerAddress!
 
   override func setUp() {
+    super.setUp()
     peerAddressDataWithTimestamp = NSData(bytes: peerAddressBytesWithTimestamp,
                                           length: peerAddressBytesWithTimestamp.count)
     peerAddressDataWithoutTimestamp = NSData(bytes: peerAddressBytesWithoutTimestamp,

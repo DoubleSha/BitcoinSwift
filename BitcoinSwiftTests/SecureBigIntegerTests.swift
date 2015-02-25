@@ -16,6 +16,7 @@ class SecureBigIntegerTests: XCTestCase {
   var secureThirtyFive: SecureBigInteger!
 
   override func setUp() {
+    super.setUp()
     let thirtyFiveBytes: [UInt8] = [0x23]
     let thirtyFiveSecureData = SecureData(bytes: thirtyFiveBytes,
                                           length: UInt(thirtyFiveBytes.count))

@@ -26,6 +26,7 @@ class IPAddressTests: XCTestCase {
   let IPV6 = IPAddress.IPV6(0x01020304, 0x11121314, 0x21222324, 0x31323334)
 
   override func setUp() {
+    super.setUp()
     IPV4Data = NSData(bytes: IPV4Bytes, length: IPV4Bytes.count)
     IPV6Data = NSData(bytes: IPV6Bytes, length: IPV6Bytes.count)
   }

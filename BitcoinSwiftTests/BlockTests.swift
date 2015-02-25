@@ -62,6 +62,7 @@ class BlockTests: XCTestCase {
   var block: Block!
 
   override func setUp() {
+    super.setUp()
     blockData = NSData(bytes: blockBytes, length: blockBytes.count)
     let previousBlockHashBytes: [UInt8] = [
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

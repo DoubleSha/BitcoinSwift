@@ -29,6 +29,7 @@ class ExtendedECKeyTests: XCTestCase {
   var masterKey1: ExtendedECKey!
 
   override func setUp() {
+    super.setUp()
     let masterKey0Seed = SecureData(bytes: masterKey0SeedBytes,
                                     length: UInt(masterKey0SeedBytes.count))
     masterKey0 = ExtendedECKey.masterKeyWithSeed(masterKey0Seed)

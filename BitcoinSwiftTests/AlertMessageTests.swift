@@ -62,6 +62,7 @@ class AlertMessageTests: XCTestCase {
   var alertMessage: AlertMessage!
 
   override func setUp() {
+    super.setUp()
     alertMessageData = NSData(bytes: alertMessageBytes, length: alertMessageBytes.count)
     let message = "See bitcoin.org/feb20 if you have trouble connecting after 20 February"
     let alert = Alert(version: 1,

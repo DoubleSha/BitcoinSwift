@@ -23,6 +23,7 @@ class GetDataMessageTests: XCTestCase {
   var getDataMessage: GetDataMessage!
 
   override func setUp() {
+    super.setUp()
     getDataMessageData = NSData(bytes: getDataMessageBytes, length: getDataMessageBytes.count)
     let vectorHashBytes: [UInt8] = [
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

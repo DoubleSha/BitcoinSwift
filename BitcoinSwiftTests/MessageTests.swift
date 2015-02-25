@@ -54,6 +54,7 @@ class MessageTests: XCTestCase {
   var message: Message!
 
   override func setUp() {
+    super.setUp()
     payloadData = NSData(bytes: payloadBytes, length: payloadBytes.count)
     messageData = NSData(bytes: messageBytes, length: messageBytes.count)
     message = Message(network: network, command: command, payloadData: payloadData)

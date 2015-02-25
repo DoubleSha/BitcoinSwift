@@ -15,6 +15,7 @@ class OSKeyChainSecureDataStoreTests: XCTestCase {
   var secureDataStore = OSKeyChainSecureDataStore(service: "com.BitcoinSwift.test")
 
   override func setUp() {
+    super.setUp()
     if secureDataStore.dataForKey(key) != nil {
       secureDataStore.deleteDataForKey(key)
     }
@@ -24,6 +25,7 @@ class OSKeyChainSecureDataStoreTests: XCTestCase {
     if secureDataStore.dataForKey(key) != nil {
       secureDataStore.deleteDataForKey(key)
     }
+    super.tearDown()
   }
 
   func testStoreSecureData() {

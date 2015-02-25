@@ -31,6 +31,7 @@ class Base58Tests: XCTestCase {
       "3N8mvNl34", "3N8mvN+34", "3N8mvN-34"]
 
   override func setUp() {
+    super.setUp()
     base58Data = NSData(bytes: base58Bytes, length: base58Bytes.count)
     base58DataWithLeadingZeros = NSData(bytes: base58BytesWithLeadingZeros,
                                         length: base58BytesWithLeadingZeros.count)

@@ -37,6 +37,7 @@ class FilteredBlockTests: XCTestCase {
   var filteredBlock: FilteredBlock!
 
   override func setUp() {
+    super.setUp()
     filteredBlockData = NSData(bytes: filteredBlockBytes, length: filteredBlockBytes.count)
     let previousBlockHashBytes: [UInt8] = [
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xb0, 0xb8,

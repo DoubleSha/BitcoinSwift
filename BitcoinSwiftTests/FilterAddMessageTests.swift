@@ -17,6 +17,7 @@ class FilterAddMessageTests: XCTestCase {
   var filterAddMessage: FilterAddMessage!
 
   override func setUp() {
+    super.setUp()
     filterAddMessageData = NSData(bytes: filterAddMessageBytes,
                                   length: filterAddMessageBytes.count)
     let filterDataBytes: [UInt8] = [0x01, 0x02, 0x03]

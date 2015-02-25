@@ -17,6 +17,7 @@ class PingMessageTests: XCTestCase {
   var pingMessage: PingMessage!
 
   override func setUp() {
+    super.setUp()
     pingMessageData = NSData(bytes: pingMessageBytes, length: pingMessageBytes.count)
     pingMessage = PingMessage(nonce: 13361828412632435045)
   }

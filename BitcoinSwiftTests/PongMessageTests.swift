@@ -17,6 +17,7 @@ class PongMessageTests: XCTestCase {
   var pongMessage: PongMessage!
 
   override func setUp() {
+    super.setUp()
     pongMessageData = NSData(bytes: pongMessageBytes, length: pongMessageBytes.count)
     pongMessage = PongMessage(nonce: 13361828412632435045)
   }
