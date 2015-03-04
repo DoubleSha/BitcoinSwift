@@ -38,6 +38,12 @@ public class BitcoinTestNetParameters: BitcoinParameters {
     return 196
   }
 
+  // MARK: - BlockHeaderParameters
+
+  public var blockVersion: UInt32 {
+    return 1
+  }
+
   // MARK: - BlockChainStoreParameters
 
   public var blockChainStoreFileName: String {

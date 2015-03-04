@@ -17,6 +17,11 @@ public func ==(left: BlockHeader, right: BlockHeader) -> Bool {
       left.nonce == right.nonce
 }
 
+public protocol BlockHeaderParameters {
+
+  var blockVersion: UInt32 { get }
+}
+
 public struct BlockHeader: Equatable {
 
   public let version: UInt32
@@ -28,6 +33,20 @@ public struct BlockHeader: Equatable {
 
   static private let largestDifficulty = BigInteger(1) << 256
   private var cachedHash: SHA256Hash?
+
+  public init(params: BlockHeaderParameters,
+              previousBlockHash: SHA256Hash,
+              merkleRoot: SHA256Hash,
+              timestamp: NSDate,
+              compactDifficulty: UInt32,
+              nonce: UInt32) {
+    self.init(version: params.blockVersion,
+              previousBlockHash: previousBlockHash,
+              merkleRoot: merkleRoot,
+              timestamp: timestamp,
+              compactDifficulty: compactDifficulty,
+              nonce: nonce)
+  }
 
   public init(version: UInt32,
               previousBlockHash: SHA256Hash,

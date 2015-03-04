@@ -21,22 +21,21 @@ public protocol BlockChainStore {
 
   /// The height of the current longest blockchain. If there is no head block, returns nil. If an
   /// error occurs, it will be stored in error.
-  func height() -> (height: UInt32?, error: NSError?)
+  func height(error: NSErrorPointer) -> UInt32?
 
   /// The head block in the current longest blockchain. If there is no head block, returns nil.
   /// If an error occurs, it will be stored in error.
-  func head() -> (head: BlockChainHeader?, error: NSError?)
+  func head(error: NSErrorPointer) -> BlockChainHeader?
 
   /// Adds blockChainHeader to the store and sets it as the head of the current longest chain.
-  /// Returns the error if an error occurred.
-  func addBlockChainHeaderAsNewHead(blockChainHeader: BlockChainHeader) -> NSError?
+  /// If an error occurs, it will be stored in error.
+  func addBlockChainHeaderAsNewHead(blockChainHeader: BlockChainHeader, error: NSErrorPointer)
 
   /// Deletes the blockChainheader with |hash| from the store.
-  /// If not present, then this is just a NOP.
-  func deleteBlockChainHeaderWithHash(hash: SHA256Hash) -> NSError?
+  /// If not present, then this is just a NOP. If an error occurs, it will be stored in error.
+  func deleteBlockChainHeaderWithHash(hash: SHA256Hash, error: NSErrorPointer)
 
   /// Returns the blockChainHeader with the given hash. If there is no block matching the given
   /// hash, returns nil. If an error occurs, it will be stored in error.
-  func blockChainHeaderWithHash(hash: SHA256Hash)
-      -> (blockChainHeader: BlockChainHeader?, error: NSError?)
+  func blockChainHeaderWithHash(hash: SHA256Hash, error: NSErrorPointer) -> BlockChainHeader?
 }

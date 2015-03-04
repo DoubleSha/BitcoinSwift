@@ -17,6 +17,8 @@ public class CoreDataBlockChainStore: BlockChainStore {
   private let blockChainHeadEntityName = "BlockChainHead"
   private let blockChainHeightEntityName = "BlockChainHeight"
 
+  public init() {}
+
   /// Helper for setUpWithURL() that uses the default directory location, and the blockStoreFileName
   /// provided by params.
   /// One of the setUp functions MUST be called before using the store, and can only be called once.
@@ -42,13 +44,13 @@ public class CoreDataBlockChainStore: BlockChainStore {
     let model = NSManagedObjectModel.mergedModelFromBundles(nil)!
     context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
     context.persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
-    var errorP = NSErrorPointer()
+    var error: NSError?
     context.persistentStoreCoordinator!.addPersistentStoreWithType(NSSQLiteStoreType,
                                                                    configuration: nil,
                                                                    URL: url,
                                                                    options: nil,
-                                                                   error: errorP)
-    if let error = errorP.memory {
+                                                                   error: &error)
+    if let error = error {
       Logger.error("Failed to setup CoreDataBlockChainStore \(error)")
       context = nil
       return error
@@ -61,35 +63,55 @@ public class CoreDataBlockChainStore: BlockChainStore {
                                                            inDomains: .UserDomainMask)[0] as NSURL
   }
 
-  // MARK: - BlockChainStore
-
-  public func height() -> (height: UInt32?, error: NSError?) {
+  /// Returns the full path of the sqlite file backing the persistent store.
+  /// This is only valid after calling one of the setUp functions.
+  public var URL: NSURL {
     precondition(context != nil)
-    let (headValue, error) = head()
-    return (height: headValue?.height, error: error)
+    let persistentStore = context.persistentStoreCoordinator!.persistentStores[0]
+        as NSPersistentStore
+    return persistentStore.URL!
   }
 
-  public func head() -> (head: BlockChainHeader?, error: NSError?) {
+  /// Deletes the sqlite file backing the persistent store.
+  /// After calling this function, one of the setUp functions must be called again in order to
+  /// continue to use the same object.
+  public func deletePersistentStore() -> NSError? {
+    var error: NSError?
+    NSFileManager.defaultManager().removeItemAtPath(URL.absoluteString!, error: &error)
+    return error
+  }
+
+  // MARK: - BlockChainStore
+
+  public func height(error: NSErrorPointer) -> UInt32? {
+    precondition(context != nil)
+    return head(error)?.height
+  }
+
+  public func head(error: NSErrorPointer) -> BlockChainHeader? {
     precondition(context != nil)
     var blockChainHeader: BlockChainHeader? = nil
-    let errorP = NSErrorPointer()
     context.performBlockAndWait() {
-      if let headerEntity = self.fetchBlockChainHeadEntityWithError(errorP) {
+      if let headerEntity = self.fetchBlockChainHeadEntity(error) {
         blockChainHeader = headerEntity.blockChainHeader
       }
     }
-    return (head: blockChainHeader, error: errorP.memory)
+    return blockChainHeader
   }
 
-  public func addBlockChainHeaderAsNewHead(blockChainHeader: BlockChainHeader) -> NSError? {
+  public func addBlockChainHeaderAsNewHead(blockChainHeader: BlockChainHeader,
+                                           error: NSErrorPointer) {
     precondition(context != nil)
-    let errorP = NSErrorPointer()
     context.performBlockAndWait() {
+      var internalError: NSError?
       // Add the block to the block store if it's not already present.
       let hash = blockChainHeader.blockHeader.hash
-      if self.fetchBlockChainHeaderEntityWithHash(hash, error: errorP) != nil {
+      if self.fetchBlockChainHeaderEntityWithHash(hash, error: &internalError) != nil {
         // The blockChainHeader already exists, so there's nothing to do.
-      } else if errorP.memory != nil {
+      } else if internalError != nil {
+        if error != nil {
+          error.memory = internalError
+        }
         return
       } else {
         // The blockChainHeader doesn't exist, so create a new entity for it.
@@ -100,16 +122,19 @@ public class CoreDataBlockChainStore: BlockChainStore {
       }
 
       // Update the head entity as the new block.
-      if let headEntity = self.fetchBlockChainHeadEntityWithError(errorP) {
+      if let headEntity = self.fetchBlockChainHeadEntity(&internalError) {
         if blockChainHeader == headEntity.blockChainHeader {
           // The head is already the correct value, so there is nothing more to do.
-          self.attemptToSaveWithError(errorP)
+          self.attemptToSave(error)
           return
         } else {
           // Delete the old head entity so we can replace it (below) with the new head entity.
           self.context.deleteObject(headEntity)
         }
-      } else if errorP.memory != nil {
+      } else if internalError != nil {
+        if error != nil {
+          error.memory = internalError
+        }
         self.context.undo()
         return
       }
@@ -117,36 +142,30 @@ public class CoreDataBlockChainStore: BlockChainStore {
           NSEntityDescription.insertNewObjectForEntityForName(self.blockChainHeadEntityName,
               inManagedObjectContext:self.context) as BlockChainHeaderEntity
       headEntity.setBlockChainHeader(blockChainHeader)
-      self.attemptToSaveWithError(errorP)
+      self.attemptToSave(error)
     }
-    return errorP.memory
   }
 
-  public func deleteBlockChainHeaderWithHash(hash: SHA256Hash) -> NSError? {
+  public func deleteBlockChainHeaderWithHash(hash: SHA256Hash, error: NSErrorPointer) {
     precondition(context != nil)
-    let errorP = NSErrorPointer()
     context.performBlockAndWait() {
-      if let headerEntity = self.fetchBlockChainHeaderEntityWithHash(hash, error: errorP) {
-        if errorP.memory == nil {
-          self.context.deleteObject(headerEntity)
-          self.attemptToSaveWithError(errorP)
-        }
+      if let headerEntity = self.fetchBlockChainHeaderEntityWithHash(hash, error: error) {
+        self.context.deleteObject(headerEntity)
+        self.attemptToSave(error)
       }
     }
-    return errorP.memory
   }
 
-  public func blockChainHeaderWithHash(hash: SHA256Hash)
-      -> (blockChainHeader: BlockChainHeader?, error: NSError?) {
+  public func blockChainHeaderWithHash(hash: SHA256Hash, error: NSErrorPointer)
+      -> BlockChainHeader? {
     precondition(context != nil)
     var blockChainHeader: BlockChainHeader? = nil
-    let errorP = NSErrorPointer()
     context.performBlockAndWait() {
-      if let headerEntity = self.fetchBlockChainHeaderEntityWithHash(hash, error: errorP) {
+      if let headerEntity = self.fetchBlockChainHeaderEntityWithHash(hash, error: error) {
         blockChainHeader = headerEntity.blockChainHeader
       }
     }
-    return (blockChainHeader: blockChainHeader, error: errorP.memory)
+    return blockChainHeader
   }
 
   // MARK: - Private Methods
@@ -168,7 +187,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
 
   /// Returns the BlockChainHeaderEntity that is currently the head of the blockchain, or nil if
   /// not found. This MUST be called from within context.performBlock().
-  private func fetchBlockChainHeadEntityWithError(error: NSErrorPointer)
+  private func fetchBlockChainHeadEntity(error: NSErrorPointer)
       -> BlockChainHeaderEntity? {
     let request = NSFetchRequest(entityName: blockChainHeadEntityName)
     if let results = self.context.executeFetchRequest(request, error: error) {
@@ -182,8 +201,8 @@ public class CoreDataBlockChainStore: BlockChainStore {
 
   /// Attempts to save changes to context. If there is an error, all changes to context are undone
   /// and the error is saved to errorP.
-  private func attemptToSaveWithError(errorP: NSErrorPointer) {
-    if context.save(errorP) == false {
+  private func attemptToSave(error: NSErrorPointer) {
+    if context.save(error) == false {
       self.context.undo()
     }
   }

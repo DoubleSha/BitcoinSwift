@@ -53,10 +53,14 @@
 		0A435A7E19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */; };
 		0A4789D31A8B0C6000F2F883 /* CoreDataBlockChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789D21A8B0C6000F2F883 /* CoreDataBlockChainStore.swift */; };
 		0A4789D41A8B0C6000F2F883 /* CoreDataBlockChainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789D21A8B0C6000F2F883 /* CoreDataBlockChainStore.swift */; };
-		0A4789D71A8B12B700F2F883 /* BlockChainStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789D51A8B12B700F2F883 /* BlockChainStore.xcdatamodeld */; };
-		0A4789D81A8B12B700F2F883 /* BlockChainStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789D51A8B12B700F2F883 /* BlockChainStore.xcdatamodeld */; };
 		0A4789DA1A8B1A4E00F2F883 /* BlockChainHeaderEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789D91A8B1A4E00F2F883 /* BlockChainHeaderEntity.swift */; };
 		0A4789DB1A8B1A4E00F2F883 /* BlockChainHeaderEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789D91A8B1A4E00F2F883 /* BlockChainHeaderEntity.swift */; };
+		0A4789E01A9DA15F00F2F883 /* CoreDataBlockChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789DF1A9DA15F00F2F883 /* CoreDataBlockChainStoreTests.swift */; };
+		0A4789E11A9DA15F00F2F883 /* CoreDataBlockChainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789DF1A9DA15F00F2F883 /* CoreDataBlockChainStoreTests.swift */; };
+		0A4789E31AA18A0700F2F883 /* BitcoinUnitTestParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789E21AA18A0700F2F883 /* BitcoinUnitTestParameters.swift */; };
+		0A4789E41AA18A0700F2F883 /* BitcoinUnitTestParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789E21AA18A0700F2F883 /* BitcoinUnitTestParameters.swift */; };
+		0A4789E71AA1A3BC00F2F883 /* BlockChainStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789E51AA1A3BC00F2F883 /* BlockChainStore.xcdatamodeld */; };
+		0A4789E81AA1A3BC00F2F883 /* BlockChainStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A4789E51AA1A3BC00F2F883 /* BlockChainStore.xcdatamodeld */; };
 		0A4BBC461A0DCDD000838450 /* BitcoinSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4BBC451A0DCDD000838450 /* BitcoinSerializable.swift */; };
 		0A4BBC471A0DCDD000838450 /* BitcoinSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4BBC451A0DCDD000838450 /* BitcoinSerializable.swift */; };
 		0A52ACEB1953979F0041541B /* ECKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A52ACE71953979F0041541B /* ECKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -316,8 +320,10 @@
 		0A435A7919F2CF2200FE2689 /* FilterAddMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterAddMessageTests.swift; sourceTree = "<group>"; };
 		0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+BitcoinDecoding.swift"; sourceTree = "<group>"; };
 		0A4789D21A8B0C6000F2F883 /* CoreDataBlockChainStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataBlockChainStore.swift; sourceTree = "<group>"; };
-		0A4789D61A8B12B700F2F883 /* BlockChainStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BlockChainStore.xcdatamodel; sourceTree = "<group>"; };
 		0A4789D91A8B1A4E00F2F883 /* BlockChainHeaderEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockChainHeaderEntity.swift; sourceTree = "<group>"; };
+		0A4789DF1A9DA15F00F2F883 /* CoreDataBlockChainStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataBlockChainStoreTests.swift; sourceTree = "<group>"; };
+		0A4789E21AA18A0700F2F883 /* BitcoinUnitTestParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinUnitTestParameters.swift; sourceTree = "<group>"; };
+		0A4789E61AA1A3BC00F2F883 /* BlockChainStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BlockChainStore.xcdatamodel; sourceTree = "<group>"; };
 		0A4BBC451A0DCDD000838450 /* BitcoinSerializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinSerializable.swift; sourceTree = "<group>"; };
 		0A52ACCB195397080041541B /* BitcoinSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BitcoinSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A52ACCF195397080041541B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -527,7 +533,7 @@
 				0A4BBC451A0DCDD000838450 /* BitcoinSerializable.swift */,
 				0A52ACD0195397080041541B /* BitcoinSwift.h */,
 				0AE757371A2A674B0084FD6F /* BlockChainStore.swift */,
-				0A4789D51A8B12B700F2F883 /* BlockChainStore.xcdatamodeld */,
+				0A4789E51AA1A3BC00F2F883 /* BlockChainStore.xcdatamodeld */,
 				0A4789D21A8B0C6000F2F883 /* CoreDataBlockChainStore.swift */,
 				0A2D51BB196E52EA009B6B25 /* DNSPeerDiscovery.swift */,
 				0A52ACE71953979F0041541B /* ECKey.h */,
@@ -581,7 +587,9 @@
 				0A84E5F41A2B045D0070238D /* BigIntegerTests.swift */,
 				0AA580BB196A053600B0E519 /* BitcoinDecodingTests.swift */,
 				0ABA36431960EC0A00C6D098 /* BitcoinEncodingTests.swift */,
+				0A4789E21AA18A0700F2F883 /* BitcoinUnitTestParameters.swift */,
 				0AF06B6819D8F484001EEE96 /* BlockTests.swift */,
+				0A4789DF1A9DA15F00F2F883 /* CoreDataBlockChainStoreTests.swift */,
 				0A78125519C4E4AA00187B9A /* DummyMessage.swift */,
 				0A52ACEF195398320041541B /* ECKeyTests.swift */,
 				0A9439A71A4A0335009992CE /* ExtendedECKeyTests.swift */,
@@ -980,7 +988,6 @@
 				0AC17AAE19E508B2000E4942 /* TransactionOutPoint.swift in Sources */,
 				0A110DE819E8FDDE00CBFCAC /* Alert.swift in Sources */,
 				0AC17AB219E508B3000E4942 /* TransactionOutput.swift in Sources */,
-				0A4789D71A8B12B700F2F883 /* BlockChainStore.xcdatamodeld in Sources */,
 				0A110DDF19E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
 				0AC17AA819E508B2000E4942 /* PongMessage.swift in Sources */,
 				0A435A7119F2C4FB00FE2689 /* FilterLoadMessage.swift in Sources */,
@@ -991,6 +998,7 @@
 				0AC17A9619E508B2000E4942 /* InventoryMessage.swift in Sources */,
 				0A435A7D19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */,
 				0AC17AA419E508B2000E4942 /* PeerServices.swift in Sources */,
+				0A4789E71AA1A3BC00F2F883 /* BlockChainStore.xcdatamodeld in Sources */,
 				0A56A73319FCEB6C00F163BD /* FilteredBlock.swift in Sources */,
 				0A1BDCC319A1A7A6008ED01F /* PeerController.swift in Sources */,
 				0AC17AAA19E508B2000E4942 /* Transaction.swift in Sources */,
@@ -1029,6 +1037,7 @@
 				0A627FD11A33CFE900170C31 /* InventoryMessageTests.swift in Sources */,
 				0A78125919C4E4B700187B9A /* DummyMessage.swift in Sources */,
 				D8BA343B19D7368800A1232F /* GetDataMessageTests.swift in Sources */,
+				0A4789E01A9DA15F00F2F883 /* CoreDataBlockChainStoreTests.swift in Sources */,
 				0A110DEB19E9088200CBFCAC /* AlertMessageTests.swift in Sources */,
 				0A9AD043199DE2C700ECEA92 /* PeerAddressMessageTests.swift in Sources */,
 				0A627FCB1A33CB7200170C31 /* IPAddressTests.swift in Sources */,
@@ -1039,6 +1048,7 @@
 				0A98B3A119B59584001C878D /* TestInputStreamDelegate.swift in Sources */,
 				0A248C221954150800C4607E /* AddressTests.swift in Sources */,
 				D8BA344419D76DB300A1232F /* PingMessageTests.swift in Sources */,
+				0A4789E31AA18A0700F2F883 /* BitcoinUnitTestParameters.swift in Sources */,
 				0A627FC51A33B81100170C31 /* SHA256HashTests.swift in Sources */,
 				0A34DF6B19664041007BBC35 /* MessageTests.swift in Sources */,
 				0A9EA98719B53363006E573F /* NSStream+Binding.swift in Sources */,
@@ -1105,7 +1115,6 @@
 				0AC17AB119E508B2000E4942 /* TransactionLockTime.swift in Sources */,
 				0AC17AAD19E508B2000E4942 /* TransactionInput.swift in Sources */,
 				0A110DE919E8FDDE00CBFCAC /* Alert.swift in Sources */,
-				0A4789D81A8B12B700F2F883 /* BlockChainStore.xcdatamodeld in Sources */,
 				0AC8CF4019A9369F00D93585 /* DNSPeerDiscovery.swift in Sources */,
 				0A110DE019E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
 				0AC8CF3B19A9369F00D93585 /* NSMutableData+BitcoinEncoding.swift in Sources */,
@@ -1116,6 +1125,7 @@
 				0AE757451A2AB4EE0084FD6F /* BigInteger.m in Sources */,
 				0AC17A8F19E508B2000E4942 /* BlockHeader.swift in Sources */,
 				0A435A7E19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */,
+				0A4789E81AA1A3BC00F2F883 /* BlockChainStore.xcdatamodeld in Sources */,
 				0AC17AAF19E508B2000E4942 /* TransactionOutPoint.swift in Sources */,
 				0A56A73419FCEB6C00F163BD /* FilteredBlock.swift in Sources */,
 				0AC17AA119E508B2000E4942 /* NotFoundMessage.swift in Sources */,
@@ -1154,6 +1164,7 @@
 				0A627FD21A33CFE900170C31 /* InventoryMessageTests.swift in Sources */,
 				0A5314F519D8A1130090F82F /* NotFoundMessageTests.swift in Sources */,
 				0AF07C771A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */,
+				0A4789E11A9DA15F00F2F883 /* CoreDataBlockChainStoreTests.swift in Sources */,
 				0A78125819C4E4B700187B9A /* DummyMessage.swift in Sources */,
 				0AC8CF5A19A9376B00D93585 /* PeerAddressMessageTests.swift in Sources */,
 				0A627FCC1A33CB7200170C31 /* IPAddressTests.swift in Sources */,
@@ -1164,6 +1175,7 @@
 				0A435A7B19F2CF2200FE2689 /* FilterAddMessageTests.swift in Sources */,
 				0AC8CF5419A9376B00D93585 /* HashingTests.swift in Sources */,
 				0A98B3A219B59584001C878D /* TestInputStreamDelegate.swift in Sources */,
+				0A4789E41AA18A0700F2F883 /* BitcoinUnitTestParameters.swift in Sources */,
 				0A627FC61A33B81100170C31 /* SHA256HashTests.swift in Sources */,
 				0A3F880419D74D8400E6E915 /* GetHeadersMessageTests.swift in Sources */,
 				0AC8CF5219A9376B00D93585 /* MessageTests.swift in Sources */,
@@ -1625,12 +1637,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		0A4789D51A8B12B700F2F883 /* BlockChainStore.xcdatamodeld */ = {
+		0A4789E51AA1A3BC00F2F883 /* BlockChainStore.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				0A4789D61A8B12B700F2F883 /* BlockChainStore.xcdatamodel */,
+				0A4789E61AA1A3BC00F2F883 /* BlockChainStore.xcdatamodel */,
 			);
-			currentVersion = 0A4789D61A8B12B700F2F883 /* BlockChainStore.xcdatamodel */;
+			currentVersion = 0A4789E61AA1A3BC00F2F883 /* BlockChainStore.xcdatamodel */;
 			path = BlockChainStore.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

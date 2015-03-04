@@ -9,4 +9,4 @@
 import Foundation
 
 public protocol BitcoinParameters: TransactionParameters, AddressParameters,
-    BlockChainStoreParameters {}
+    BlockHeaderParameters, BlockChainStoreParameters {}

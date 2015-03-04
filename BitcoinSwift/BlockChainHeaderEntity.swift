@@ -9,6 +9,7 @@
 import CoreData
 import Foundation
 
+@objc(BlockChainHeaderEntity)
 class BlockChainHeaderEntity: NSManagedObject {
 
   @NSManaged var height: NSNumber
