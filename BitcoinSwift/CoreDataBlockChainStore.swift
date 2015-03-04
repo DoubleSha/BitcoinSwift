@@ -19,6 +19,10 @@ public class CoreDataBlockChainStore: BlockChainStore {
 
   public init() {}
 
+  public var isSetUp: Bool {
+    return context != nil
+  }
+
   /// Helper for setUpWithURL() that uses the default directory location, and the blockStoreFileName
   /// provided by params.
   /// One of the setUp functions MUST be called before using the store, and can only be called once.
@@ -40,22 +44,15 @@ public class CoreDataBlockChainStore: BlockChainStore {
   /// If setup fails, returns the error.
   /// In most cases, you should just use setUpWithParams() rather than calling this directly.
   public func setUpWithURL(url: NSURL) -> NSError? {
-    precondition(context == nil)
-    let model = NSManagedObjectModel.mergedModelFromBundles(nil)!
-    context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-    context.persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
-    var error: NSError?
-    context.persistentStoreCoordinator!.addPersistentStoreWithType(NSSQLiteStoreType,
-                                                                   configuration: nil,
-                                                                   URL: url,
-                                                                   options: nil,
-                                                                   error: &error)
-    if let error = error {
-      Logger.error("Failed to setup CoreDataBlockChainStore \(error)")
-      context = nil
-      return error
-    }
-    return nil
+    return setUpContextWithType(NSSQLiteStoreType, URL: url)
+  }
+
+  /// Sets up an in-memory persistent store, and the CoreData managed object.
+  /// If setup fails, returns the error.
+  /// This is only used for unit tests. If you want to store the blockchain in memory in your
+  /// app, use the InMemoryBlockChainStore instead.
+  public func setUpInMemory() -> NSError? {
+    return setUpContextWithType(NSInMemoryStoreType)
   }
 
   public var defaultDir: NSURL {
@@ -78,6 +75,9 @@ public class CoreDataBlockChainStore: BlockChainStore {
   public func deletePersistentStore() -> NSError? {
     var error: NSError?
     NSFileManager.defaultManager().removeItemAtPath(URL.absoluteString!, error: &error)
+    if error == nil {
+      context = nil
+    }
     return error
   }
 
@@ -115,7 +115,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
         return
       } else {
         // The blockChainHeader doesn't exist, so create a new entity for it.
-        let headerEntity: BlockChainHeaderEntity =
+        let headerEntity =
             NSEntityDescription.insertNewObjectForEntityForName(self.blockChainHeaderEntityName,
                 inManagedObjectContext:self.context) as BlockChainHeaderEntity
         headerEntity.setBlockChainHeader(blockChainHeader)
@@ -138,7 +138,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
         self.context.undo()
         return
       }
-      let headEntity: BlockChainHeaderEntity =
+      let headEntity =
           NSEntityDescription.insertNewObjectForEntityForName(self.blockChainHeadEntityName,
               inManagedObjectContext:self.context) as BlockChainHeaderEntity
       headEntity.setBlockChainHeader(blockChainHeader)
@@ -170,12 +170,34 @@ public class CoreDataBlockChainStore: BlockChainStore {
 
   // MARK: - Private Methods
 
+  /// Sets up the context ivar with the provided type and URL.
+  /// URL can be nil if the type is NSInMemoryStoreType.
+  private func setUpContextWithType(type: NSString, URL: NSURL? = nil) -> NSError? {
+    precondition(context == nil)
+    let bundle = NSBundle(forClass: self.dynamicType)
+    let model = NSManagedObjectModel.mergedModelFromBundles([bundle])!
+    context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+    context.persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+    var error: NSError?
+    context.persistentStoreCoordinator!.addPersistentStoreWithType(type,
+                                                                   configuration: nil,
+                                                                   URL: URL,
+                                                                   options: nil,
+                                                                   error: &error)
+    if let error = error {
+      Logger.error("Failed to setup CoreDataBlockChainStore \(error)")
+      context = nil
+      return error
+    }
+    return nil
+  }
+
   /// Returns the BlockChainHeaderEntity keyed by the given hash, or nil if not found.
   /// This MUST be called from within context.performBlock().
   private func fetchBlockChainHeaderEntityWithHash(hash: SHA256Hash, error: NSErrorPointer)
       -> BlockChainHeaderEntity? {
     let request = NSFetchRequest(entityName: blockChainHeaderEntityName)
-    request.predicate = NSPredicate(format: "blockHash == \(hash)", argumentArray: nil)
+    request.predicate = NSPredicate(format: "blockHash == %@", hash.data)
     if let results = self.context.executeFetchRequest(request, error: error) {
       assert(results.count <= 1)
       if results.count > 0 {
@@ -200,7 +222,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
   }
 
   /// Attempts to save changes to context. If there is an error, all changes to context are undone
-  /// and the error is saved to errorP.
+  /// and the error is saved to error.
   private func attemptToSave(error: NSErrorPointer) {
     if context.save(error) == false {
       self.context.undo()

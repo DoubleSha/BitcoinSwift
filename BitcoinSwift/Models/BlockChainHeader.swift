@@ -17,12 +17,18 @@ public func ==(left: BlockChainHeader, right: BlockChainHeader) -> Bool {
 /// Represents a block header that has been added to a blockchain.
 public struct BlockChainHeader: Equatable {
 
-  let blockHeader: BlockHeader
+  public let blockHeader: BlockHeader
 
   /// The height of the block in the blockchain.
-  let height: UInt32
+  public let height: UInt32
 
   /// The chain work represents the total amount of work that has been done on all blocks in this
   /// chain. It is used to determine the longest chain.
-  let chainWork: BigInteger
+  public let chainWork: BigInteger
+
+  public init(blockHeader: BlockHeader, height: UInt32, chainWork: BigInteger) {
+    self.blockHeader = blockHeader
+    self.height = height
+    self.chainWork = chainWork
+  }
 }

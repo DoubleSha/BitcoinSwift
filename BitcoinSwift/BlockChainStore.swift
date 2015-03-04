@@ -31,6 +31,9 @@ public protocol BlockChainStore {
   /// If an error occurs, it will be stored in error.
   func addBlockChainHeaderAsNewHead(blockChainHeader: BlockChainHeader, error: NSErrorPointer)
 
+  // TODO: Make this operate like a stack - so you can only delete the head blockHeader. Otherise
+  // this can easily get into a bad state where the head is not updated after deleting a block.
+  //
   /// Deletes the blockChainheader with |hash| from the store.
   /// If not present, then this is just a NOP. If an error occurs, it will be stored in error.
   func deleteBlockChainHeaderWithHash(hash: SHA256Hash, error: NSErrorPointer)
