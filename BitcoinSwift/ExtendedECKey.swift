@@ -34,6 +34,36 @@ public class ExtendedECKey : ECKey {
   public let index: UInt32
   public let version: ExtendedKeyVersion
   public let parent: ExtendedECKey?
+    
+    
+    public var identifier:NSData {
+        return publicKey.SHA256Hash().RIPEMD160Hash()
+    }
+    
+    public var fingerprint:NSData {
+        return self.identifier.subdataWithRange(NSMakeRange(0, 4))
+    }
+    
+    public var parentFingerprint:NSData {
+        if let parent = parent {
+            return parent.fingerprint
+        }
+        else {
+            let masterprint: [UInt8] = [
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+            return NSData(bytes: masterprint, length: masterprint.count)
+        }
+    }
+    
+    public var depth:UInt8 {
+        if let parent = parent {
+            return parent.depth + 1
+        }
+        else {
+            return 0
+        }
+    }
+    
 
   /// Creates a new master extended key (both private and public).
   /// Returns the key and the randomly-generated seed used to create the key.
