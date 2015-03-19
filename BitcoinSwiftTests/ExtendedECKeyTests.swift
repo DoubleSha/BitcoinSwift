@@ -287,4 +287,38 @@ class ExtendedECKeyTests: XCTestCase {
       XCTFail("Failed to create child key.")
     }
   }
+    
+  func testParentPointer() {
+    let child = masterKey0.childKeyWithIndex(0)
+    let grandchild = child!.childKeyWithHardenedIndex(0)
+    
+    XCTAssertNil(masterKey0.parent)
+    XCTAssertEqual(child!.parent!, masterKey0)
+    XCTAssertEqual(grandchild!.parent!, child!)
+  }
+  
+  func testDefaultVersion() {
+    XCTAssertEqual(masterKey0.version, ExtendedKeyVersion.MainNet)
+  }
+  
+  func testExplicitVersionOverwrite() {
+    let mainnetKey = ExtendedECKey.masterKey(version: .MainNet).key
+    let testnetKey = ExtendedECKey.masterKey(version: .TestNet).key
+    
+    XCTAssertEqual(mainnetKey.version, ExtendedKeyVersion.MainNet)
+    XCTAssertEqual(testnetKey.version, ExtendedKeyVersion.TestNet)
+  }
+  
+  func testVersionPropagation() {
+    let seed = SecureData(bytes: masterKey0SeedBytes,
+        length: UInt(masterKey0SeedBytes.count))
+    
+    let mMaster = ExtendedECKey.masterKeyWithSeed(seed, version: .MainNet)!
+    let tMaster = ExtendedECKey.masterKeyWithSeed(seed, version: .TestNet)!
+    let mGrandChild = mMaster.childKeyWithIndex(0)!.childKeyWithHardenedIndex(0)!
+    let tGrandChild = tMaster.childKeyWithHardenedIndex(0)!.childKeyWithIndex(0)!
+    
+    XCTAssertEqual(mGrandChild.version, ExtendedKeyVersion.MainNet)
+    XCTAssertEqual(tGrandChild.version, ExtendedKeyVersion.TestNet)
+  }
 }
