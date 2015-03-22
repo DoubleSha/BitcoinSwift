@@ -9,6 +9,13 @@
 import Foundation
 
 
+
+
+public enum KeyType {
+    case PublicKey
+    case PrivateKey
+}
+
 public enum ExtendedKeyVersion {
     case MainNet
     case TestNet
@@ -20,6 +27,12 @@ public enum ExtendedKeyVersion {
         case .TestNet:
             return (pub:0x043587CF, prv:0x04358394)
         }
+    }
+    
+    public func addressForKeyType(type:KeyType) -> UInt32 {
+        
+        let addresses = self.addresses
+        return type == .PublicKey ? addresses.pub : addresses.prv
     }
 }
 
@@ -63,6 +76,50 @@ public class ExtendedECKey : ECKey {
             return 0
         }
     }
+    
+    
+    
+    public func extendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> NSMutableData {
+        
+        func keyDataForType(type:KeyType) -> NSData {
+            
+            if type == .PublicKey {
+                return self.publicKey
+            }
+            else {
+                let keyData = NSMutableData()
+                keyData.appendUInt8(0x00)
+                keyData.appendData(self.privateKey.mutableData)
+                
+                return keyData
+            }
+        }
+        
+        
+        let extKey = NSMutableData()
+        
+        extKey.appendUInt32(version.addressForKeyType(type), endianness: .BigEndian)    // address
+        extKey.appendUInt8(self.depth)                                                  // depth
+        extKey.appendData(self.parentFingerprint)                                       // parent fingerprint
+        extKey.appendUInt32(self.index, endianness: .BigEndian)                         // child number
+        extKey.appendData(self.chainCode.mutableData)                                   // chain code
+        
+        extKey.appendData(keyDataForType(type))                                         // public/private key
+        
+        return extKey
+    }
+    
+    public func serializeExtendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> String {
+        
+        let extKey = self.extendedKey(ofType: type, version: version)
+        
+        let checksum = extKey.SHA256Hash().SHA256Hash().subdataWithRange(NSRange(location: 0, length: 4))
+        extKey.appendData(checksum)
+        
+        return extKey.base58String
+    }
+    
+    
     
 
   /// Creates a new master extended key (both private and public).
