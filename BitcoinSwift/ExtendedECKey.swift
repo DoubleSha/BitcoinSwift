@@ -8,18 +8,123 @@
 
 import Foundation
 
+
+
+
+public enum KeyType {
+  case PublicKey
+  case PrivateKey
+}
+
+public enum ExtendedKeyVersion {
+  case MainNet
+  case TestNet
+  
+  public var addresses:(pub:UInt32, prv: UInt32) {
+    switch self {
+    case .MainNet:
+      return (pub:0x0488B21E, prv:0x0488ADE4)
+    case .TestNet:
+      return (pub:0x043587CF, prv:0x04358394)
+    }
+  }
+  
+  public func addressForKeyType(type:KeyType) -> UInt32 {
+    
+    let addresses = self.addresses
+    return type == .PublicKey ? addresses.pub : addresses.prv
+  }
+}
+
+
 /// An ExtendedECKey represents a key that is part of a DeterministicECKeyChain. It is just an
 /// ECKey except an additional chainCode parameter and an index are used to derive the key.
 /// Extended keys can be used to derive child keys.
 /// BIP 32: https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
 public class ExtendedECKey : ECKey {
-
+  
   public let chainCode: SecureData
   public let index: UInt32
+  public let version: ExtendedKeyVersion
+  public let parent: ExtendedECKey?
+  
+  
+  public var identifier:NSData {
+    return publicKey.SHA256Hash().RIPEMD160Hash()
+  }
+  
+  public var fingerprint:NSData {
+    return self.identifier.subdataWithRange(NSMakeRange(0, 4))
+  }
+  
+  public var parentFingerprint:NSData {
+    if let parent = parent {
+      return parent.fingerprint
+    }
+    else {
+      let masterprint: [UInt8] = [
+        0x00, 0x00, 0x00, 0x00]
+      return NSData(bytes: masterprint, length: masterprint.count)
+    }
+  }
+  
+  public var depth:UInt8 {
+    if let parent = parent {
+      return parent.depth + 1
+    }
+    else {
+      return 0
+    }
+  }
+  
+  
+  
+  public func extendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> NSMutableData {
+    
+    func keyDataForType(type:KeyType) -> NSData {
+      
+      if type == .PublicKey {
+        return self.publicKey
+      }
+      else {
+        let keyData = NSMutableData()
+        keyData.appendUInt8(0x00)
+        keyData.appendData(self.privateKey.mutableData)
+        
+        return keyData
+      }
+    }
+    
+    
+    let extKey = NSMutableData()
+    
+    extKey.appendUInt32(version.addressForKeyType(type), endianness: .BigEndian)    // address
+    extKey.appendUInt8(self.depth)                                                  // depth
+    extKey.appendData(self.parentFingerprint)                                       // parent fingerprint
+    extKey.appendUInt32(self.index, endianness: .BigEndian)                         // child number
+    extKey.appendData(self.chainCode.mutableData)                                   // chain code
+    
+    extKey.appendData(keyDataForType(type))                                         // public/private key
+    
+    return extKey
+  }
+  
+  public func serializeExtendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> String {
+    
+    let extKey = self.extendedKey(ofType: type, version: version)
+    
+    let checksum = extKey.SHA256Hash().SHA256Hash().subdataWithRange(NSRange(location: 0, length: 4))
+    extKey.appendData(checksum)
+    
+    return extKey.base58String
+  }
+  
+  
+  
 
   /// Creates a new master extended key (both private and public).
   /// Returns the key and the randomly-generated seed used to create the key.
-  public class func masterKey() -> (key: ExtendedECKey, seed: SecureData) {
+  public class func masterKey(version:ExtendedKeyVersion = .MainNet) -> (key: ExtendedECKey, seed: SecureData) {
     var masterKey: ExtendedECKey? = nil
     let randomData = SecureData(length: UInt(ECKey.privateKeyLength()))
     var tries = 0
@@ -28,7 +133,7 @@ public class ExtendedECKey : ECKey {
                                       UInt(randomData.length),
                                       UnsafeMutablePointer<UInt8>(randomData.mutableBytes))
       assert(result == 0)
-      masterKey = ExtendedECKey.masterKeyWithSeed(randomData)
+      masterKey = ExtendedECKey.masterKeyWithSeed(randomData, version:version)
       assert(++tries < 5)
     }
     return (masterKey!, randomData)
@@ -36,7 +141,7 @@ public class ExtendedECKey : ECKey {
 
   /// Can return nil in the (very very very very) unlikely case the randomly generated private key
   /// is invalid. If nil is returned, retry.
-  public class func masterKeyWithSeed(seed: SecureData) -> ExtendedECKey? {
+  public class func masterKeyWithSeed(seed: SecureData, version:ExtendedKeyVersion = .MainNet) -> ExtendedECKey? {
     let indexHash = seed.HMACSHA512WithKeyData(ExtendedECKey.masterKeySeed())
     let privateKey = indexHash[0..<32]
     let chainCode = indexHash[32..<64]
@@ -45,7 +150,7 @@ public class ExtendedECKey : ECKey {
         privateKeyInt.greaterThanOrEqual(ECKey.curveOrder()) {
       return nil
     }
-    return ExtendedECKey(privateKey: privateKey, chainCode: chainCode)
+    return ExtendedECKey(privateKey: privateKey, chainCode: chainCode, version:version)
   }
 
   /// Creates a new child key derived from self with index.
@@ -81,7 +186,7 @@ public class ExtendedECKey : ECKey {
     childPrivateKey.appendSecureData(childPrivateKeyInt.secureData)
     assert(Int32(childPrivateKey.length) == ECKey.privateKeyLength())
     let childChainCode = indexHash[32..<64]
-    return ExtendedECKey(privateKey: childPrivateKey, chainCode: childChainCode, index: index)
+    return ExtendedECKey(privateKey: childPrivateKey, chainCode: childChainCode, index: index, parent:self)
   }
 
   public func childKeyWithHardenedIndex(index: UInt32) -> ExtendedECKey? {
@@ -112,7 +217,11 @@ public class ExtendedECKey : ECKey {
     return 0x80000000
   }
 
-  private init(privateKey: SecureData, chainCode: SecureData, index: UInt32 = 0) {
+  private init(privateKey: SecureData, chainCode: SecureData, index: UInt32 = 0, parent:ExtendedECKey? = nil, version:ExtendedKeyVersion? = nil) {
+    // version setting priority is parent, then specified verion, then defaults to .MainNet
+    self.version = parent != nil ? parent!.version : version != nil ? version! : .MainNet
+    
+    self.parent = parent
     self.chainCode = chainCode
     self.index = index
     super.init(privateKey: privateKey)
