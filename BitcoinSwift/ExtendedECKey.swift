@@ -12,28 +12,28 @@ import Foundation
 
 
 public enum KeyType {
-    case PublicKey
-    case PrivateKey
+  case PublicKey
+  case PrivateKey
 }
 
 public enum ExtendedKeyVersion {
-    case MainNet
-    case TestNet
-    
-    public var addresses:(pub:UInt32, prv: UInt32) {
-        switch self {
-        case .MainNet:
-            return (pub:0x0488B21E, prv:0x0488ADE4)
-        case .TestNet:
-            return (pub:0x043587CF, prv:0x04358394)
-        }
+  case MainNet
+  case TestNet
+  
+  public var addresses:(pub:UInt32, prv: UInt32) {
+    switch self {
+    case .MainNet:
+      return (pub:0x0488B21E, prv:0x0488ADE4)
+    case .TestNet:
+      return (pub:0x043587CF, prv:0x04358394)
     }
+  }
+  
+  public func addressForKeyType(type:KeyType) -> UInt32 {
     
-    public func addressForKeyType(type:KeyType) -> UInt32 {
-        
-        let addresses = self.addresses
-        return type == .PublicKey ? addresses.pub : addresses.prv
-    }
+    let addresses = self.addresses
+    return type == .PublicKey ? addresses.pub : addresses.prv
+  }
 }
 
 
@@ -42,85 +42,85 @@ public enum ExtendedKeyVersion {
 /// Extended keys can be used to derive child keys.
 /// BIP 32: https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
 public class ExtendedECKey : ECKey {
-
+  
   public let chainCode: SecureData
   public let index: UInt32
   public let version: ExtendedKeyVersion
   public let parent: ExtendedECKey?
-    
-    
-    public var identifier:NSData {
-        return publicKey.SHA256Hash().RIPEMD160Hash()
+  
+  
+  public var identifier:NSData {
+    return publicKey.SHA256Hash().RIPEMD160Hash()
+  }
+  
+  public var fingerprint:NSData {
+    return self.identifier.subdataWithRange(NSMakeRange(0, 4))
+  }
+  
+  public var parentFingerprint:NSData {
+    if let parent = parent {
+      return parent.fingerprint
     }
-    
-    public var fingerprint:NSData {
-        return self.identifier.subdataWithRange(NSMakeRange(0, 4))
+    else {
+      let masterprint: [UInt8] = [
+        0x00, 0x00, 0x00, 0x00]
+      return NSData(bytes: masterprint, length: masterprint.count)
     }
-    
-    public var parentFingerprint:NSData {
-        if let parent = parent {
-            return parent.fingerprint
-        }
-        else {
-            let masterprint: [UInt8] = [
-                0x00, 0x00, 0x00, 0x00]
-            return NSData(bytes: masterprint, length: masterprint.count)
-        }
+  }
+  
+  public var depth:UInt8 {
+    if let parent = parent {
+      return parent.depth + 1
     }
-    
-    public var depth:UInt8 {
-        if let parent = parent {
-            return parent.depth + 1
-        }
-        else {
-            return 0
-        }
+    else {
+      return 0
     }
+  }
+  
+  
+  
+  public func extendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> NSMutableData {
     
-    
-    
-    public func extendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> NSMutableData {
+    func keyDataForType(type:KeyType) -> NSData {
+      
+      if type == .PublicKey {
+        return self.publicKey
+      }
+      else {
+        let keyData = NSMutableData()
+        keyData.appendUInt8(0x00)
+        keyData.appendData(self.privateKey.mutableData)
         
-        func keyDataForType(type:KeyType) -> NSData {
-            
-            if type == .PublicKey {
-                return self.publicKey
-            }
-            else {
-                let keyData = NSMutableData()
-                keyData.appendUInt8(0x00)
-                keyData.appendData(self.privateKey.mutableData)
-                
-                return keyData
-            }
-        }
-        
-        
-        let extKey = NSMutableData()
-        
-        extKey.appendUInt32(version.addressForKeyType(type), endianness: .BigEndian)    // address
-        extKey.appendUInt8(self.depth)                                                  // depth
-        extKey.appendData(self.parentFingerprint)                                       // parent fingerprint
-        extKey.appendUInt32(self.index, endianness: .BigEndian)                         // child number
-        extKey.appendData(self.chainCode.mutableData)                                   // chain code
-        
-        extKey.appendData(keyDataForType(type))                                         // public/private key
-        
-        return extKey
-    }
-    
-    public func serializeExtendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> String {
-        
-        let extKey = self.extendedKey(ofType: type, version: version)
-        
-        let checksum = extKey.SHA256Hash().SHA256Hash().subdataWithRange(NSRange(location: 0, length: 4))
-        extKey.appendData(checksum)
-        
-        return extKey.base58String
+        return keyData
+      }
     }
     
     
+    let extKey = NSMutableData()
     
+    extKey.appendUInt32(version.addressForKeyType(type), endianness: .BigEndian)    // address
+    extKey.appendUInt8(self.depth)                                                  // depth
+    extKey.appendData(self.parentFingerprint)                                       // parent fingerprint
+    extKey.appendUInt32(self.index, endianness: .BigEndian)                         // child number
+    extKey.appendData(self.chainCode.mutableData)                                   // chain code
+    
+    extKey.appendData(keyDataForType(type))                                         // public/private key
+    
+    return extKey
+  }
+  
+  public func serializeExtendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> String {
+    
+    let extKey = self.extendedKey(ofType: type, version: version)
+    
+    let checksum = extKey.SHA256Hash().SHA256Hash().subdataWithRange(NSRange(location: 0, length: 4))
+    extKey.appendData(checksum)
+    
+    return extKey.base58String
+  }
+  
+  
+  
 
   /// Creates a new master extended key (both private and public).
   /// Returns the key and the randomly-generated seed used to create the key.
