@@ -50,7 +50,7 @@ public class ExtendedECKey : ECKey {
         }
         else {
             let masterprint: [UInt8] = [
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+                0x00, 0x00, 0x00, 0x00]
             return NSData(bytes: masterprint, length: masterprint.count)
         }
     }
