@@ -81,7 +81,41 @@ public class ExtendedECKey : ECKey {
     }
   }
   
+  // True if this key has no parent
+  public var isMaster:Bool {
+    return self.parent == nil
+  }
   
+  // Find the master key by traversing the parents until a parentless key is found.
+  public var master:ExtendedECKey {
+    if let parent = self.parent {
+      return parent.master
+    }
+    else {
+      return self
+    }
+  }
+  
+  // Return an array of path components from the master key.
+  // Add apostrophe (') to hardened indexes, and use the letter (m) to represent the master - to make an absolute path.
+  public var pathComponents:Array<String> {
+    if let parent = self.parent {
+      if let hIndex = self.hardenedIndex {
+        return parent.pathComponents + [NSNumber(unsignedInt: hIndex).stringValue + "'"]
+      }
+      else {
+        return parent.pathComponents + [NSNumber(unsignedInt: self.index).stringValue]
+      }
+    }
+    else {
+      return ["m"]
+    }
+  }
+  
+  // Combines the path components into a string path separated with slashes (\)
+  public var path:String {
+    return "\\".join(self.pathComponents)
+  }
   
   // Serialize the extended key data
   public func serializeExtendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> NSMutableData {
@@ -192,7 +226,58 @@ public class ExtendedECKey : ECKey {
   }
 
   public func childKeyWithHardenedIndex(index: UInt32) -> ExtendedECKey? {
+    // guard agains overflows
+    if index > UInt32(UInt16.max) {
+      return nil
+    }
     return childKeyWithIndex(index + ExtendedECKey.hardenedIndexOffset())
+  }
+
+  // Derive a key from the path.
+  // Supports both absolute or relative paths.
+  public func derive(path:String, isAbsolute isAbsolutePath:Bool = true) -> ExtendedECKey? {
+    func keyFromLinkString(link:String) -> ExtendedECKey? {
+      var link = link.lowercaseString
+      if first(link) == "m" {
+        // only allow 'm' to be used at the begining of an absolute path or directly on the master key
+        if isAbsolutePath || self.isMaster {
+          return master
+        }
+        else {
+          return nil
+        }
+      }
+      else {
+        let isHardened = last(link) == "'"
+        if isHardened {
+          link = dropLast(link)
+        }
+        if let index = NSNumberFormatter().numberFromString(link)?.unsignedIntValue {
+          if isHardened {
+            return self.childKeyWithHardenedIndex(index)
+          }
+          else {
+            return self.childKeyWithIndex(index)
+          }
+        }
+        else {
+          return nil
+        }
+      }
+    }
+    
+    // seporate and parse the first link in the chain
+    let pathLinks = split(path, {$0 == "\\"} , maxSplit: 1, allowEmptySlices: false)
+    let link = pathLinks[0]
+    let key = keyFromLinkString(link)
+    // derive the rest of the path untill the last link is parsed
+    if pathLinks.count > 1 {
+      // the sub path can not be absolute.
+      return key?.derive(pathLinks[1], isAbsolute: false)
+    }
+    else {
+      return key
+    }
   }
 
   /// Returns whether or not this key is hardened. A hardened key has more secure properties.

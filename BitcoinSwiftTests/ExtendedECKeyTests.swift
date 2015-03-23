@@ -389,5 +389,29 @@ class ExtendedECKeyTests: XCTestCase {
     XCTAssertEqual(key.encodeExtendedKey(ofType: .PublicKey),  "xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt")
     XCTAssertEqual(key.encodeExtendedKey(ofType: .PrivateKey), "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j")
   }
+  
+  func testDeriviation() {
+    let key01 = masterKey0.childKeyWithIndex(1)?.childKeyWithHardenedIndex(2)?.childKeyWithIndex(2147483647)
+    let key02 = key01?.childKeyWithIndex(1)
+    let derivedKey01 = masterKey0.derive("m\\1\\2'\\2147483647")
+    let derivedKey02 = derivedKey01?.derive("\\1")
+    XCTAssertEqual(key01!.publicKey, derivedKey01!.publicKey)
+    XCTAssertEqual(key02!.publicKey, derivedKey02!.publicKey)
+    
+    let badKey01 = masterKey0.derive("\\3000000000'")
+    let badKey02 = masterKey0.derive("m\\1\\m\\1")
+    let badKey03 = masterKey0.childKeyWithIndex(15)?.derive("m\\1", isAbsolute:false)
+    XCTAssertNil(badKey01)
+    XCTAssertNil(badKey02)
+    XCTAssertNil(badKey03)
+  }
+  
+  func testPath() {
+    let key = masterKey0.childKeyWithIndex(1)?.childKeyWithIndex(2)?.childKeyWithIndex(3)
+    let keyPath = key!.path
+    XCTAssertEqual(keyPath, "m\\1\\2\\3")
+    
+    let keyFromPath = key!.derive(keyPath)
+    XCTAssertEqual(key!.publicKey, keyFromPath!.publicKey)
   }
 }
