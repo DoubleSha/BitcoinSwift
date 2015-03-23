@@ -49,14 +49,17 @@ public class ExtendedECKey : ECKey {
   public let parent: ExtendedECKey?
   
   
+  // This key's identifier (this corresponds exactly to a traditional bitcoin address)
   public var identifier:NSData {
     return publicKey.SHA256Hash().RIPEMD160Hash()
   }
   
+  // Return this key's fingerprint
   public var fingerprint:NSData {
     return self.identifier.subdataWithRange(NSMakeRange(0, 4))
   }
   
+  // Return the parent's fingerprint. 0x0000000 if master
   public var parentFingerprint:NSData {
     if let parent = parent {
       return parent.fingerprint
@@ -68,6 +71,7 @@ public class ExtendedECKey : ECKey {
     }
   }
   
+  // Find the depth of this key
   public var depth:UInt8 {
     if let parent = parent {
       return parent.depth + 1
@@ -79,7 +83,8 @@ public class ExtendedECKey : ECKey {
   
   
   
-  public func extendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> NSMutableData {
+  // Serialize the extended key data
+  public func serializeExtendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> NSMutableData {
     
     func keyDataForType(type:KeyType) -> NSData {
       
@@ -95,7 +100,6 @@ public class ExtendedECKey : ECKey {
       }
     }
     
-    
     let extKey = NSMutableData()
     
     extKey.appendUInt32(version.addressForKeyType(type), endianness: .BigEndian)    // address
@@ -103,23 +107,21 @@ public class ExtendedECKey : ECKey {
     extKey.appendData(self.parentFingerprint)                                       // parent fingerprint
     extKey.appendUInt32(self.index, endianness: .BigEndian)                         // child number
     extKey.appendData(self.chainCode.mutableData)                                   // chain code
-    
     extKey.appendData(keyDataForType(type))                                         // public/private key
     
     return extKey
   }
   
-  public func serializeExtendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> String {
+  // Encode the extended key into a base64check string
+  public func encodeExtendedKey(ofType type:KeyType = .PublicKey, version: ExtendedKeyVersion = .MainNet) -> String {
     
-    let extKey = self.extendedKey(ofType: type, version: version)
+    let extKey = self.serializeExtendedKey(ofType: type, version: version)
     
     let checksum = extKey.SHA256Hash().SHA256Hash().subdataWithRange(NSRange(location: 0, length: 4))
     extKey.appendData(checksum)
     
     return extKey.base58String
   }
-  
-  
   
 
   /// Creates a new master extended key (both private and public).
