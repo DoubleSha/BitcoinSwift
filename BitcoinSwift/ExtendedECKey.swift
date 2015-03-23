@@ -227,7 +227,7 @@ public class ExtendedECKey : ECKey {
 
   public func childKeyWithHardenedIndex(index: UInt32) -> ExtendedECKey? {
     // guard agains overflows
-    if index > UInt32(UInt16.max) {
+    if index > UInt32.max / 2 {
       return nil
     }
     return childKeyWithIndex(index + ExtendedECKey.hardenedIndexOffset())
