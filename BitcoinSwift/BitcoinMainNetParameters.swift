@@ -49,4 +49,14 @@ public class BitcoinMainNetParameters: BitcoinParameters {
   public var blockChainStoreFileName: String {
     return "blockchain"
   }
+  
+  // MARK: - ExtendedKeyVersionParameters
+  
+  public var addresses: (pub:UInt32, prv: UInt32) {
+    return (pub:0x0488B21E, prv:0x0488ADE4)
+  }
+  
+  public func addressForKeyType(type:KeyType) -> UInt32 {
+    return type == .PublicKey ? self.addresses.pub : self.addresses.prv
+  }
 }

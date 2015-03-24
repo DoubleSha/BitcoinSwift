@@ -298,28 +298,28 @@ class ExtendedECKeyTests: XCTestCase {
   }
   
   func testDefaultVersion() {
-    XCTAssertEqual(masterKey0.version, ExtendedKeyVersion.MainNet)
+    XCTAssert(masterKey0.version === BitcoinMainNetParameters.get())
   }
   
   func testExplicitVersionOverwrite() {
-    let mainnetKey = ExtendedECKey.masterKey(version: .MainNet).key
-    let testnetKey = ExtendedECKey.masterKey(version: .TestNet).key
+    let mainnetKey = ExtendedECKey.masterKey(version: BitcoinMainNetParameters.get()).key
+    let testnetKey = ExtendedECKey.masterKey(version: BitcoinTestNetParameters.get()).key
     
-    XCTAssertEqual(mainnetKey.version, ExtendedKeyVersion.MainNet)
-    XCTAssertEqual(testnetKey.version, ExtendedKeyVersion.TestNet)
+    XCTAssert(mainnetKey.version === BitcoinMainNetParameters.get())
+    XCTAssert(testnetKey.version === BitcoinTestNetParameters.get())
   }
   
   func testVersionPropagation() {
     let seed = SecureData(bytes: masterKey0SeedBytes,
         length: UInt(masterKey0SeedBytes.count))
     
-    let mMaster = ExtendedECKey.masterKeyWithSeed(seed, version: .MainNet)!
-    let tMaster = ExtendedECKey.masterKeyWithSeed(seed, version: .TestNet)!
+    let mMaster = ExtendedECKey.masterKeyWithSeed(seed, version: BitcoinMainNetParameters.get())!
+    let tMaster = ExtendedECKey.masterKeyWithSeed(seed, version: BitcoinTestNetParameters.get())!
     let mGrandChild = mMaster.childKeyWithIndex(0)!.childKeyWithHardenedIndex(0)!
     let tGrandChild = tMaster.childKeyWithHardenedIndex(0)!.childKeyWithIndex(0)!
     
-    XCTAssertEqual(mGrandChild.version, ExtendedKeyVersion.MainNet)
-    XCTAssertEqual(tGrandChild.version, ExtendedKeyVersion.TestNet)
+    XCTAssert(mGrandChild.version === BitcoinMainNetParameters.get())
+    XCTAssert(tGrandChild.version === BitcoinTestNetParameters.get())
   }
   
   func testExtendedKeySerilization_TestVector1() {
