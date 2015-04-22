@@ -393,14 +393,14 @@ class ExtendedECKeyTests: XCTestCase {
   func testDeriviation() {
     let key01 = masterKey0.childKeyWithIndex(1)?.childKeyWithHardenedIndex(2)?.childKeyWithIndex(2147483647)
     let key02 = key01?.childKeyWithIndex(1)
-    let derivedKey01 = masterKey0.derive("m\\1\\2'\\2147483647")
-    let derivedKey02 = derivedKey01?.derive("\\1")
+    let derivedKey01 = masterKey0.deriveFromExtendedKeyPath("m\\1\\2'\\2147483647")
+    let derivedKey02 = derivedKey01?.deriveFromExtendedKeyPath("\\1")
     XCTAssertEqual(key01!.publicKey, derivedKey01!.publicKey)
     XCTAssertEqual(key02!.publicKey, derivedKey02!.publicKey)
     
-    let badKey01 = masterKey0.derive("\\3000000000'")
-    let badKey02 = masterKey0.derive("m\\1\\m\\1")
-    let badKey03 = masterKey0.childKeyWithIndex(15)?.derive("m\\1", isAbsolute: false)
+    let badKey01 = masterKey0.deriveFromExtendedKeyPath("\\3000000000'")
+    let badKey02 = masterKey0.deriveFromExtendedKeyPath("m\\1\\m\\1")
+    let badKey03 = masterKey0.childKeyWithIndex(15)?.deriveFromExtendedKeyPath("m\\1", isAbsolute: false)
     XCTAssertNil(badKey01)
     XCTAssertNil(badKey02)
     XCTAssertNil(badKey03)
@@ -411,7 +411,7 @@ class ExtendedECKeyTests: XCTestCase {
     let keyPath = key!.path
     XCTAssertEqual(keyPath, "m\\1\\2\\3")
     
-    let keyFromPath = key!.derive(keyPath)
+    let keyFromPath = key!.deriveFromExtendedKeyPath(keyPath)
     XCTAssertEqual(key!.publicKey, keyFromPath!.publicKey)
   }
 }

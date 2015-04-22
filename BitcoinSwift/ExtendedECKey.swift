@@ -40,14 +40,22 @@ public class ExtendedECKey : ECKey {
     return self.identifier.subdataWithRange(NSMakeRange(0, 4))
   }
   
+  
+  public class func masterFingerprint() -> NSData {
+    // TODO: Remove this once Swift supports class vars.
+    struct Static {
+      static let masterFingerprint: [UInt8] = [0x00, 0x00, 0x00, 0x00]
+    }
+    return NSData(bytes: Static.masterFingerprint, length: Static.masterFingerprint.count)
+  }
+  
+  
   // Return the parent's fingerprint. 0x0000000 if master.
   public var parentFingerprint: NSData {
     if let parent = parent {
       return parent.fingerprint
     } else {
-      let masterprint: [UInt8] = [
-        0x00, 0x00, 0x00, 0x00]
-      return NSData(bytes: masterprint, length: masterprint.count)
+      return ExtendedECKey.masterFingerprint()
     }
   }
   
@@ -207,7 +215,7 @@ public class ExtendedECKey : ECKey {
 
   // Derive a key from the path.
   // Supports both absolute or relative paths.
-  public func derive(path: String, isAbsolute isAbsolutePath: Bool = true) -> ExtendedECKey? {
+  public func deriveFromExtendedKeyPath(path: String, isAbsolute isAbsolutePath: Bool = true) -> ExtendedECKey? {
     func keyFromLinkString(link: String) -> ExtendedECKey? {
       var link = link.lowercaseString
       if first(link) == "m" {
@@ -241,7 +249,7 @@ public class ExtendedECKey : ECKey {
     // derive the rest of the path untill the last link is parsed.
     if pathLinks.count > 1 {
       // the sub path can not be absolute.
-      return key?.derive(pathLinks[1], isAbsolute: false)
+      return key?.deriveFromExtendedKeyPath(pathLinks[1], isAbsolute: false)
     } else {
       return key
     }
