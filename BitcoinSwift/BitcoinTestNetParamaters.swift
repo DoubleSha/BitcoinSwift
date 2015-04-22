@@ -52,11 +52,12 @@ public class BitcoinTestNetParameters: BitcoinParameters {
   
   // MARK: - ExtendedKeyVersionParameters
   
-  public var addresses: (pub:UInt32, prv: UInt32) {
-    return (pub:0x043587CF, prv:0x04358394)
+  public var extendedPublicKeyVersion: NSData {
+    let publicKeyVersion: [UInt8] = [0x04, 0x35, 0x87, 0xcf]
+    return NSData(bytes: publicKeyVersion, length: publicKeyVersion.count)
   }
-  
-  public func addressForKeyType(type:KeyType) -> UInt32 {
-    return type == .PublicKey ? self.addresses.pub : self.addresses.prv
+  public var extendedPrivateKeyVersion: NSData {
+    let privateKeyVersion: [UInt8] = [0x04, 0x35, 0x83, 0x94]
+    return NSData(bytes: privateKeyVersion, length: privateKeyVersion.count)
   }
 }
