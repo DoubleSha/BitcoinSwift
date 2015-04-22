@@ -322,7 +322,7 @@ class ExtendedECKeyTests: XCTestCase {
     XCTAssert(tGrandChild.version === BitcoinTestNetParameters.get())
   }
   
-  func testExtendedKeySerilization_TestVector1() {
+  func testExtendedKeySerilizationTestVector1() {
     
     var key = masterKey0
     
@@ -356,7 +356,7 @@ class ExtendedECKeyTests: XCTestCase {
     XCTAssertEqual(key.encodeExtendedKey(ofType: .PrivateKey), "xprvA41z7zogVVwxVSgdKUHDy1SKmdb533PjDz7J6N6mV6uS3ze1ai8FHa8kmHScGpWmj4WggLyQjgPie1rFSruoUihUZREPSL39UNdE3BBDu76")
   }
   
-  func testExtendedKeySerilization_TestVector2() {
+  func testExtendedKeySerilizationTestVector2() {
     
     var key = masterKey1
     
@@ -400,7 +400,7 @@ class ExtendedECKeyTests: XCTestCase {
     
     let badKey01 = masterKey0.derive("\\3000000000'")
     let badKey02 = masterKey0.derive("m\\1\\m\\1")
-    let badKey03 = masterKey0.childKeyWithIndex(15)?.derive("m\\1", isAbsolute:false)
+    let badKey03 = masterKey0.childKeyWithIndex(15)?.derive("m\\1", isAbsolute: false)
     XCTAssertNil(badKey01)
     XCTAssertNil(badKey02)
     XCTAssertNil(badKey03)
