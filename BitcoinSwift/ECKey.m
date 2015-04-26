@@ -211,8 +211,8 @@
   BN_bin2bn(_privateKey.bytes, (int)_privateKey.length, &privateKeyBn);
   EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);
   EC_POINT *publicKeyPoint = EC_POINT_new(group);
-  NSAssert(EC_POINT_mul(group, publicKeyPoint, &privateKeyBn, NULL, NULL, NULL),
-           @"Failed to create public key from private key");
+  int result = EC_POINT_mul(group, publicKeyPoint, &privateKeyBn, NULL, NULL, NULL);
+  NSAssert(result == 1, @"Failed to create public key from private key");
   BN_clear(&privateKeyBn);
   EC_GROUP_free(group);
   return publicKeyPoint;
