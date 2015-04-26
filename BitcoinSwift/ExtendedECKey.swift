@@ -48,10 +48,9 @@ public class ExtendedECKey : ECKey {
   
   
   private class func pathSeporator() -> Character {
-    // TODO: change delimiters to '/'s to conform with the bip32
     // TODO: Remove this once Swift supports class vars.
     struct Static {
-      static let pathSeporator: Character = "\\"
+      static let pathSeporator: Character = "/"
     }
     return Static.pathSeporator
   }
@@ -233,7 +232,7 @@ public class ExtendedECKey : ECKey {
 
   /// Derive a key from the path.
   /// Supports both absolute or relative paths.
-  /// The format is '\' delimitered, while 'm' represents the master key, and ' appended indexes
+  /// The format is '/' delimitered, while 'm' represents the master key, and ' appended indexes
   /// represend hardened indexes.
   /// This follows the Bip32, which can be found here:
   /// https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
