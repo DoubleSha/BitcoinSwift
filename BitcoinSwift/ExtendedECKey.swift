@@ -156,7 +156,7 @@ public class ExtendedECKey : ECKey {
 
   /// Creates a new master extended key (both private and public).
   /// Returns the key and the randomly-generated seed used to create the key.
-  public class func masterKey(params: BitcoinParameters = BitcoinMainNetParameters.get()) -> (key: ExtendedECKey, seed: SecureData) {
+  public class func masterKey(params: ExtendedKeyVersionParameters = BitcoinMainNetParameters.get()) -> (key: ExtendedECKey, seed: SecureData) {
     var masterKey: ExtendedECKey? = nil
     let randomData = SecureData(length: UInt(ECKey.privateKeyLength()))
     var tries = 0
@@ -173,7 +173,7 @@ public class ExtendedECKey : ECKey {
 
   /// Can return nil in the (very very very very) unlikely case the randomly generated private key
   /// is invalid. If nil is returned, retry.
-  public class func masterKeyWithSeed(seed: SecureData, params: BitcoinParameters = BitcoinMainNetParameters.get()) -> ExtendedECKey? {
+  public class func masterKeyWithSeed(seed: SecureData, params: ExtendedKeyVersionParameters = BitcoinMainNetParameters.get()) -> ExtendedECKey? {
     let indexHash = seed.HMACSHA512WithKeyData(ExtendedECKey.masterKeySeed())
     let privateKey = indexHash[0..<32]
     let chainCode = indexHash[32..<64]
@@ -303,7 +303,7 @@ public class ExtendedECKey : ECKey {
     return 0x80000000
   }
 
-  private init(privateKey: SecureData, chainCode: SecureData, index: UInt32 = 0, parent: ExtendedECKey? = nil, params: BitcoinParameters? = nil) {
+  private init(privateKey: SecureData, chainCode: SecureData, index: UInt32 = 0, parent: ExtendedECKey? = nil, params: ExtendedKeyVersionParameters? = nil) {
     // params setting priority is parent, then specified verion, then defaults to MainNet.
     self.params = parent != nil ? parent!.params : params != nil ? params! : BitcoinMainNetParameters.get()
     
