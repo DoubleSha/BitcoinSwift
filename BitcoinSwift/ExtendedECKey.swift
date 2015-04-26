@@ -36,7 +36,6 @@ public class ExtendedECKey : ECKey {
     return self.identifier.subdataWithRange(NSMakeRange(0, 4))
   }
   
-  
   private class func masterParentFingerprint() -> NSData {
     // TODO: Remove this once Swift supports class vars.
     struct Static {
@@ -46,7 +45,6 @@ public class ExtendedECKey : ECKey {
                  length: Static.masterParentFingerprint.count)
   }
   
-  
   private class func pathSeporator() -> Character {
     // TODO: Remove this once Swift supports class vars.
     struct Static {
@@ -54,7 +52,6 @@ public class ExtendedECKey : ECKey {
     }
     return Static.pathSeporator
   }
-  
   
   /// Returns the parent's fingerprint. 0x0000000 if master.
   public var parentFingerprint: NSData {
@@ -107,7 +104,6 @@ public class ExtendedECKey : ECKey {
     let seporator = String(ExtendedECKey.pathSeporator())
     return seporator.join(self.pathComponents)
   }
-  
   
   private func serializedExtendedKey(#version: NSData, keyData: NSData) -> NSMutableData {
     let extKey = NSMutableData()
