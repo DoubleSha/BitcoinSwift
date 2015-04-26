@@ -26,36 +26,47 @@ public class ExtendedECKey : ECKey {
   public let params: ExtendedKeyVersionParameters
   public let parent: ExtendedECKey?
   
-  // This key's identifier (this corresponds exactly to a traditional bitcoin address).
+  /// Returns the key's identifier (this corresponds exactly to a traditional bitcoin address).
   public var identifier: NSData {
     return publicKey.SHA256Hash().RIPEMD160Hash()
   }
   
-  // Return this key's fingerprint.
+  /// Returns this key's fingerprint.
   public var fingerprint: NSData {
     return self.identifier.subdataWithRange(NSMakeRange(0, 4))
   }
   
   
-  public class func masterFingerprint() -> NSData {
+  private class func masterParentFingerprint() -> NSData {
     // TODO: Remove this once Swift supports class vars.
     struct Static {
-      static let masterFingerprint: [UInt8] = [0x00, 0x00, 0x00, 0x00]
+      static let masterParentFingerprint: [UInt8] = [0x00, 0x00, 0x00, 0x00]
     }
-    return NSData(bytes: Static.masterFingerprint, length: Static.masterFingerprint.count)
+    return NSData(bytes: Static.masterParentFingerprint,
+                 length: Static.masterParentFingerprint.count)
   }
   
   
-  // Return the parent's fingerprint. 0x0000000 if master.
+  private class func pathSeporator() -> Character {
+    // TODO: change delimiters to '/'s to conform with the bip32
+    // TODO: Remove this once Swift supports class vars.
+    struct Static {
+      static let pathSeporator: Character = "\\"
+    }
+    return Static.pathSeporator
+  }
+  
+  
+  /// Returns the parent's fingerprint. 0x0000000 if master.
   public var parentFingerprint: NSData {
     if let parent = parent {
       return parent.fingerprint
     } else {
-      return ExtendedECKey.masterFingerprint()
+      return ExtendedECKey.masterParentFingerprint()
     }
   }
   
-  // Find the depth of this key.
+  /// Returns the depth of this key.
   public var depth: UInt8 {
     if let parent = parent {
       return parent.depth + 1
@@ -64,12 +75,12 @@ public class ExtendedECKey : ECKey {
     }
   }
   
-  // True if this key has no parent.
+  /// Returns true if this key has no parent.
   public var isMaster: Bool {
     return parent == nil
   }
   
-  // Find the master key by traversing the parents until a parentless key is found.
+  /// Returns the master key by traversing the parents until a parentless key is found.
   public var master: ExtendedECKey {
     if let parent = self.parent {
       return parent.master
@@ -78,9 +89,8 @@ public class ExtendedECKey : ECKey {
     }
   }
   
-  // Return an array of path components from the master key.
-  // Add apostrophe (') to hardened indexes, and use the letter (m) to represent the master - to
-  // make an absolute path.
+  /// Returns an array of path components from the master key.
+  /// Adding apostrophe (') to hardened indexes, and use the letter (m) to represent the master
   public var pathComponents: Array<String> {
     if let parent = self.parent {
       if let hIndex = self.hardenedIndex {
@@ -93,9 +103,10 @@ public class ExtendedECKey : ECKey {
     }
   }
   
-  // Combines the path components into a string path separated with slashes (\).
+  /// Returns the absolute path string.
   public var path: String {
-    return "\\".join(self.pathComponents)
+    let seporator = String(ExtendedECKey.pathSeporator())
+    return seporator.join(self.pathComponents)
   }
   
   
@@ -210,7 +221,8 @@ public class ExtendedECKey : ECKey {
     let childChainCode = indexHash[32..<64]
     return ExtendedECKey(privateKey: childPrivateKey, chainCode: childChainCode, index: index, parent:self)
   }
-
+  
+  /// Returns a new hardened child key derived from self with index.
   public func childKeyWithHardenedIndex(index: UInt32) -> ExtendedECKey? {
     // guard agains overflows
     if index > UInt32.max / 2 {
@@ -219,8 +231,12 @@ public class ExtendedECKey : ECKey {
     return childKeyWithIndex(index + ExtendedECKey.hardenedIndexOffset())
   }
 
-  // Derive a key from the path.
-  // Supports both absolute or relative paths.
+  /// Derive a key from the path.
+  /// Supports both absolute or relative paths.
+  /// The format is '\' delimitered, while 'm' represents the master key, and ' appended indexes
+  /// represend hardened indexes.
+  /// This follows the Bip32, which can be found here:
+  /// https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
   public func deriveFromExtendedKeyPath(path: String, isAbsolute isAbsolutePath: Bool = true) -> ExtendedECKey? {
     func keyFromLinkString(link: String) -> ExtendedECKey? {
       var link = link.lowercaseString
@@ -249,7 +265,10 @@ public class ExtendedECKey : ECKey {
     }
     
     // seporate and parse the first link in the chain.
-    let pathLinks = split(path, {$0 == "\\"} , maxSplit: 1, allowEmptySlices: false)
+    let pathLinks = split(path,
+                          {$0 == ExtendedECKey.pathSeporator()},
+                          maxSplit: 1,
+                          allowEmptySlices: false)
     let link = pathLinks[0]
     let key = keyFromLinkString(link)
     // derive the rest of the path untill the last link is parsed.
