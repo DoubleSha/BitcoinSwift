@@ -61,45 +61,51 @@ static void *secureReallocate(void *ptr, CFIndex newSize, CFOptionFlags hint, vo
 }
 
 - (void *)allocateWithSize:(CFIndex)allocSize hint:(CFOptionFlags)hint info:(void *)info {
-  void *memory = malloc(allocSize);
-  if (memory == NULL) {
-    return nil;
+  @synchronized(self) {
+    void *memory = malloc(allocSize);
+    if (memory == NULL) {
+      return nil;
+    }
+    [_memoryLockController lockMemory:memory size:(int)allocSize];
+    _memorySizes[[NSValue valueWithPointer:memory]] = [NSNumber numberWithInteger:allocSize];
+    return memory;
   }
-  [_memoryLockController lockMemory:memory size:(int)allocSize];
-  _memorySizes[[NSValue valueWithPointer:memory]] = [NSNumber numberWithInteger:allocSize];
-  return memory;
 }
 
 - (void)deallocateMemory:(void *)ptr info:(void *)info {
-  NSAssert(ptr != NULL, @"Cannot deallocate null pointer");
-  NSValue *ptrValue = [NSValue valueWithPointer:ptr];
-  NSNumber *size = (NSNumber *)_memorySizes[ptrValue];
-  NSAssert(size != nil, @"Cannot deallocate unknown pointer");
-  memset(ptr, 0, size.intValue);
-  [_memorySizes removeObjectForKey:ptrValue];
-  [_memoryLockController unlockMemory:ptr size:size.intValue];
-  free(ptr);
+  @synchronized(self) {
+    NSAssert(ptr != NULL, @"Cannot deallocate null pointer");
+    NSValue *ptrValue = [NSValue valueWithPointer:ptr];
+    NSNumber *size = (NSNumber *)_memorySizes[ptrValue];
+    NSAssert(size != nil, @"Cannot deallocate unknown pointer");
+    memset(ptr, 0, size.intValue);
+    [_memorySizes removeObjectForKey:ptrValue];
+    [_memoryLockController unlockMemory:ptr size:size.intValue];
+    free(ptr);
+  }
 }
 
 - (void *)reallocateWithMemory:(void *)ptr
                        newSize:(CFIndex)newSize
                           hint:(CFOptionFlags)hint
                           info:(void *)info {
-  if (ptr == nil || newSize <= 0) {
-    return nil;
+  @synchronized(self) {
+    if (ptr == nil || newSize <= 0) {
+      return nil;
+    }
+    NSNumber *size = _memorySizes[[NSValue valueWithPointer:ptr]];
+    if (size == nil) {
+      return nil;
+    }
+    void *newPtr = [self allocateWithSize:newSize hint:hint info:info];
+    if (newPtr == nil) {
+      return nil;
+    }
+    int cpySize = size.intValue < newSize ? size.intValue : (int)newSize;
+    memcpy(newPtr, ptr, cpySize);
+    [self deallocateMemory:ptr info:info];
+    return newPtr;
   }
-  NSNumber *size = _memorySizes[[NSValue valueWithPointer:ptr]];
-  if (size == nil) {
-    return nil;
-  }
-  void *newPtr = [self allocateWithSize:newSize hint:hint info:info];
-  if (newPtr == nil) {
-    return nil;
-  }
-  int cpySize = size.intValue < newSize ? size.intValue : (int)newSize;
-  memcpy(newPtr, ptr, cpySize);
-  [self deallocateMemory:ptr info:info];
-  return newPtr;
 }
 
 @end
