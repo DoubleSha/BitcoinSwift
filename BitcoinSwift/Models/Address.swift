@@ -58,7 +58,7 @@ public struct Address: Equatable {
   /// If params is nil, the header will not be verified.
   /// If params is not nil, returns nil if the header does not match a known value.
   public init?(params: AddressParameters?, stringValue: String) {
-    let stringLength = countElements(stringValue)
+    let stringLength = count(stringValue)
     if stringLength > 35 || stringLength < 26 {
       Logger.debug("Invalid Address \(stringValue)")
       return nil

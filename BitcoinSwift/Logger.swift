@@ -37,7 +37,7 @@ public class Logger {
     var timeStruct = gmtime(&time)
     var timeBuffer = [Int8](count: 20, repeatedValue: 0)
     strftime(&timeBuffer, 20, "%Y-%m-%d %H:%M:%S", timeStruct)
-    return NSString(CString: timeBuffer, encoding: NSASCIIStringEncoding)!
+    return NSString(CString: timeBuffer, encoding: NSASCIIStringEncoding)! as String
   }
 
   private class func log(message: String, prefix: String) {

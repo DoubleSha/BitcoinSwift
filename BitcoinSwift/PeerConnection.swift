@@ -170,7 +170,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
 
   // MARK: - NSStreamDelegate
 
-  func stream(stream: NSStream!, handleEvent event: NSStreamEvent) {
+  public func stream(stream: NSStream, handleEvent event: NSStreamEvent) {
     precondition(NSThread.currentThread() == networkThread)
     switch event {
       case NSStreamEvent.None: 

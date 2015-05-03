@@ -21,7 +21,7 @@ extension SecureData: Equatable {
     let length = subRange.endIndex - subRange.startIndex
     let range = NSRange(location: subRange.startIndex, length: length)
     var subData = SecureData(length: UInt(length))
-    memcpy(subData.mutableBytes, mutableBytes.advancedBy(subRange.startIndex), UInt(length))
+    memcpy(subData.mutableBytes, mutableBytes.advancedBy(subRange.startIndex), length)
     return subData
   }
 }

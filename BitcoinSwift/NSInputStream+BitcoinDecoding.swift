@@ -153,7 +153,7 @@ public extension NSInputStream {
       }
       --length
     }
-    return NSString(bytes: readBuffer, length: length, encoding: NSASCIIStringEncoding)
+    return NSString(bytes: readBuffer, length: length, encoding: NSASCIIStringEncoding) as String?
   }
 
   // Reads the number of bytes provided by |length|, or the rest of the remaining bytes if length

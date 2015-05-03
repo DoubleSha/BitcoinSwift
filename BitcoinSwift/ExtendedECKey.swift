@@ -25,7 +25,7 @@ public class ExtendedECKey : ECKey {
     var tries = 0
     while masterKey == nil {
       let result = SecRandomCopyBytes(kSecRandomDefault,
-                                      UInt(randomData.length),
+                                      size_t(randomData.length),
                                       UnsafeMutablePointer<UInt8>(randomData.mutableBytes))
       assert(result == 0)
       masterKey = ExtendedECKey.masterKeyWithSeed(randomData)

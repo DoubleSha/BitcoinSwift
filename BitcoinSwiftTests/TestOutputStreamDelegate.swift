@@ -33,7 +33,7 @@ class TestOutputStreamDelegate: NSObject, NSStreamDelegate {
       case NSStreamEvent.OpenCompleted: 
         break
       case NSStreamEvent.HasSpaceAvailable: 
-        send(stream as NSOutputStream)
+        send(stream as! NSOutputStream)
       case NSStreamEvent.HasBytesAvailable: 
         break
       case NSStreamEvent.EndEncountered:

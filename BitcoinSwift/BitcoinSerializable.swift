@@ -12,5 +12,5 @@ public protocol BitcoinSerializable {
   var bitcoinData: NSData { get }
 
   /// Tries to parse the object from the stream. If the data is invalid for any reason, returns nil.
-  class func fromBitcoinStream(stream: NSInputStream) -> Self?
+  static func fromBitcoinStream(stream: NSInputStream) -> Self?
 }

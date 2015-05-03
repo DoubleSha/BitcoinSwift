@@ -34,7 +34,7 @@ public class OSKeyChainSecureDataStore: SecureDataStore {
     if status != noErr {
       return nil
     }
-    let data = result.memory!.takeUnretainedValue() as NSData
+    let data = result.memory!.takeUnretainedValue() as! NSData
     let secureData = SecureData(data: data)
     result.dealloc(1)
     return secureData

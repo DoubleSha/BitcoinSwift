@@ -57,7 +57,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
 
   public var defaultDir: NSURL {
     return NSFileManager.defaultManager().URLsForDirectory(.LibraryDirectory,
-                                                           inDomains: .UserDomainMask)[0] as NSURL
+                                                           inDomains: .UserDomainMask)[0] as! NSURL
   }
 
   /// Returns the full path of the sqlite file backing the persistent store.
@@ -65,7 +65,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
   public var URL: NSURL {
     precondition(context != nil)
     let persistentStore = context.persistentStoreCoordinator!.persistentStores[0]
-        as NSPersistentStore
+        as! NSPersistentStore
     return persistentStore.URL!
   }
 
@@ -117,7 +117,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
         // The blockChainHeader doesn't exist, so create a new entity for it.
         let headerEntity =
             NSEntityDescription.insertNewObjectForEntityForName(self.blockChainHeaderEntityName,
-                inManagedObjectContext:self.context) as BlockChainHeaderEntity
+                inManagedObjectContext:self.context) as! BlockChainHeaderEntity
         headerEntity.setBlockChainHeader(blockChainHeader)
       }
 
@@ -140,7 +140,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
       }
       let headEntity =
           NSEntityDescription.insertNewObjectForEntityForName(self.blockChainHeadEntityName,
-              inManagedObjectContext:self.context) as BlockChainHeaderEntity
+              inManagedObjectContext:self.context) as! BlockChainHeaderEntity
       headEntity.setBlockChainHeader(blockChainHeader)
       self.attemptToSave(error)
     }
@@ -179,7 +179,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
     context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
     context.persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
     var error: NSError?
-    context.persistentStoreCoordinator!.addPersistentStoreWithType(type,
+    context.persistentStoreCoordinator!.addPersistentStoreWithType(type as String,
                                                                    configuration: nil,
                                                                    URL: URL,
                                                                    options: nil,
@@ -201,7 +201,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
     if let results = self.context.executeFetchRequest(request, error: error) {
       assert(results.count <= 1)
       if results.count > 0 {
-        return (results[0] as BlockChainHeaderEntity)
+        return (results[0] as! BlockChainHeaderEntity)
       }
     }
     return nil
@@ -215,7 +215,7 @@ public class CoreDataBlockChainStore: BlockChainStore {
     if let results = self.context.executeFetchRequest(request, error: error) {
       assert(results.count <= 1)
       if results.count > 0 {
-        return (results[0] as BlockChainHeaderEntity)
+        return (results[0] as! BlockChainHeaderEntity)
       }
     }
     return nil

@@ -45,7 +45,7 @@ class TestInputStreamDelegate: NSObject, NSStreamDelegate {
       case NSStreamEvent.HasSpaceAvailable: 
         break
       case NSStreamEvent.HasBytesAvailable: 
-        readFromStream(stream as NSInputStream)
+        readFromStream(stream as! NSInputStream)
       default: 
         XCTFail("Invalid NSStreamEvent \(event)")
     }
