@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/DoubleSha/BitcoinSwift.svg?branch=master)](https://travis-ci.org/DoubleSha/BitcoinSwift)
+[![Build Status](https://travis-ci.org/DoubleSha/BitcoinSwift.svg?branch=master)](https://travis-ci.org/DoubleSha/BitcoinSwift)  
 Note: Travis CI is not yet compatible with Swift 1.2, so it will look broken until they fix that.
 
 BitcoinSwift
