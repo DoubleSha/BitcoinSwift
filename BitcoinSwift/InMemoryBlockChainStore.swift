@@ -14,6 +14,8 @@ public class InMemoryBlockChainStore: BlockChainStore {
   private var _head: BlockChainHeader? = nil
   private var blockChainHeadersByHash = Dictionary<SHA256Hash, BlockChainHeader>()
 
+  public init() {}
+
   // MARK: - BlockChainStore
 
   public func height(error: NSErrorPointer) -> UInt32? {
