@@ -58,9 +58,14 @@
       int result = SecRandomCopyBytes(kSecRandomDefault,
                                       _privateKey.length,
                                       _privateKey.mutableBytes);
-      NSAssert(result == 0, @"Failed to generate private key");
+      if (result != 0) {
+        // Check result outside of the NSAssert to avoid "unused variable" warnings in the release
+        // build.
+        NSAssert(false, @"Failed to generate private key");
+      }
       privateKeyInt = [[SecureBigInteger alloc] initWithSecureData:_privateKey];
-      NSAssert(++tries <= 5, @"Failed to generate private key");
+      ++tries;
+      NSAssert(tries <= 5, @"Failed to generate private key");
     }
   }
   return self;
@@ -212,7 +217,11 @@
   EC_GROUP *group = EC_GROUP_new_by_curve_name(NID_secp256k1);
   EC_POINT *publicKeyPoint = EC_POINT_new(group);
   int result = EC_POINT_mul(group, publicKeyPoint, &privateKeyBn, NULL, NULL, NULL);
-  NSAssert(result == 1, @"Failed to create public key from private key");
+  if (result != 1) {
+    // Check result outside of the NSAssert to avoid "unused variable" warnings in the release
+    // build.
+    NSAssert(false, @"Failed to create public key from private key");
+  }
   BN_clear(&privateKeyBn);
   EC_GROUP_free(group);
   return publicKeyPoint;
