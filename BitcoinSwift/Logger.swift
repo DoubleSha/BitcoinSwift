@@ -8,28 +8,62 @@
 
 import Foundation
 
+/// Use this class to write log message. By default log messages are written to stderr.
+/// TODO: Add support for logging to a file.
 public class Logger {
 
-  // TODO: Add support for logging to a file.
+  private static let queue = NSOperationQueue()
+  private static var outputFileHandle = NSFileHandle.fileHandleWithStandardError()
+
+  public enum LogLevel: String {
+    case Debug     = "DEBUG   "
+    case Info      = "INFO    "
+    case Notice    = "NOTICE  "
+    case Warn      = "WARN    "
+    case Error     = "ERROR   "
+    case Critical  = "CRITICAL"
+    case Alert     = "ALERT   "
+    case Emergency = "EMERGENCY"
+  }
 
   public class func debug(message: String) {
-    Logger.log(message, prefix: "DEBUG   ")
+    Logger.log(.Debug, message: message)
   }
 
   public class func info(message: String) {
-    Logger.log(message, prefix: "INFO    ")
+    Logger.log(.Info, message: message)
+  }
+
+  public class func notice(message: String) {
+    Logger.log(.Notice, message: message)
   }
 
   public class func warn(message: String) {
-    Logger.log(message, prefix: "WARN    ")
+    Logger.log(.Warn, message: message)
   }
 
   public class func error(message: String) {
-    Logger.log(message, prefix: "ERROR   ")
+    Logger.log(.Error, message: message)
   }
 
   public class func critical(message: String) {
-    Logger.log(message, prefix: "CRITICAL")
+    Logger.log(.Critical, message: message)
+  }
+
+  public class func alert(message: String) {
+    Logger.log(.Alert, message: message)
+  }
+
+  public class func emergency(message: String) {
+    Logger.log(.Emergency, message: message)
+  }
+
+  public class func log(logLevel: LogLevel, message: String) {
+    Logger.queue.addOperationWithBlock {
+      Logger.outputFileHandle.writeData(
+          "\(logLevel.rawValue) [\(Logger.currentTimeString)] \(message)\n"
+              .dataUsingEncoding(NSUTF8StringEncoding)!)
+    }
   }
 
   private class var currentTimeString: String {
@@ -38,9 +72,5 @@ public class Logger {
     var timeBuffer = [Int8](count: 20, repeatedValue: 0)
     strftime(&timeBuffer, 20, "%Y-%m-%d %H:%M:%S", timeStruct)
     return NSString(CString: timeBuffer, encoding: NSASCIIStringEncoding)! as String
-  }
-
-  private class func log(message: String, prefix: String) {
-    println("\(prefix) [\(currentTimeString)] \(message)")
   }
 }
