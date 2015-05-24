@@ -5,21 +5,22 @@ import Foundation
 
 class BlockHeaderDownloader {
 
-  init() {}
+  private let semaphore = dispatch_semaphore_create(0)
 
-  let semaphore = dispatch_semaphore_create(0)
+  init() {}
 
   func downloadBlockHeaders() {
     let peerController = PeerController(hostname: "localhost",
                                         port: 8333,
                                         network: Message.Network.MainNet,
-                                        blockStore: InMemorySPVBlockStore(),
-                                        queue: NSOperationQueue())
+                                        blockChainStore: InMemoryBlockChainStore(),
+                                        queue: NSOperationQueue(),
+                                        delegate: self)
     peerController.start()
     waitWithTimeout(6000)
   }
 
-  func waitWithTimeout(seconds: Int) {
+  private func waitWithTimeout(seconds: Int) {
     let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(seconds) * Int64(NSEC_PER_SEC))
     dispatch_semaphore_wait(semaphore, timeout)
   }
@@ -28,7 +29,6 @@ class BlockHeaderDownloader {
 extension BlockHeaderDownloader: PeerControllerDelegate {
 
   func blockChainSyncComplete() {
-    println("COMPLETE")
     dispatch_semaphore_signal(semaphore)
   }
 }
