@@ -37,6 +37,59 @@ public struct FilteredBlock: Equatable {
     self.hashes = hashes
     self.flags = flags
   }
+
+  public func merkleProofIsValid() -> Bool {
+    var flagBitIndex = 0
+    var hashIndex = 0
+    if let root = merkleTreeNodeWithHeight(transactionMerkleTreeHeight,
+                                           flagBitIndex: &flagBitIndex,
+                                           hashIndex: &hashIndex) {
+      return root.hash == header.merkleRoot
+    }
+    return false
+  }
+
+  // MARK: - Private Methods
+
+  private var transactionMerkleTreeHeight: Int {
+    return Int(ceil(log2(Double(totalNumTransactions))))
+  }
+
+  private func merkleTreeNodeWithHeight(height: Int,
+                                        inout flagBitIndex: Int,
+                                        inout hashIndex: Int) -> MerkleTreeNode? {
+    let flagByte = flags[flags.count - Int(flagBitIndex / 8) - 1]
+    let flag = (flagByte >> UInt8(flagBitIndex % 8)) & 1
+    ++flagBitIndex
+    let nodeHash: SHA256Hash
+    var leftNode: MerkleTreeNode! = nil
+    var rightNode: MerkleTreeNode! = nil
+    if (height == 0) {
+      // This is a leaf node.
+      nodeHash = hashes[hashIndex++]
+      // TODO: Mark the transaction as part of the filter based on the flag.
+    } else {
+      // This is not a leaf node.
+      if (flag == 0) {
+        nodeHash = hashes[hashIndex++]
+      } else {
+        leftNode = merkleTreeNodeWithHeight(height - 1,
+                                            flagBitIndex: &flagBitIndex,
+                                            hashIndex: &hashIndex)
+        rightNode = merkleTreeNodeWithHeight(height - 1,
+                                             flagBitIndex: &flagBitIndex,
+                                             hashIndex: &hashIndex)
+        if leftNode == nil || rightNode == nil {
+          return nil
+        }
+        let hashData = NSMutableData()
+        hashData.appendData(leftNode.hash.data.reversedData)
+        hashData.appendData(rightNode.hash.data.reversedData)
+        nodeHash = SHA256Hash(data: hashData.SHA256Hash().SHA256Hash().reversedData)
+      }
+    }
+    return MerkleTreeNode(hash: nodeHash, left: leftNode, right: rightNode)
+  }
 }
 
 extension FilteredBlock: MessagePayload {
@@ -99,9 +152,14 @@ extension FilteredBlock: MessagePayload {
       }
       flags.append(flagByte!)
     }
-    return FilteredBlock(header: header!,
-                         totalNumTransactions: totalNumTransactions!,
-                         hashes: hashes,
-                         flags: flags)
+    let filteredBlock = FilteredBlock(header: header!,
+                                      totalNumTransactions: totalNumTransactions!,
+                                      hashes: hashes,
+                                      flags: flags)
+    if filteredBlock.merkleProofIsValid() {
+      return filteredBlock
+    }
+    Logger.warn("Invalid merkle proof in FilteredBlock")
+    return nil
   }
 }

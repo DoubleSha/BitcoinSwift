@@ -144,6 +144,8 @@
 		0AB6319A1A58DF6800B2ABD6 /* MemoryLockController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB631961A58DF6800B2ABD6 /* MemoryLockController.m */; };
 		0AB631A21A5E57D300B2ABD6 /* SecureBigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB6319F1A5E57D300B2ABD6 /* SecureBigInteger.m */; };
 		0AB631A31A5E57D300B2ABD6 /* SecureBigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB6319F1A5E57D300B2ABD6 /* SecureBigInteger.m */; };
+		0AB6DA091B12F33C0021ED26 /* MerkleTreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB6DA081B12F33C0021ED26 /* MerkleTreeNode.swift */; };
+		0AB6DA0A1B12F33C0021ED26 /* MerkleTreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB6DA081B12F33C0021ED26 /* MerkleTreeNode.swift */; };
 		0ABA36441960EC0A00C6D098 /* BitcoinEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABA36431960EC0A00C6D098 /* BitcoinEncodingTests.swift */; };
 		0AC17A8819E508B2000E4942 /* PeerAddressMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC17A7019E508B2000E4942 /* PeerAddressMessage.swift */; };
 		0AC17A8919E508B2000E4942 /* PeerAddressMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC17A7019E508B2000E4942 /* PeerAddressMessage.swift */; };
@@ -377,6 +379,7 @@
 		0AB631961A58DF6800B2ABD6 /* MemoryLockController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MemoryLockController.m; sourceTree = "<group>"; };
 		0AB6319E1A5E57D300B2ABD6 /* SecureBigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureBigInteger.h; sourceTree = "<group>"; };
 		0AB6319F1A5E57D300B2ABD6 /* SecureBigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureBigInteger.m; sourceTree = "<group>"; };
+		0AB6DA081B12F33C0021ED26 /* MerkleTreeNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MerkleTreeNode.swift; sourceTree = "<group>"; };
 		0ABA36431960EC0A00C6D098 /* BitcoinEncodingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinEncodingTests.swift; sourceTree = "<group>"; };
 		0AC17A7019E508B2000E4942 /* PeerAddressMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeerAddressMessage.swift; path = Models/PeerAddressMessage.swift; sourceTree = "<group>"; };
 		0AC17A7119E508B2000E4942 /* Address.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Address.swift; path = Models/Address.swift; sourceTree = "<group>"; };
@@ -544,6 +547,7 @@
 				0A34D5DC19E7B181003A3B89 /* Logger.swift */,
 				0AB631951A58DF6800B2ABD6 /* MemoryLockController.h */,
 				0AB631961A58DF6800B2ABD6 /* MemoryLockController.m */,
+				0AB6DA081B12F33C0021ED26 /* MerkleTreeNode.swift */,
 				0A78124F19C4D41300187B9A /* MessageParser.swift */,
 				0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */,
 				0A52ACF81953A7690041541B /* NSData+Hashing.h */,
@@ -995,6 +999,7 @@
 				0A1C534A19EE480000D27206 /* MemPoolMessage.swift in Sources */,
 				0A83CDFC1A49F27F0074A4CE /* BigInteger+objc.m in Sources */,
 				0AE757441A2AB4EE0084FD6F /* BigInteger.m in Sources */,
+				0AB6DA091B12F33C0021ED26 /* MerkleTreeNode.swift in Sources */,
 				0AC17A9619E508B2000E4942 /* InventoryMessage.swift in Sources */,
 				0A435A7D19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */,
 				0AC17AA419E508B2000E4942 /* PeerServices.swift in Sources */,
@@ -1122,6 +1127,7 @@
 				0A435A7219F2C4FB00FE2689 /* FilterLoadMessage.swift in Sources */,
 				0A1C534B19EE480000D27206 /* MemPoolMessage.swift in Sources */,
 				0A83CDFD1A49F27F0074A4CE /* BigInteger+objc.m in Sources */,
+				0AB6DA0A1B12F33C0021ED26 /* MerkleTreeNode.swift in Sources */,
 				0AE757451A2AB4EE0084FD6F /* BigInteger.m in Sources */,
 				0AC17A8F19E508B2000E4942 /* BlockHeader.swift in Sources */,
 				0A435A7E19F2D13300FE2689 /* NSData+BitcoinDecoding.swift in Sources */,
