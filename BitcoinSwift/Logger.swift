@@ -12,21 +12,41 @@ import Foundation
 /// To log to a custom file location, set outputFileHandle.
 public class Logger {
 
-  private static let queue = NSOperationQueue()
-
   /// The location where log messages will be written.
   public static var outputFileHandle = NSFileHandle.fileHandleWithStandardError()
 
-  public enum LogLevel: String {
-    case Debug     = "DEBUG   "
-    case Info      = "INFO    "
-    case Notice    = "NOTICE  "
-    case Warn      = "WARN    "
-    case Error     = "ERROR   "
-    case Critical  = "CRITICAL"
-    case Alert     = "ALERT   "
-    case Emergency = "EMERGENCY"
+  /// The minimum log level that will be printed.
+  /// TODO: Set this to .Info by default for v1.0.
+  public static var logLevel = LogLevel.Debug
+
+  public enum LogLevel: Int, Printable {
+
+    case Debug = 0, Info, Notice, Warn, Error, Critical, Alert, Emergency
+
+    public var description: String {
+      switch self {
+        case Debug:
+          return "DEBUG   "
+        case Info:
+          return "INFO    "
+        case Notice:
+          return "NOTICE  "
+        case Warn:
+          return "WARN    "
+        case Error:
+          return "ERROR   "
+        case Critical:
+          return "CRITICAL"
+        case Alert:
+          return "ALERT   "
+        case Emergency:
+          return "EMERGENCY"
+      }
+    }
   }
+
+  // All log statements are written on this background queue to avoid blocking the calling thread.
+  private static let queue = NSOperationQueue()
 
   /// Log a message with log level .Debug.
   /// The log message will be written to the location specified by Logger.outputFileHandle.
@@ -80,9 +100,12 @@ public class Logger {
   /// methods for logging rather than calling this directly (e.g. Logger.info()).
   /// The log message will be written to the location specified by Logger.outputFileHandle.
   public class func log(logLevel: LogLevel, message: String) {
+    if logLevel.rawValue < Logger.logLevel.rawValue {
+      return
+    }
     Logger.queue.addOperationWithBlock {
       Logger.outputFileHandle.writeData(
-          "\(logLevel.rawValue) [\(Logger.currentTimeString)] \(message)\n"
+          "\(logLevel) [\(Logger.currentTimeString)] \(message)\n"
               .dataUsingEncoding(NSUTF8StringEncoding)!)
     }
   }
