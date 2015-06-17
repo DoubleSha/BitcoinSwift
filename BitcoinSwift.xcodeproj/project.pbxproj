@@ -132,6 +132,8 @@
 		0A9EA98719B53363006E573F /* NSStream+Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9EA98619B53363006E573F /* NSStream+Binding.swift */; };
 		0A9EA98819B53363006E573F /* NSStream+Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9EA98619B53363006E573F /* NSStream+Binding.swift */; };
 		0AA580BC196A053600B0E519 /* BitcoinDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA580BB196A053600B0E519 /* BitcoinDecodingTests.swift */; };
+		0AACF9CA1B311FE700C560B7 /* PartialMerkleTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AACF9C91B311FE700C560B7 /* PartialMerkleTree.swift */; };
+		0AACF9CB1B311FE700C560B7 /* PartialMerkleTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AACF9C91B311FE700C560B7 /* PartialMerkleTree.swift */; };
 		0AB30D2C1A58A91C0079D9C9 /* SecureMemoryAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AB30D2A1A58A91C0079D9C9 /* SecureMemoryAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0AB30D2D1A58A91C0079D9C9 /* SecureMemoryAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AB30D2A1A58A91C0079D9C9 /* SecureMemoryAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0AB30D2E1A58A91C0079D9C9 /* SecureMemoryAllocator.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AB30D2B1A58A91C0079D9C9 /* SecureMemoryAllocator.m */; };
@@ -372,6 +374,7 @@
 		0A9AD042199DE2C700ECEA92 /* PeerAddressMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerAddressMessageTests.swift; sourceTree = "<group>"; };
 		0A9EA98619B53363006E573F /* NSStream+Binding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStream+Binding.swift"; sourceTree = "<group>"; };
 		0AA580BB196A053600B0E519 /* BitcoinDecodingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitcoinDecodingTests.swift; sourceTree = "<group>"; };
+		0AACF9C91B311FE700C560B7 /* PartialMerkleTree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartialMerkleTree.swift; sourceTree = "<group>"; };
 		0AB30D2A1A58A91C0079D9C9 /* SecureMemoryAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureMemoryAllocator.h; sourceTree = "<group>"; };
 		0AB30D2B1A58A91C0079D9C9 /* SecureMemoryAllocator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecureMemoryAllocator.m; sourceTree = "<group>"; };
 		0AB631921A58C99100B2ABD6 /* SecureDataTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureDataTests.swift; sourceTree = "<group>"; };
@@ -556,6 +559,7 @@
 				0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */,
 				0A34DF62196118DE007BBC35 /* NSInputStream+BitcoinDecoding.swift */,
 				0A5694B81A78AF7900C5DE2F /* OSKeyChainSecureDataStore.swift */,
+				0AACF9C91B311FE700C560B7 /* PartialMerkleTree.swift */,
 				0AF9C6EE195E134C009F281D /* PeerConnection.swift */,
 				0A1BDCC219A1A7A6008ED01F /* PeerController.swift */,
 				0A98FAA919A1CF4700E4E57B /* PeerDiscovery.swift */,
@@ -983,6 +987,7 @@
 				0AE757381A2A674B0084FD6F /* BlockChainStore.swift in Sources */,
 				0AC17A9019E508B2000E4942 /* GetBlocksMessage.swift in Sources */,
 				0AB30D2E1A58A91C0079D9C9 /* SecureMemoryAllocator.m in Sources */,
+				0AACF9CA1B311FE700C560B7 /* PartialMerkleTree.swift in Sources */,
 				0A34DF651961197D007BBC35 /* Endianness.swift in Sources */,
 				0AC17A8A19E508B2000E4942 /* Address.swift in Sources */,
 				0A5694B61A78AC6C00C5DE2F /* SecureDataStore.swift in Sources */,
@@ -1111,6 +1116,7 @@
 				0AC17A9119E508B2000E4942 /* GetBlocksMessage.swift in Sources */,
 				0AE757391A2A674B0084FD6F /* BlockChainStore.swift in Sources */,
 				0AB30D2F1A58A91C0079D9C9 /* SecureMemoryAllocator.m in Sources */,
+				0AACF9CB1B311FE700C560B7 /* PartialMerkleTree.swift in Sources */,
 				0AC17A9B19E508B2000E4942 /* IPAddress.swift in Sources */,
 				0AC17AA919E508B2000E4942 /* PongMessage.swift in Sources */,
 				0A5694B71A78AC6C00C5DE2F /* SecureDataStore.swift in Sources */,

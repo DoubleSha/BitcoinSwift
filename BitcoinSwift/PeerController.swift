@@ -114,7 +114,7 @@ extension PeerController: PeerConnectionDelegate {
           if headersMessage.headers.count == 2000 {
             let percentComplete = Double(self.headersDownloaded) /
                 Double(self.peerVersion!.blockStartHeight) * 100
-            Logger.info("Received \(headersMessage.headers.count) block headers. " +
+            Logger.info("Received \(headersMessage.headers.count) block headers - " +
                 "\(Int(percentComplete))% complete")
             let lastHeaderHash = headersMessage.headers.last!.hash
             let getHeadersMessage = GetHeadersMessage(protocolVersion: 70002,

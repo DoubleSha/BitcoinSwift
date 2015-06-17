@@ -94,15 +94,14 @@ class FilteredBlockTests: XCTestCase {
     let transaction2Hash = SHA256Hash(bytes: transaction2HashBytes)
     let transaction3Hash = SHA256Hash(bytes: transaction3HashBytes)
     let transaction4Hash = SHA256Hash(bytes: transaction4HashBytes)
-    filteredBlock = FilteredBlock(header: header,
-                                  totalNumTransactions: 7,
-                                  hashes: [
-                                      transaction1Hash,
-                                      transaction2Hash,
-                                      transaction3Hash,
-                                      transaction4Hash],
-                                  flags: [0x1d])
-
+    let partialMerkleTree = PartialMerkleTree(totalLeafNodes: 7,
+                                              hashes: [
+                                                  transaction1Hash,
+                                                  transaction2Hash,
+                                                  transaction3Hash,
+                                                  transaction4Hash],
+                                              flags: [0x1d])!
+    filteredBlock = FilteredBlock(header: header, partialMerkleTree: partialMerkleTree)
   }
 
   func testFilteredBlockEncoding() {
@@ -119,9 +118,5 @@ class FilteredBlockTests: XCTestCase {
     }
     XCTAssertFalse(stream.hasBytesAvailable)
     stream.close()
-  }
-
-  func testFilteredBlockMerkleProof() {
-    XCTAssertTrue(filteredBlock.merkleProofIsValid())
   }
 }
