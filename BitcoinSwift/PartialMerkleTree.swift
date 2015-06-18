@@ -83,19 +83,27 @@ public struct PartialMerkleTree {
                                                inout matchingHashes: [SHA256Hash],
                                                inout flagBitIndex: Int,
                                                inout hashIndex: Int) -> MerkleTreeNode? {
-    let flag = PartialMerkleTree.flagBitAtIndex(flagBitIndex++, flags: flags)
+    if hashIndex >= hashes.count {
+      // We have run out of hashes without successfully building the tree.
+      return nil
+    }
+    if flagBitIndex >= flags.count * 8 {
+      // We have run out of flags without sucessfully building the tree.
+      return nil
+    }
+    let flag = flagBitAtIndex(flagBitIndex++, flags: flags)
     let nodeHash: SHA256Hash
     var leftNode: MerkleTreeNode! = nil
     var rightNode: MerkleTreeNode! = nil
-    if (height == 0) {
+    if height == 0 {
       // This is a leaf node.
       nodeHash = hashes[hashIndex++]
-      if (flag == 1) {
+      if flag == 1 {
         matchingHashes.append(nodeHash)
       }
     } else {
       // This is not a leaf node.
-      if (flag == 0) {
+      if flag == 0 {
         nodeHash = hashes[hashIndex++]
       } else {
         leftNode = merkleTreeNodeWithHeight(height - 1,

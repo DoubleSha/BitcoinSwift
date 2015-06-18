@@ -99,6 +99,8 @@
 		0A627FCC1A33CB7200170C31 /* IPAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */; };
 		0A627FD11A33CFE900170C31 /* InventoryMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FD01A33CFE900170C31 /* InventoryMessageTests.swift */; };
 		0A627FD21A33CFE900170C31 /* InventoryMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A627FD01A33CFE900170C31 /* InventoryMessageTests.swift */; };
+		0A6A32E71B327B2600D6B818 /* PartialMerkleTreeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6A32E61B327B2600D6B818 /* PartialMerkleTreeTests.swift */; };
+		0A6A32E81B327B2600D6B818 /* PartialMerkleTreeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6A32E61B327B2600D6B818 /* PartialMerkleTreeTests.swift */; };
 		0A78124D19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78124E19BAD2EB00187B9A /* TestOutputStreamDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */; };
 		0A78125019C4D41300187B9A /* MessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A78124F19C4D41300187B9A /* MessageParser.swift */; };
@@ -355,6 +357,7 @@
 		0A627FC71A33C01E00170C31 /* PeerAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerAddressTests.swift; sourceTree = "<group>"; };
 		0A627FCA1A33CB7200170C31 /* IPAddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPAddressTests.swift; sourceTree = "<group>"; };
 		0A627FD01A33CFE900170C31 /* InventoryMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InventoryMessageTests.swift; sourceTree = "<group>"; };
+		0A6A32E61B327B2600D6B818 /* PartialMerkleTreeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartialMerkleTreeTests.swift; sourceTree = "<group>"; };
 		0A78124C19BAD2EB00187B9A /* TestOutputStreamDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestOutputStreamDelegate.swift; sourceTree = "<group>"; };
 		0A78124F19C4D41300187B9A /* MessageParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParser.swift; sourceTree = "<group>"; };
 		0A78125219C4E45500187B9A /* MessageParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageParserTests.swift; sourceTree = "<group>"; };
@@ -617,6 +620,7 @@
 				0A7FB5B519A33AA00008690F /* NSDataToUInt8ArrayTests.swift */,
 				0A9EA98619B53363006E573F /* NSStream+Binding.swift */,
 				0A8B90131A7B6AEF00164A10 /* OSKeyChainSecureDataStoreTests.swift */,
+				0A6A32E61B327B2600D6B818 /* PartialMerkleTreeTests.swift */,
 				0A9AD042199DE2C700ECEA92 /* PeerAddressMessageTests.swift */,
 				0A627FC71A33C01E00170C31 /* PeerAddressTests.swift */,
 				0A1AFF4819B4283F0032F488 /* PeerConnectionTests.swift */,
@@ -1067,6 +1071,7 @@
 				0A627FC81A33C01E00170C31 /* PeerAddressTests.swift in Sources */,
 				0A56A73619FCF40500F163BD /* FilteredBlockTests.swift in Sources */,
 				0A8B90141A7B6AEF00164A10 /* OSKeyChainSecureDataStoreTests.swift in Sources */,
+				0A6A32E71B327B2600D6B818 /* PartialMerkleTreeTests.swift in Sources */,
 				0A248C201954015200C4607E /* Base58Tests.swift in Sources */,
 				0AF06B6919D8F484001EEE96 /* BlockTests.swift in Sources */,
 				0AA580BC196A053600B0E519 /* BitcoinDecodingTests.swift in Sources */,
@@ -1196,6 +1201,7 @@
 				0A627FC91A33C01E00170C31 /* PeerAddressTests.swift in Sources */,
 				0AC8CF5319A9376B00D93585 /* ECKeyTests.swift in Sources */,
 				0A8B90151A7B6AEF00164A10 /* OSKeyChainSecureDataStoreTests.swift in Sources */,
+				0A6A32E81B327B2600D6B818 /* PartialMerkleTreeTests.swift in Sources */,
 				0A9EA98819B53363006E573F /* NSStream+Binding.swift in Sources */,
 				0A110DEC19E9088200CBFCAC /* AlertMessageTests.swift in Sources */,
 				0AECD0DC19AAFFD600C11AC9 /* MessageHeaderTests.swift in Sources */,
