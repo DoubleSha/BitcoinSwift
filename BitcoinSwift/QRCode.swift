@@ -8,8 +8,8 @@
 
 import UIKit
 
-public class QRCode: NSObject {
-    public class func image(string: String, size: CGSize, scale:CGFloat) -> UIImage? {
+public struct QRCode {
+    public static func image(string: String, size: CGSize, scale:CGFloat) -> UIImage? {
         var filter = CIFilter(name: "CIQRCodeGenerator")
         let data = string.dataUsingEncoding(NSISOLatin1StringEncoding, allowLossyConversion: false)
         filter.setValue(data, forKey: "inputMessage")

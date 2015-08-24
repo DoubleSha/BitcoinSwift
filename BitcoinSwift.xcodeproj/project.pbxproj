@@ -565,6 +565,8 @@
 				0AB6DA081B12F33C0021ED26 /* MerkleTreeNode.swift */,
 				0A78124F19C4D41300187B9A /* MessageParser.swift */,
 				0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */,
+				56BF94F21B85974B00D92D30 /* NSString+Hashing.h */,
+				56BF94F31B85974B00D92D30 /* NSString+Hashing.m */,
 				0A52ACF81953A7690041541B /* NSData+Hashing.h */,
 				0A52ACFA1953A79B0041541B /* NSData+Hashing.m */,
 				0A9439AA1A4A6E43009992CE /* NSData+StringEncoding.swift */,
@@ -586,8 +588,6 @@
 				0A0514841A4CBB3D006E1377 /* String+Reverse.swift */,
 				0AECD0D119AACA5400C11AC9 /* Thread.swift */,
 				56E7639E1B827A7C00F1A254 /* QRCode.swift */,
-				56BF94F21B85974B00D92D30 /* NSString+Hashing.h */,
-				56BF94F31B85974B00D92D30 /* NSString+Hashing.m */,
 			);
 			path = BitcoinSwift;
 			sourceTree = "<group>";
