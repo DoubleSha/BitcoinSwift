@@ -255,6 +255,12 @@
 		0AF07C761A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF07C751A09ECBD00A0C9F1 /* RejectMessageTests.swift */; };
 		0AF07C771A09ECBD00A0C9F1 /* RejectMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF07C751A09ECBD00A0C9F1 /* RejectMessageTests.swift */; };
 		0AF9C6F11960D51F009F281D /* NSMutableData+BitcoinEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */; };
+		56BF94F41B85974B00D92D30 /* NSString+Hashing.h in Headers */ = {isa = PBXBuildFile; fileRef = 56BF94F21B85974B00D92D30 /* NSString+Hashing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56BF94F51B85974B00D92D30 /* NSString+Hashing.h in Headers */ = {isa = PBXBuildFile; fileRef = 56BF94F21B85974B00D92D30 /* NSString+Hashing.h */; };
+		56BF94F61B85974B00D92D30 /* NSString+Hashing.m in Sources */ = {isa = PBXBuildFile; fileRef = 56BF94F31B85974B00D92D30 /* NSString+Hashing.m */; };
+		56BF94F91B85974B00D92D30 /* NSString+Hashing.m in Sources */ = {isa = PBXBuildFile; fileRef = 56BF94F31B85974B00D92D30 /* NSString+Hashing.m */; };
+		56E7639F1B827A7C00F1A254 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56E7639E1B827A7C00F1A254 /* QRCode.swift */; };
+		56E763A21B827A7C00F1A254 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56E7639E1B827A7C00F1A254 /* QRCode.swift */; };
 		D845F45419D7A5FB00346A25 /* PongMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D845F45319D7A5FB00346A25 /* PongMessageTests.swift */; };
 		D862844D19AA7C0500CFCE80 /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6EE195E134C009F281D /* PeerConnection.swift */; };
 		D862845119AA7C0700CFCE80 /* PeerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF9C6EE195E134C009F281D /* PeerConnection.swift */; };
@@ -430,6 +436,9 @@
 		0AF0E6C4196BAF5A007BC06F /* VersionMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionMessageTests.swift; sourceTree = "<group>"; };
 		0AF9C6EE195E134C009F281D /* PeerConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConnection.swift; sourceTree = "<group>"; };
 		0AF9C6F01960D51F009F281D /* NSMutableData+BitcoinEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMutableData+BitcoinEncoding.swift"; sourceTree = "<group>"; };
+		56BF94F21B85974B00D92D30 /* NSString+Hashing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Hashing.h"; sourceTree = "<group>"; };
+		56BF94F31B85974B00D92D30 /* NSString+Hashing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Hashing.m"; sourceTree = "<group>"; };
+		56E7639E1B827A7C00F1A254 /* QRCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCode.swift; sourceTree = "<group>"; };
 		D810F30819B50155009EE349 /* GetDataMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetDataMessageTests.swift; sourceTree = "<group>"; };
 		D845F45319D7A5FB00346A25 /* PongMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PongMessageTests.swift; sourceTree = "<group>"; };
 		D8BA343E19D74E0E00A1232F /* NotFoundMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotFoundMessageTests.swift; sourceTree = "<group>"; };
@@ -556,6 +565,8 @@
 				0AB6DA081B12F33C0021ED26 /* MerkleTreeNode.swift */,
 				0A78124F19C4D41300187B9A /* MessageParser.swift */,
 				0A435A7C19F2D13300FE2689 /* NSData+BitcoinDecoding.swift */,
+				56BF94F21B85974B00D92D30 /* NSString+Hashing.h */,
+				56BF94F31B85974B00D92D30 /* NSString+Hashing.m */,
 				0A52ACF81953A7690041541B /* NSData+Hashing.h */,
 				0A52ACFA1953A79B0041541B /* NSData+Hashing.m */,
 				0A9439AA1A4A6E43009992CE /* NSData+StringEncoding.swift */,
@@ -576,6 +587,7 @@
 				0AB30D2B1A58A91C0079D9C9 /* SecureMemoryAllocator.m */,
 				0A0514841A4CBB3D006E1377 /* String+Reverse.swift */,
 				0AECD0D119AACA5400C11AC9 /* Thread.swift */,
+				56E7639E1B827A7C00F1A254 /* QRCode.swift */,
 			);
 			path = BitcoinSwift;
 			sourceTree = "<group>";
@@ -711,6 +723,7 @@
 				0AED07C61A5E653800B1584B /* BitcoinSwift.h in Headers */,
 				0AB631971A58DF6800B2ABD6 /* MemoryLockController.h in Headers */,
 				0AE757421A2AB4EE0084FD6F /* BigInteger.h in Headers */,
+				56BF94F41B85974B00D92D30 /* NSString+Hashing.h in Headers */,
 				0AED07CB1A63288700B1584B /* SecureData.h in Headers */,
 				0AB30D2C1A58A91C0079D9C9 /* SecureMemoryAllocator.h in Headers */,
 				0A52ACF91953A7690041541B /* NSData+Hashing.h in Headers */,
@@ -732,6 +745,7 @@
 				0AC8CF3119A9368D00D93585 /* ECKey.h in Headers */,
 				0AC8CF3419A9369F00D93585 /* NSData+Hashing.h in Headers */,
 				0AED07C71A5E666B00B1584B /* SecureBigInteger.h in Headers */,
+				56BF94F51B85974B00D92D30 /* NSString+Hashing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -967,6 +981,7 @@
 				0A84E5F81A2B054E0070238D /* BigInteger+Operators.swift in Sources */,
 				0A0514821A4CB515006E1377 /* NSData+StringEncoding.swift in Sources */,
 				0AECD0D219AACA5400C11AC9 /* Thread.swift in Sources */,
+				56BF94F61B85974B00D92D30 /* NSString+Hashing.m in Sources */,
 				0A4789DA1A8B1A4E00F2F883 /* BlockChainHeaderEntity.swift in Sources */,
 				0AED07C31A5E5BF900B1584B /* SecureData+swift.swift in Sources */,
 				0A26BA4919F0EFAB00278622 /* FilterClearMessage.swift in Sources */,
@@ -1002,6 +1017,7 @@
 				0A110DE819E8FDDE00CBFCAC /* Alert.swift in Sources */,
 				0AC17AB219E508B3000E4942 /* TransactionOutput.swift in Sources */,
 				0A110DDF19E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
+				56E7639F1B827A7C00F1A254 /* QRCode.swift in Sources */,
 				0AC17AA819E508B2000E4942 /* PongMessage.swift in Sources */,
 				0A435A7119F2C4FB00FE2689 /* FilterLoadMessage.swift in Sources */,
 				0A5694A41A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift in Sources */,
@@ -1097,6 +1113,7 @@
 				0A84E5F91A2B054E0070238D /* BigInteger+Operators.swift in Sources */,
 				0A0514831A4CB516006E1377 /* NSData+StringEncoding.swift in Sources */,
 				0AC8CF4419A9369F00D93585 /* PeerDiscovery.swift in Sources */,
+				56BF94F91B85974B00D92D30 /* NSString+Hashing.m in Sources */,
 				0A4789DB1A8B1A4E00F2F883 /* BlockChainHeaderEntity.swift in Sources */,
 				0AED07C41A5E5BF900B1584B /* SecureData+swift.swift in Sources */,
 				0A26BA4A19F0EFAB00278622 /* FilterClearMessage.swift in Sources */,
@@ -1132,6 +1149,7 @@
 				0AC17AAD19E508B2000E4942 /* TransactionInput.swift in Sources */,
 				0A110DE919E8FDDE00CBFCAC /* Alert.swift in Sources */,
 				0AC8CF4019A9369F00D93585 /* DNSPeerDiscovery.swift in Sources */,
+				56E763A21B827A7C00F1A254 /* QRCode.swift in Sources */,
 				0A110DE019E8F7BB00CBFCAC /* AlertMessage.swift in Sources */,
 				0AC8CF3B19A9369F00D93585 /* NSMutableData+BitcoinEncoding.swift in Sources */,
 				0A5694A51A68DAE800C5DE2F /* BitcoinTestNetParamaters.swift in Sources */,
@@ -1252,6 +1270,7 @@
 		0A2D51CD19777320009B6B25 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1264,12 +1283,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		0A2D51CE19777320009B6B25 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1424,6 +1445,7 @@
 		0A52ACE5195397080041541B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1436,12 +1458,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		0A52ACE6195397080041541B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1511,6 +1535,7 @@
 		0AC8CF2F19A934C800D93585 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -1526,12 +1551,14 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		0AC8CF3019A934C800D93585 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1550,6 +1577,7 @@
 		0AECD0CA19AAC5F400C11AC9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -1565,12 +1593,14 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		0AECD0CB19AAC5F400C11AC9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
