@@ -15,29 +15,26 @@ class OPCodeTests: XCTestCase {
     XCTAssertTrue(OPCode(rawValue: 50) == nil)
     XCTAssertTrue(OPCode(rawValue: 0) != nil)
     XCTAssertTrue(OPCode(rawValue: 50) != OPCode(rawValue: 0))
-    XCTAssertFalse(OPCode(rawValue: 50) == OPCode(rawValue: 0))
   }
   
   func testEqual() {
     XCTAssertEqual(OPCode.OP_0, OPCode.OP_FALSE)
     XCTAssertNotEqual(OPCode.OP_2, OPCode.OP_14)
+    XCTAssertEqual(OPCode(rawValue: 81)!, OPCode.OP_TRUE)
   }
   
   func testGreaterThan() {
     XCTAssertGreaterThan(OPCode(rawValue: 81)!, OPCode(rawValue: 0)!)
-    XCTAssertFalse(OPCode(rawValue: 81)! > OPCode(rawValue: 81)!)
     XCTAssertFalse(OPCode(rawValue: 81)! > OPCode(rawValue: 82)!)
   }
   
   func testGreaterThanOrEqual() {
-    XCTAssertGreaterThanOrEqual(OPCode(rawValue: 81)!, OPCode(rawValue: 0)!)
     XCTAssertGreaterThanOrEqual(OPCode(rawValue: 81)!, OPCode(rawValue: 0)!)
     XCTAssertFalse(OPCode(rawValue: 0)! >= OPCode(rawValue: 81)!)
   }
   
   func testLessThan() {
     XCTAssertLessThan(OPCode(rawValue: 0)!, OPCode(rawValue: 81)!)
-    XCTAssertFalse(OPCode(rawValue: 81)! < OPCode(rawValue: 81)!)
     XCTAssertFalse(OPCode(rawValue: 82)! < OPCode(rawValue: 81)!)
   }
   
