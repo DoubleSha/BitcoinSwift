@@ -84,7 +84,32 @@ extension NSData {
     // the string after we are finished, rather than appending to the front as we go.
     return base58String.reversedString
   }
-
+  
+  ///Converts hexadecimal string into binary data.
+  public class func fromHexString(hexString: String) -> NSData? {
+    let hexCharToValueMap: [Character: UInt8] = [
+      "0":  0, "1":  1, "2":  2, "3":  3,
+      "4":  4, "5":  5, "6":  6, "7":  7,
+      "8":  8, "9":  9, "a": 10, "b": 11,
+      "c": 12, "d": 13, "e": 14, "f": 15
+    ]
+    let hexChars = Array(hexString.lowercaseString)
+    var byte: UInt8 = 0
+    var bytes: [UInt8] = []
+    for (index, char) in enumerate(hexChars) {
+      if let hex = hexCharToValueMap[char] {
+        byte = 16 * byte + hex
+        if index % 2 == 1 {
+          bytes.append(byte)
+          byte = 0
+        }
+      } else {
+        return nil
+      }
+    }
+    return NSData(bytes: bytes, length: bytes.count)
+  }
+  
   /// Returns hexadecimal string representation of NSData. Empty string if data is empty.
   /// There is no leading '0x'.
   public var hexString: String {
