@@ -25,18 +25,16 @@ public class OSKeyChainSecureDataStore: SecureDataStore {
     query.setObject(service, forKey: "\(kSecAttrService)")
     query.setObject(key, forKey: "\(kSecAttrAccount)")
     query.setObject(true, forKey: "\(kSecReturnData)")
-    let result = UnsafeMutablePointer<AnyObject?>.alloc(1)
-    result.initialize(nil)
-    let status = SecItemCopyMatching(query, result)
+    var result: CFTypeRef? = nil
+    let status = SecItemCopyMatching(query, &result)
     if status == errSecItemNotFound {
       return nil
     }
     if status != noErr {
       return nil
     }
-    let data = result.memory as? NSData
+    let data = result as! NSData
     let secureData = SecureData(data: data)
-    result.dealloc(1)
     return secureData
   }
 
