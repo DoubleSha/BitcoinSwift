@@ -234,98 +234,136 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
         }
       case .Address:
         if let peerAddressMessage = PeerAddressMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.PeerAddressMessage(peerAddressMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.PeerAddressMessage(peerAddressMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .Inventory:
         if let inventoryMessage = InventoryMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.InventoryMessage(inventoryMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.InventoryMessage(inventoryMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .GetData:
         if let getDataMessage = GetDataMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.GetDataMessage(getDataMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.GetDataMessage(getDataMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .NotFound:
         if let notFoundMessage = NotFoundMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.NotFoundMessage(notFoundMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.NotFoundMessage(notFoundMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .GetBlocks:
         if let getBlocksMessage = GetBlocksMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.GetBlocksMessage(getBlocksMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.GetBlocksMessage(getBlocksMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .GetHeaders:
         if let getHeadersMessage = GetHeadersMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.GetHeadersMessage(getHeadersMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.GetHeadersMessage(getHeadersMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .Transaction:
         if let transaction = Transaction.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.Transaction(transaction)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.Transaction(transaction)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .Block:
         if let block = Block.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.Block(block)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.Block(block)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .Headers:
         if let headersMessage = HeadersMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.HeadersMessage(headersMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.HeadersMessage(headersMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .GetAddress:
         if let getPeerAddressMessage = GetPeerAddressMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.GetPeerAddressMessage(getPeerAddressMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.GetPeerAddressMessage(getPeerAddressMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .MemPool:
         if let memPoolMessage = MemPoolMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.MemPoolMessage(memPoolMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.MemPoolMessage(memPoolMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .Ping:
         if let pingMessage = PingMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.PingMessage(pingMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.PingMessage(pingMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .Pong:
         if let pongMessage = PongMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.PongMessage(pongMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.PongMessage(pongMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .Reject:
         if let rejectMessage = RejectMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.RejectMessage(rejectMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.RejectMessage(rejectMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .FilterLoad:
         if let filterLoadMessage = FilterLoadMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.FilterLoadMessage(filterLoadMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.FilterLoadMessage(filterLoadMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .FilterAdd:
         if let filterAddMessage = FilterAddMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.FilterAddMessage(filterAddMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.FilterAddMessage(filterAddMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .FilterClear:
         if let filterClearMessage = FilterClearMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.FilterClearMessage(filterClearMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.FilterClearMessage(filterClearMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .FilteredBlock:
         if let filteredBlock = FilteredBlock.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.FilteredBlock(filteredBlock)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.FilteredBlock(filteredBlock)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
       case .Alert:
         if let alertMessage = AlertMessage.fromBitcoinStream(payloadStream) {
-          let message = PeerConnectionMessage.AlertMessage(alertMessage)
-          delegate?.peerConnection(self, didReceiveMessage: message)
+          self.delegateQueue.addOperationWithBlock {
+            let message = PeerConnectionMessage.AlertMessage(alertMessage)
+            self.delegate?.peerConnection(self, didReceiveMessage: message)
+          }
         }
     }
     payloadStream.close()
