@@ -39,7 +39,7 @@ extension SHA256Hash: BitcoinSerializable {
   }
 
   public static func fromBitcoinStream(stream: NSInputStream) -> SHA256Hash? {
-    let hashData = stream.readData(length: 32)
+    let hashData = stream.readData(32)
     if hashData == nil {
       Logger.warn("Failed to parse hashData from SHA256Hash")
       return nil
@@ -49,7 +49,7 @@ extension SHA256Hash: BitcoinSerializable {
   }
 }
 
-extension SHA256Hash: Printable {
+extension SHA256Hash: CustomStringConvertible {
 
   public var description: String {
     return data.hexString

@@ -18,25 +18,24 @@ public class InMemoryBlockChainStore: BlockChainStore {
 
   // MARK: - BlockChainStore
 
-  public func height(error: NSErrorPointer) -> UInt32? {
+  public func height() throws -> UInt32? {
     return _head?.height
   }
 
-  public func head(error: NSErrorPointer) -> BlockChainHeader? {
+  public func head() throws -> BlockChainHeader? {
     return _head
   }
 
-  public func addBlockChainHeaderAsNewHead(blockChainHeader: BlockChainHeader,
-                                           error: NSErrorPointer) {
+  public func addBlockChainHeaderAsNewHead(blockChainHeader: BlockChainHeader) throws {
     blockChainHeadersByHash[blockChainHeader.blockHeader.hash] = blockChainHeader
     _head = blockChainHeader
   }
 
-  public func deleteBlockChainHeaderWithHash(hash: SHA256Hash, error: NSErrorPointer) {
+  public func deleteBlockChainHeaderWithHash(hash: SHA256Hash) throws {
     blockChainHeadersByHash[hash] = nil
   }
 
-  public func blockChainHeaderWithHash(hash: SHA256Hash, error: NSErrorPointer)
+  public func blockChainHeaderWithHash(hash: SHA256Hash) throws
       -> BlockChainHeader? {
     return blockChainHeadersByHash[hash]
   }

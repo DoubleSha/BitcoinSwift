@@ -37,7 +37,7 @@ public extension Transaction {
  extension Transaction.Output: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendInt64(value)
     data.appendVarInt(script.length)
     data.appendData(script)
@@ -55,7 +55,7 @@ public extension Transaction {
       Logger.warn("Failed to parse scriptLength from Transaction.Output")
       return nil
     }
-    let script = stream.readData(length: Int(scriptLength!))
+    let script = stream.readData(Int(scriptLength!))
     if script == nil {
       Logger.warn("Failed to parse script from Transaction.Output")
       return nil

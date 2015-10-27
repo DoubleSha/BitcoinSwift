@@ -38,7 +38,7 @@ extension FilterAddMessage: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendVarInt(filterData.length)
     data.appendData(filterData)
     return data
@@ -55,7 +55,7 @@ extension FilterAddMessage: MessagePayload {
       Logger.warn("Invalid filterDataLength \(filterDataLength!) in FilterAddMessage")
       return nil
     }
-    let filterData = stream.readData(length: Int(filterDataLength!))
+    let filterData = stream.readData(Int(filterDataLength!))
     if filterData == nil {
       Logger.warn("Failed to parse filterData from FilterAddMessage")
       return nil

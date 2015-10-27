@@ -75,14 +75,14 @@ class BitcoinDecodingTests: XCTestCase {
     }
 
     // Test reading a big-endian UInt16.
-    if let int = stream.readUInt16(endianness: .BigEndian) {
+    if let int = stream.readUInt16(.BigEndian) {
       XCTAssertEqual(int, UInt16(0x0304))
     } else {
       XCTFail("Failed to read int")
     }
 
     // There is only one byte left, which is not long enough.
-    if let int = stream.readUInt16() {
+    if let _ = stream.readUInt16() {
       XCTFail("Expected to fail")
     }
 
@@ -104,14 +104,14 @@ class BitcoinDecodingTests: XCTestCase {
     }
 
     // Test reading a big-endian UInt32.
-    if let int = stream.readUInt32(endianness: .BigEndian) {
+    if let int = stream.readUInt32(.BigEndian) {
       XCTAssertEqual(int, UInt32(0x05060708))
     } else {
       XCTFail("Failed to read int")
     }
 
     // There is only one byte left, which is not long enough.
-    if let int = stream.readUInt32() {
+    if let _ = stream.readUInt32() {
       XCTFail("Expected to fail")
     }
 
@@ -135,14 +135,14 @@ class BitcoinDecodingTests: XCTestCase {
     }
 
     // Test reading a big-endian UInt64.
-    if let int = stream.readUInt64(endianness: .BigEndian) {
+    if let int = stream.readUInt64(.BigEndian) {
       XCTAssertEqual(int, UInt64(0x090a0b0c0d0e0f10))
     } else {
       XCTFail("Failed to read int")
     }
 
     // There is only one byte left, which is not long enough.
-    if let int = stream.readUInt64() {
+    if let _ = stream.readUInt64() {
       XCTFail("Expected to fail")
     }
 
@@ -164,14 +164,14 @@ class BitcoinDecodingTests: XCTestCase {
     }
 
     // Test reading a big-endian Int16.
-    if let int = stream.readInt16(endianness: .BigEndian) {
+    if let int = stream.readInt16(.BigEndian) {
       XCTAssertEqual(int, Int16(-2))
     } else {
       XCTFail("Failed to read int")
     }
 
     // There is only one byte left, which is not long enough.
-    if let int = stream.readInt16() {
+    if let _ = stream.readInt16() {
       XCTFail("Expected to fail")
     }
 
@@ -193,14 +193,14 @@ class BitcoinDecodingTests: XCTestCase {
     }
 
     // Test reading a big-endian Int32.
-    if let int = stream.readInt32(endianness: .BigEndian) {
+    if let int = stream.readInt32(.BigEndian) {
       XCTAssertEqual(int, Int32(-2))
     } else {
       XCTFail("Failed to read int")
     }
 
     // There is only one byte left, which is not long enough.
-    if let int = stream.readInt32() {
+    if let _ = stream.readInt32() {
       XCTFail("Expected to fail")
     }
 
@@ -224,14 +224,14 @@ class BitcoinDecodingTests: XCTestCase {
     }
 
     // Test reading a big-endian Int64.
-    if let int = stream.readInt64(endianness: .BigEndian) {
+    if let int = stream.readInt64(.BigEndian) {
       XCTAssertEqual(int, Int64(-2))
     } else {
       XCTFail("Failed to read int")
     }
 
     // There is only one byte left, which is not long enough.
-    if let int = stream.readInt64() {
+    if let _ = stream.readInt64() {
       XCTFail("Expected to fail")
     }
 
@@ -293,7 +293,7 @@ class BitcoinDecodingTests: XCTestCase {
     stream.open()
 
     // Test reading data of a fixed length.
-    if let data = stream.readData(length: 4) {
+    if let data = stream.readData(4) {
       let expectedBytes: [UInt8] = [0x01, 0x02, 0x03, 0x04]
       let expectedData = NSData(bytes: expectedBytes, length: expectedBytes.count)
       XCTAssertEqual(data, expectedData)

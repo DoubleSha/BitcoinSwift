@@ -43,7 +43,7 @@ extension PeerAddress: BitcoinSerializable {
   }
 
   public func bitcoinDataWithTimestamp(includeTimestamp: Bool) -> NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     if includeTimestamp {
       if let timestamp = timestamp {
         data.appendDateAs32BitUnixTimestamp(timestamp)
@@ -78,7 +78,7 @@ extension PeerAddress: BitcoinSerializable {
       Logger.warn("Failed to parse IP from PeerAddress")
       return nil
     }
-    let port = stream.readUInt16(endianness: .BigEndian)  // Network byte order.
+    let port = stream.readUInt16(.BigEndian)  // Network byte order.
     if port == nil {
       Logger.warn("Failed to parse port from PeerAddress")
       return nil

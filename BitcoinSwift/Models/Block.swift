@@ -39,7 +39,7 @@ extension Block: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendData(header.bitcoinData)
     // Note: the transactions array will be empty if this is just a block header.
     data.appendVarInt(transactions.count)

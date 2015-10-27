@@ -20,12 +20,12 @@ public class OSKeyChainSecureDataStore: SecureDataStore {
   }
 
   public func dataForKey(key: String) -> SecureData? {
-    var query = NSMutableDictionary()
+    let query = NSMutableDictionary()
     query.setObject("\(kSecClassGenericPassword)", forKey: "\(kSecClass)")
     query.setObject(service, forKey: "\(kSecAttrService)")
     query.setObject(key, forKey: "\(kSecAttrAccount)")
     query.setObject(true, forKey: "\(kSecReturnData)")
-    var result = UnsafeMutablePointer<Unmanaged<AnyObject>?>.alloc(1)
+    let result = UnsafeMutablePointer<AnyObject?>.alloc(1)
     result.initialize(nil)
     let status = SecItemCopyMatching(query, result)
     if status == errSecItemNotFound {
@@ -34,7 +34,7 @@ public class OSKeyChainSecureDataStore: SecureDataStore {
     if status != noErr {
       return nil
     }
-    let data = result.memory!.takeUnretainedValue() as! NSData
+    let data = result.memory as? NSData
     let secureData = SecureData(data: data)
     result.dealloc(1)
     return secureData
@@ -42,7 +42,7 @@ public class OSKeyChainSecureDataStore: SecureDataStore {
 
   public func saveData(data: SecureData, forKey key: String) -> Bool {
     precondition(dataForKey(key) == nil, "SecureData already exists with for key \(key)")
-    var item = NSMutableDictionary()
+    let item = NSMutableDictionary()
     // This prevents the key from being copied to Apple servers.
     item.setObject("\(kSecAttrAccessibleWhenUnlockedThisDeviceOnly)",
                    forKey: "\(kSecAttrAccessible)")
@@ -54,7 +54,7 @@ public class OSKeyChainSecureDataStore: SecureDataStore {
   }
 
   public func deleteDataForKey(key: String) -> Bool {
-    var query = NSMutableDictionary()
+    let query = NSMutableDictionary()
     query.setObject("\(kSecClassGenericPassword)", forKey: "\(kSecClass)")
     query.setObject(service, forKey: "\(kSecAttrService)")
     query.setObject(key, forKey: "\(kSecAttrAccount)")

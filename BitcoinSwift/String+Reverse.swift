@@ -12,7 +12,7 @@ extension String {
 
   public var reversedString: String {
     var reversedString = String()
-    for char in reverse(self) {
+    for char in Array(self.characters.reverse()) {
       reversedString.append(char)
     }
     return reversedString

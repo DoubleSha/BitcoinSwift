@@ -50,7 +50,7 @@ public class ExtendedECKey : ECKey {
 
   /// Creates a new child key derived from self with index.
   public func childKeyWithIndex(index: UInt32) -> ExtendedECKey? {
-    var data = SecureData()
+    let data = SecureData()
     if indexIsHardened(index) {
       data.appendBytes([0] as [UInt8], length: 1)
       data.appendSecureData(privateKey)
@@ -59,7 +59,7 @@ public class ExtendedECKey : ECKey {
       data.appendData(publicKey)
       data.appendUInt32(index, endianness: .BigEndian)
     }
-    var indexHash = data.HMACSHA512WithKey(chainCode)
+    let indexHash = data.HMACSHA512WithKey(chainCode)
     let indexHashLInt = SecureBigInteger(secureData: indexHash[0..<32])
     let curveOrder = ECKey.curveOrder()
     if indexHashLInt.greaterThanOrEqual(curveOrder) {
@@ -71,7 +71,7 @@ public class ExtendedECKey : ECKey {
       return nil
     }
     // The BigInteger might result in data whose length is less than expected, so we pad with 0's.
-    var childPrivateKey = SecureData()
+    let childPrivateKey = SecureData()
     let offset = ECKey.privateKeyLength() - Int32(childPrivateKeyInt.secureData.length)
     assert(offset >= 0)
     if offset > 0 {

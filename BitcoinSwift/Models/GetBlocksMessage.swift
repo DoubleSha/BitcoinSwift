@@ -41,7 +41,7 @@ extension GetBlocksMessage: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendUInt32(protocolVersion)
     data.appendVarInt(blockLocatorHashes.count)
     for blockLocatorHash in blockLocatorHashes {

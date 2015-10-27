@@ -32,7 +32,7 @@ public enum IPAddress: Equatable {
 extension IPAddress: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
     // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
     // Addresses are encoded using network byte order (big endian).
@@ -55,22 +55,22 @@ extension IPAddress: BitcoinSerializable {
     // An IPAddress is encoded as 4 32-bit words. IPV4 addresses are encoded as IPV4-in-IPV6
     // (12 bytes 00 00 00 00 00 00 00 00 00 00 FF FF, followed by the 4 bytes of the IPv4 address).
     // Addresses are encoded using network byte order.
-    let word0 = stream.readUInt32(endianness: .BigEndian)
+    let word0 = stream.readUInt32(.BigEndian)
     if word0 == nil {
       Logger.warn("Failed to parse word0 from IPAddress")
       return nil
     }
-    let word1 = stream.readUInt32(endianness: .BigEndian)
+    let word1 = stream.readUInt32(.BigEndian)
     if word1 == nil {
       Logger.warn("Failed to parse word1 from IPAddress")
       return nil
     }
-    let word2 = stream.readUInt32(endianness: .BigEndian)
+    let word2 = stream.readUInt32(.BigEndian)
     if word2 == nil {
       Logger.warn("Failed to parse word2 from IPAddress")
       return nil
     }
-    let word3 = stream.readUInt32(endianness: .BigEndian)
+    let word3 = stream.readUInt32(.BigEndian)
     if word3 == nil {
       Logger.warn("Failed to parse word3 from IPAddress")
       return nil

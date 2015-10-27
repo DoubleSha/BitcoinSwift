@@ -33,7 +33,7 @@ extension InventoryMessage: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendVarInt(inventoryVectors.count)
     for inventoryVector in inventoryVectors {
       data.appendData(inventoryVector.bitcoinData)

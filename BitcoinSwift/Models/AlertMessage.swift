@@ -53,7 +53,7 @@ extension AlertMessage: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     let alertData = alert.bitcoinData
     data.appendVarInt(alertData.length)
     data.appendData(alertData)
@@ -78,7 +78,7 @@ extension AlertMessage: MessagePayload {
       Logger.warn("Failed to parse signatureLength from AlertMessage")
       return nil
     }
-    let signature = stream.readData(length: Int(signatureLength!))
+    let signature = stream.readData(Int(signatureLength!))
     if signature == nil {
       Logger.warn("Failed to parse signature from AlertMessage")
       return nil

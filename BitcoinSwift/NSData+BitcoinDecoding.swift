@@ -15,7 +15,7 @@ public extension NSData {
     let subdata = self.subdataWithRange(NSRange(location: index, length: sizeof(UInt32)))
     let stream = NSInputStream(data: subdata)
     stream.open()
-    var int: UInt32? = stream.readUInt32(endianness: endianness)
+    let int: UInt32? = stream.readUInt32(endianness)
     stream.close()
     return int
   }

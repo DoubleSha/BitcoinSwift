@@ -164,7 +164,7 @@ public extension NSInputStream {
     var readBuffer = [UInt8](count: 256, repeatedValue: 0)
     if length == 0 {
       while hasBytesAvailable {
-        var numberOfBytesRead = self.read(&readBuffer, maxLength: readBuffer.count)
+        let numberOfBytesRead = self.read(&readBuffer, maxLength: readBuffer.count)
         if numberOfBytesRead == 0 {
           return nil
         }
@@ -174,7 +174,7 @@ public extension NSInputStream {
     } else {
       while hasBytesAvailable && length > 0 {
         let numberOfBytesToRead = min(length, readBuffer.count)
-        var numberOfBytesRead = self.read(&readBuffer, maxLength: numberOfBytesToRead)
+        let numberOfBytesRead = self.read(&readBuffer, maxLength: numberOfBytesToRead)
         if numberOfBytesRead != numberOfBytesToRead {
           return nil
         }
@@ -216,7 +216,7 @@ public extension NSInputStream {
   }
 
   public func readDateFrom32BitUnixTimestamp(endianness: Endianness = .LittleEndian) -> NSDate? {
-    let rawTimestamp = readUInt32(endianness: endianness)
+    let rawTimestamp = readUInt32(endianness)
     if rawTimestamp == nil {
       return nil
     }
@@ -224,7 +224,7 @@ public extension NSInputStream {
   }
 
   public func readDateFrom64BitUnixTimestamp(endianness: Endianness = .LittleEndian) -> NSDate? {
-    let rawTimestamp = readUInt64(endianness: endianness)
+    let rawTimestamp = readUInt64(endianness)
     if rawTimestamp == nil {
       return nil
     }

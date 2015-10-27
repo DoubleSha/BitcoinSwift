@@ -84,4 +84,17 @@
   [_mutableData appendData:secureData.mutableData];
 }
 
+#pragma mark NSObject
+
+- (BOOL)isEqual:(id)object {
+  if (self == object) {
+    return YES;
+  }
+  // This also covers the case where object is nil.
+  if (![object isKindOfClass:[self class]]) {
+    return NO;
+  }
+  return [_mutableData isEqualToData:[(SecureData *)object mutableData]];
+}
+
 @end

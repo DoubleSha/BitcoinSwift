@@ -32,7 +32,7 @@ extension PeerAddressMessage: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendVarInt(peerAddresses.count)
     for peerAddress in peerAddresses {
       data.appendData(peerAddress.bitcoinData)

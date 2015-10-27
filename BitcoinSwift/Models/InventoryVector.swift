@@ -33,7 +33,7 @@ public struct InventoryVector: Equatable {
 extension InventoryVector: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendUInt32(type.rawValue)
     data.appendData(hash.bitcoinData)
     return data
@@ -59,7 +59,7 @@ extension InventoryVector: BitcoinSerializable {
   }
 }
 
-extension InventoryVector: Printable {
+extension InventoryVector: CustomStringConvertible {
 
   public var description: String {
     switch type {

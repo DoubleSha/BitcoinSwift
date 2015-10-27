@@ -140,7 +140,7 @@ public struct PartialMerkleTree {
 extension PartialMerkleTree: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendUInt32(totalLeafNodes)
     data.appendVarInt(hashes.count)
     for hash in hashes {

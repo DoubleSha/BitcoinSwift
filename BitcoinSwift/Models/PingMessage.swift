@@ -36,7 +36,7 @@ extension PingMessage: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendUInt64(nonce)
     return data
   }

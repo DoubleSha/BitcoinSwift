@@ -36,7 +36,7 @@ extension NSData {
     let big58 = BigInteger(58)
     var multiplier = BigInteger(1)
     var value = BigInteger(0)
-    for char in reverse(base58String) {
+    for char in base58String.characters.reverse() {
       if let charValue = base58CharToValueMap[char] {
         value = value + (BigInteger(Int32(charValue)) * multiplier)
       } else {
@@ -46,7 +46,7 @@ extension NSData {
       multiplier = multiplier * big58
     }
     var prefixBytes: [UInt8] = []
-    for char in base58String {
+    for char in base58String.characters {
       // For each leading '1', append a 0 to the base58 result.
       if char != "1" {
         break

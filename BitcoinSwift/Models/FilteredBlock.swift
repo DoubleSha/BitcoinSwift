@@ -38,7 +38,7 @@ extension FilteredBlock: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendData(header.bitcoinData)
     data.appendData(partialMerkleTree.bitcoinData)
     return data

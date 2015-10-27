@@ -15,53 +15,96 @@ class CoreDataBlockChainStoreTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    blockChainStore.setUpInMemory()
+    do {
+      try blockChainStore.setUpInMemory()
+    } catch {
+      XCTFail()
+    }
     XCTAssertTrue(blockChainStore.isSetUp)
   }
 
   func testEmpty() {
-    var error: NSError?
-    let height = blockChainStore.height(&error)
-    XCTAssertNil(error)
+    let height: UInt32?
+    do {
+      try height = blockChainStore.height()
+    } catch {
+      height = nil
+      XCTFail()
+    }
     XCTAssertTrue(height == nil)
 
-    let head = blockChainStore.head(&error)
-    XCTAssertNil(error)
+    let head: BlockChainHeader?
+    do {
+      try head = blockChainStore.head()
+    } catch {
+      head = nil
+      XCTFail()
+    }
     XCTAssertTrue(head == nil)
 
-    let blockChainHeader = blockChainStore.blockChainHeaderWithHash(SHA256Hash(), error: &error)
-    XCTAssertNil(error)
+    let blockChainHeader: BlockChainHeader?
+    do {
+      try blockChainHeader = blockChainStore.blockChainHeaderWithHash(SHA256Hash())
+    } catch {
+    blockChainHeader = nil
+      XCTFail()
+    }
     XCTAssertTrue(blockChainHeader == nil)
   }
 
   func testSaveAndReadAndDelete() {
-    var error: NSError?
     let blockChainHeader = dummyBlockChainHeader()
-    blockChainStore.addBlockChainHeaderAsNewHead(blockChainHeader, error: &error)
-    XCTAssertNil(error)
+    do {
+      try blockChainStore.addBlockChainHeaderAsNewHead(blockChainHeader)
+    } catch {
+      XCTFail()
+    }
 
-    let height = blockChainStore.height(&error)
-    XCTAssertNil(error)
+    let height: UInt32?
+    do {
+      try height = blockChainStore.height()
+    } catch {
+      height = nil
+      XCTFail()
+    }
     XCTAssertTrue(height != nil)
     XCTAssertEqual(height!, blockChainHeader.height)
 
-    let head = blockChainStore.head(&error)
-    XCTAssertNil(error)
+    let head: BlockChainHeader?
+    do {
+      try head = blockChainStore.head()
+    } catch {
+      head = nil
+      XCTFail()
+    }
     XCTAssertTrue(head != nil)
     XCTAssertEqual(head!, blockChainHeader)
 
-    let readBlockChainHeader =
-        blockChainStore.blockChainHeaderWithHash(blockChainHeader.blockHeader.hash, error: &error)
-    XCTAssertNil(error)
+    let readBlockChainHeader: BlockChainHeader?
+    do {
+      try readBlockChainHeader =
+          blockChainStore.blockChainHeaderWithHash(blockChainHeader.blockHeader.hash)
+    } catch {
+      readBlockChainHeader = nil
+      XCTFail()
+    }
     XCTAssertTrue(readBlockChainHeader != nil)
     XCTAssertEqual(readBlockChainHeader!, blockChainHeader)
 
-    blockChainStore.deleteBlockChainHeaderWithHash(blockChainHeader.blockHeader.hash, error: &error)
-    XCTAssertNil(error)
+    do {
+      try blockChainStore.deleteBlockChainHeaderWithHash(blockChainHeader.blockHeader.hash)
+    } catch {
+      XCTFail()
+    }
 
-    let deletedBlockChainHeader =
-        blockChainStore.blockChainHeaderWithHash(blockChainHeader.blockHeader.hash, error: &error)
-    XCTAssertNil(error)
+    let deletedBlockChainHeader: BlockChainHeader?
+    do {
+      try deletedBlockChainHeader =
+          blockChainStore.blockChainHeaderWithHash(blockChainHeader.blockHeader.hash)
+    } catch {
+      deletedBlockChainHeader = nil
+      XCTFail()
+    }
     XCTAssertTrue(deletedBlockChainHeader == nil)
   }
 

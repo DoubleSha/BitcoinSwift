@@ -31,7 +31,7 @@ public struct Address: Equatable {
   public let hash160: NSData
 
   public var stringValue: String {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendUInt8(header)
     data.appendData(hash160)
     data.appendData(checksumForData(data))
@@ -39,7 +39,7 @@ public struct Address: Equatable {
   }
 
   public var checksum: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendUInt8(header)
     data.appendData(hash160)
     return checksumForData(data)
@@ -58,7 +58,7 @@ public struct Address: Equatable {
   /// If params is nil, the header will not be verified.
   /// If params is not nil, returns nil if the header does not match a known value.
   public init?(params: AddressParameters?, stringValue: String) {
-    let stringLength = count(stringValue)
+    let stringLength = stringValue.characters.count
     if stringLength > 35 || stringLength < 26 {
       Logger.debug("Invalid Address \(stringValue)")
       return nil
@@ -76,15 +76,15 @@ public struct Address: Equatable {
     let inputStream = NSInputStream(data: data)
     inputStream.open()
     header = inputStream.readUInt8()!
-    hash160 = inputStream.readData(length: 20)!
-    let checksum = inputStream.readData(length: 4)!
+    hash160 = inputStream.readData(20)!
+    let checksum = inputStream.readData(4)!
     inputStream.close()
     if self.checksum != checksum {
       Logger.debug("Invalid Address \(stringValue) checksum failed")
       return nil
     }
     if let supportedAddressHeaders = params?.supportedAddressHeaders {
-      if find(supportedAddressHeaders, header) == nil {
+      if supportedAddressHeaders.indexOf(header) == nil {
         Logger.debug("Invalid Address \(stringValue) unsupported header")
         return nil
       }

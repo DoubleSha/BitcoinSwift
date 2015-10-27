@@ -30,7 +30,7 @@ public prefix func ~(other: PeerServices) -> PeerServices {
 
 /// Bitfield of features to be enabled for this connection.
 /// https://en.bitcoin.it/wiki/Protocol_specification#version
-public struct PeerServices : RawOptionSetType {
+public struct PeerServices : OptionSetType {
   private let value: UInt64
 
   public init(rawValue value: UInt64) { self.value = value }

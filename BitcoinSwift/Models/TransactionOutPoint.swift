@@ -34,7 +34,7 @@ public extension Transaction {
  extension Transaction.OutPoint: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendData(transactionHash.bitcoinData)
     data.appendUInt32(index)
     return data

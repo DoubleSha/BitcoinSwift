@@ -65,7 +65,7 @@ extension VersionMessage: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendUInt32(protocolVersion)
     data.appendUInt64(services.rawValue)
     data.appendDateAs64BitUnixTimestamp(date)

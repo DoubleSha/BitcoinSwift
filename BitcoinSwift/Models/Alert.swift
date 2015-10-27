@@ -91,7 +91,7 @@ public struct Alert: Equatable {
 extension Alert: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendInt32(version)
     data.appendDateAs64BitUnixTimestamp(relayUntilDate)
     data.appendDateAs64BitUnixTimestamp(expirationDate)

@@ -327,8 +327,6 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
           let message = PeerConnectionMessage.AlertMessage(alertMessage)
           delegate?.peerConnection(self, didReceiveMessage: message)
         }
-      default: 
-        Logger.warn("Received unknown command \(message.header.command.rawValue). Ignoring")
     }
     payloadStream.close()
   }

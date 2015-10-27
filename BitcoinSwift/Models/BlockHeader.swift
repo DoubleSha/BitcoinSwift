@@ -72,7 +72,7 @@ public struct BlockHeader: Equatable {
   /// The difficulty used to create this block. This is the uncompressed form of the
   /// compactDifficulty property.
   public var difficulty: BigInteger {
-    var compactDifficultyData = NSMutableData()
+    let compactDifficultyData = NSMutableData()
     compactDifficultyData.appendUInt32(compactDifficulty, endianness: .BigEndian)
     return BigInteger(compactData: compactDifficultyData)
   }
@@ -89,7 +89,7 @@ public struct BlockHeader: Equatable {
 extension BlockHeader: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendUInt32(version)
     data.appendData(previousBlockHash.bitcoinData)
     data.appendData(merkleRoot.bitcoinData)

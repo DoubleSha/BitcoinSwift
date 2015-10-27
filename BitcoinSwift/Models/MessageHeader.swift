@@ -44,7 +44,7 @@ extension Message {
 extension Message.Header: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var bytes = NSMutableData()
+    let bytes = NSMutableData()
     bytes.appendUInt32(network.rawValue)
     bytes.appendData(command.data)
     bytes.appendUInt32(payloadLength)

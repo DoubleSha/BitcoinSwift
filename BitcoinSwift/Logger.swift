@@ -19,7 +19,7 @@ public class Logger {
   /// TODO: Set this to .Info by default for v1.0.
   public static var logLevel = LogLevel.Debug
 
-  public enum LogLevel: Int, Printable {
+  public enum LogLevel: Int, CustomStringConvertible {
 
     case Debug = 0, Info, Notice, Warn, Error, Critical, Alert, Emergency
 
@@ -112,7 +112,7 @@ public class Logger {
 
   private class var currentTimeString: String {
     var time = time_t(NSDate().timeIntervalSince1970)
-    var timeStruct = gmtime(&time)
+    let timeStruct = gmtime(&time)
     var timeBuffer = [Int8](count: 20, repeatedValue: 0)
     strftime(&timeBuffer, 20, "%Y-%m-%d %H:%M:%S", timeStruct)
     return NSString(CString: timeBuffer, encoding: NSASCIIStringEncoding)! as String

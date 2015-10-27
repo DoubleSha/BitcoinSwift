@@ -69,7 +69,7 @@ public struct Message: Equatable {
 
     /// The command string encoded into 12 bytes, null padded.
     public var data: NSData {
-      var data = NSMutableData(length: Command.encodedLength)!
+      let data = NSMutableData(length: Command.encodedLength)!
       let ASCIIStringData = rawValue.dataUsingEncoding(NSASCIIStringEncoding)!
       data.replaceBytesInRange(NSRange(location: 0, length: ASCIIStringData.length),
                                withBytes: ASCIIStringData.bytes)
@@ -125,7 +125,7 @@ public struct Message: Equatable {
 extension Message: BitcoinSerializable {
 
   public var bitcoinData: NSData {
-    var bytes = NSMutableData(data: header.bitcoinData)
+    let bytes = NSMutableData(data: header.bitcoinData)
     bytes.appendData(payload)
     return bytes
   }

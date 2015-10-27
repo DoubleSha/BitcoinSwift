@@ -53,7 +53,7 @@ extension RejectMessage: MessagePayload {
   }
 
   public var bitcoinData: NSData {
-    var data = NSMutableData()
+    let data = NSMutableData()
     data.appendVarString(rejectedCommand.rawValue)
     data.appendUInt8(code.rawValue)
     data.appendVarString(reason)
@@ -66,34 +66,34 @@ extension RejectMessage: MessagePayload {
   public static func fromBitcoinStream(stream: NSInputStream) -> RejectMessage? {
     let rawCommand = stream.readVarString()
     if rawCommand == nil {
-      println("WARN: Failed to parse rawCommand from RejectMessage")
+      print("WARN: Failed to parse rawCommand from RejectMessage")
       return nil
     }
     let command = Message.Command(rawValue: rawCommand!)
     if command == nil {
-      println("WARN: Invalid command \(rawCommand!) from RejectMessage")
+      print("WARN: Invalid command \(rawCommand!) from RejectMessage")
       return nil
     }
     let rawCode = stream.readUInt8()
     if rawCode == nil {
-      println("WARN: Failed to parse rawCode from RejectMessage")
+      print("WARN: Failed to parse rawCode from RejectMessage")
       return nil
     }
     let code = Code(rawValue: rawCode!)
     if code == nil {
-      println("WARN: Invalid code \(rawCode!) from RejectMessage")
+      print("WARN: Invalid code \(rawCode!) from RejectMessage")
       return nil
     }
     let reason = stream.readVarString()
     if reason == nil {
-      println("WARN: Failed to parse reason from RejectMessage")
+      print("WARN: Failed to parse reason from RejectMessage")
       return nil
     }
     var hash: SHA256Hash? = nil
     if stream.hasBytesAvailable {
       hash = SHA256Hash.fromBitcoinStream(stream)
       if hash == nil {
-        println("WARN: Failed to parse hash from RejectMessage")
+        print("WARN: Failed to parse hash from RejectMessage")
         return nil
       }
     }
