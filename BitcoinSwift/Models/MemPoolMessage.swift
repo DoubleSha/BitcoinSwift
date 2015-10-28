@@ -16,8 +16,7 @@ public struct MemPoolMessage: MessagePayload {
 
   // Swift's default struct initializers are marked as internal
   // See: http://stackoverflow.com/a/27635674/1470317
-  public init()
-  {}
+  public init() {}
   
   public var command: Message.Command {
     return Message.Command.MemPool
