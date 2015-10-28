@@ -12,6 +12,11 @@ import Foundation
 /// https://en.bitcoin.it/wiki/Protocol_specification#filterload.2C_filteradd.2C_filterclear.2C_merkleblock
 public struct FilterClearMessage: MessagePayload {
 
+  // Swift's default struct initializers are marked as internal
+  // See: http://stackoverflow.com/a/27635674/1470317
+  public init()
+  {}
+  
   public var command: Message.Command {
     return Message.Command.FilterClear
   }
