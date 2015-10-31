@@ -84,10 +84,14 @@ public class MessageParser {
       }
       let payloadData = NSData(bytes: receivedBytes, length: payloadLength)
       let message = Message(header: receivedHeader!, payloadData: payloadData)
-      if message.isChecksumValid() {
-        delegate?.didParseMessage(message)
+      if message.header.network == network {
+        if message.isChecksumValid() {
+          delegate?.didParseMessage(message)
+        } else {
+          Logger.warn("Dropping \(message.command.rawValue) message with invalid checksum")
+        }
       } else {
-        Logger.warn("Dropping \(message.command.rawValue) message with invalid checksum")
+        Logger.warn("Dropping \(message.command.rawValue) message with invalid network header: \(message.header.network) != \(network)")
       }
       receivedBytes.removeRange(0..<payloadLength)
       receivedHeader = nil

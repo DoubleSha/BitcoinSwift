@@ -58,11 +58,6 @@ extension Message.Header: BitcoinSerializable {
       Logger.warn("Failed to parse network magic value in message header")
       return nil
     }
-    let network = Message.Network(rawValue: NetworkMagicNumber(networkRaw!))
-    if network == nil {
-      Logger.warn("Unsupported network \(networkRaw!) in message header")
-      return nil
-    }
     let commandRaw = stream.readASCIIStringWithLength(Message.Command.encodedLength)
     if commandRaw == nil {
       Logger.warn("Failed to parse command in message header")
@@ -83,7 +78,7 @@ extension Message.Header: BitcoinSerializable {
       Logger.warn("Failed to parse payload checksum in message header")
       return nil
     }
-    return Message.Header(network: network!.rawValue,
+    return Message.Header(network: NetworkMagicNumber(networkRaw!),
       command: command!,
       payloadLength: payloadLength!,
       payloadChecksum: payloadChecksum!)
