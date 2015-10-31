@@ -21,7 +21,7 @@ extension Message {
   /// https://en.bitcoin.it/wiki/Protocol_specification#Message_structure
   public struct Header: Equatable {
 
-    public let network: Network
+    public let network: NetworkMagicNumber
     public let command: Command
     public let payloadLength: UInt32
     public let payloadChecksum: UInt32
@@ -29,7 +29,7 @@ extension Message {
     // Network (4 bytes) + Command (12 bytes) + payloadLength (4 bytes) + payloadChecksum (4 bytes).
     public static let length = 24
 
-    public init(network: Network,
+    public init(network: NetworkMagicNumber,
                 command: Command,
                 payloadLength: UInt32,
                 payloadChecksum: UInt32) {
@@ -45,7 +45,7 @@ extension Message.Header: BitcoinSerializable {
 
   public var bitcoinData: NSData {
     let bytes = NSMutableData()
-    bytes.appendUInt32(network.rawValue)
+    bytes.appendUInt32(network)
     bytes.appendData(command.data)
     bytes.appendUInt32(payloadLength)
     bytes.appendUInt32(payloadChecksum)
@@ -58,7 +58,7 @@ extension Message.Header: BitcoinSerializable {
       Logger.warn("Failed to parse network magic value in message header")
       return nil
     }
-    let network = Message.Network(rawValue: networkRaw!)
+    let network = Message.Network(rawValue: NetworkMagicNumber(networkRaw!))
     if network == nil {
       Logger.warn("Unsupported network \(networkRaw!) in message header")
       return nil
@@ -83,7 +83,7 @@ extension Message.Header: BitcoinSerializable {
       Logger.warn("Failed to parse payload checksum in message header")
       return nil
     }
-    return Message.Header(network: network!,
+    return Message.Header(network: network!.rawValue,
       command: command!,
       payloadLength: payloadLength!,
       payloadChecksum: payloadChecksum!)

@@ -29,7 +29,7 @@ class PeerConnectionTests: XCTestCase {
       self.outputStream = outputStream
       super.init(hostname: hostname,
                  port: port,
-                 network: network,
+                 network: network.rawValue,
                  delegate: delegate,
                  delegateQueue: delegateQueue)
     }
