@@ -19,6 +19,16 @@ public func ==(left: Message, right: Message) -> Bool {
   return left.header == right.header && left.payload == right.payload
 }
 
+public typealias NetworkMagicNumber = UInt32
+
+public extension NetworkMagicNumber {
+  public func magicBytes() -> [UInt8] {
+    let data = NSMutableData()
+    data.appendUInt32(self)
+    return data.UInt8Array
+  }
+}
+
 /// Wrapper struct that contains the header and payload for sending a message.
 /// Use this to serialize/deserialize messages to/from the Bitcoin P2P wire format.
 /// https://en.bitcoin.it/wiki/Protocol_specification#Message_structure
@@ -26,14 +36,8 @@ public struct Message: Equatable {
 
   /// Magic value indicating message origin network, and used to seek to next message when stream
   /// state is unknown.
-  public enum Network: UInt32 {
+  public enum Network: NetworkMagicNumber {
     case MainNet = 0xd9b4Bef9, TestNet = 0xdab5bffa, TestNet3 = 0x0709110b
-
-    public var magicBytes: [UInt8] {
-      let data = NSMutableData()
-      data.appendUInt32(rawValue)
-      return data.UInt8Array
-    }
   }
 
   /// Indicates what command this message corresponds to.
@@ -80,7 +84,7 @@ public struct Message: Equatable {
   public let header: Header
   public let payload: NSData
 
-  public var network: Network {
+  public var network: NetworkMagicNumber {
     return header.network
   }
   public var command: Command {
@@ -90,7 +94,7 @@ public struct Message: Equatable {
     return header.payloadChecksum
   }
 
-  public init(network: Network, command: Command, payloadData: NSData) {
+  public init(network: NetworkMagicNumber, command: Command, payloadData: NSData) {
     self.header = Header(network: network,
                          command: command,
                          payloadLength: UInt32(payloadData.length),
@@ -98,7 +102,7 @@ public struct Message: Equatable {
     self.payload = payloadData
   }
 
-  public init(network: Network, payload: MessagePayload) {
+  public init(network: NetworkMagicNumber, payload: MessagePayload) {
     self.header = Header(network: network,
                          command: payload.command,
                          payloadLength: UInt32(payload.bitcoinData.length),

@@ -19,7 +19,7 @@ public class PeerController {
 
   private let hostname: String
   private let port: UInt16
-  private let network: Message.Network
+  private let network: NetworkMagicNumber
   private let queue: NSOperationQueue
   private let blockChainStore: BlockChainStore
   private var connection: PeerConnection?
@@ -29,7 +29,7 @@ public class PeerController {
 
   public init(hostname: String,
               port: UInt16,
-              network: Message.Network,
+              network: NetworkMagicNumber,
               blockChainStore: BlockChainStore,
               queue: NSOperationQueue = NSOperationQueue.mainQueue(),
               delegate: PeerControllerDelegate? = nil) {

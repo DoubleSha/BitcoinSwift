@@ -18,7 +18,7 @@ public class MessageParser {
 
   public weak var delegate: MessageParserDelegate? = nil
 
-  private let network: Message.Network
+  private let network: NetworkMagicNumber
 
   // We receive a message in chunks. When we have received only part of a message, but not the
   // whole thing, receivedBytes stores the pending bytes, and adds onto it the next time
@@ -29,7 +29,7 @@ public class MessageParser {
   // enough bytes to parse the header, but haven't received the full message yet.
   private var receivedHeader: Message.Header? = nil
 
-  public init(network: Message.Network) {
+  public init(network: NetworkMagicNumber) {
     self.network = network
   }
 
@@ -46,7 +46,7 @@ public class MessageParser {
           // Throw away the bytes we have since we couldn't figure out how to handle them.
           // We might have all but the last byte of the networkMagicBytes for the next message,
           // so keep the last 3 bytes.
-          let end = receivedBytes.count - network.magicBytes.count + 1
+          let end = receivedBytes.count - network.magicBytes().count + 1
           if end > 0 {
             receivedBytes.removeRange(0..<end)
           }
@@ -67,7 +67,7 @@ public class MessageParser {
           // Failed to parse the header for some reason. It's possible that the networkMagicBytes
           // coincidentally appeared in the byte data, or the header was invalid for some reason.
           // Strip the networkMagicBytes so we can advance and try to parse again.
-          receivedBytes.removeRange(0..<network.magicBytes.count)
+          receivedBytes.removeRange(0..<network.magicBytes().count)
           continue
         }
         // receivedHeader is guaranteed to be non-nil at this point.
@@ -84,10 +84,14 @@ public class MessageParser {
       }
       let payloadData = NSData(bytes: receivedBytes, length: payloadLength)
       let message = Message(header: receivedHeader!, payloadData: payloadData)
-      if message.isChecksumValid() {
-        delegate?.didParseMessage(message)
+      if message.header.network == network {
+        if message.isChecksumValid() {
+          delegate?.didParseMessage(message)
+        } else {
+          Logger.warn("Dropping \(message.command.rawValue) message with invalid checksum")
+        }
       } else {
-        Logger.warn("Dropping \(message.command.rawValue) message with invalid checksum")
+        Logger.warn("Dropping \(message.command.rawValue) message with invalid network header: \(message.header.network) != \(network)")
       }
       receivedBytes.removeRange(0..<payloadLength)
       receivedHeader = nil
@@ -99,7 +103,7 @@ public class MessageParser {
   // Returns -1 if the header start (the position of network.magicBytes) was not found.
   // Otherwise returns the position where the message header begins.
   private func headerStartIndexInBytes(bytes: [UInt8]) -> Int {
-    let networkMagicBytes = network.magicBytes
+    let networkMagicBytes = network.magicBytes()
     if bytes.count < networkMagicBytes.count {
       return -1
     }

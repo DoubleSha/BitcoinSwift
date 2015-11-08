@@ -71,7 +71,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
 
   private let peerHostname: String?
   private let peerPort: UInt16
-  private let network: Message.Network
+  private let network: NetworkMagicNumber
 
   // Parses raw data received off the wire into Message objects.
   private let messageParser: MessageParser
@@ -99,7 +99,7 @@ public class PeerConnection: NSObject, NSStreamDelegate, MessageParserDelegate {
 
   public init(hostname: String,
               port: UInt16,
-              network: Message.Network,
+              network: NetworkMagicNumber,
               delegate: PeerConnectionDelegate? = nil,
               delegateQueue: NSOperationQueue = NSOperationQueue.mainQueue()) {
     self.delegate = delegate

@@ -19,7 +19,7 @@ class MessageParserTests: XCTestCase, MessageParserDelegate {
 
   override func setUp() {
     super.setUp()
-    messageParser = MessageParser(network: .MainNet)
+    messageParser = MessageParser(network: Message.Network.MainNet.rawValue)
     messageParser.delegate = self
   }
 

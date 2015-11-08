@@ -15,7 +15,7 @@ class DummyMessage {
   // MARK: - VersionMessage
 
   class var versionMessage: Message {
-    return Message(network: .MainNet, payload: versionMessagePayload)
+    return Message(network: Message.Network.MainNet.rawValue, payload: versionMessagePayload)
   }
 
   class var versionMessagePayload: VersionMessage {
