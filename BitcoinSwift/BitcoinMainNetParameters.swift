@@ -49,4 +49,15 @@ public class BitcoinMainNetParameters: BitcoinParameters {
   public var blockChainStoreFileName: String {
     return "blockchain"
   }
+  
+  // MARK: - ExtendedKeyVersionParameters
+  
+  public var extendedPublicKeyVersion: NSData {
+    let publicKeyVersion: [UInt8] = [0x04, 0x88, 0xb2, 0x1e]
+    return NSData(bytes: publicKeyVersion, length: publicKeyVersion.count)
+  }
+  public var extendedPrivateKeyVersion: NSData {
+    let privateKeyVersion: [UInt8] = [0x04, 0x88, 0xad, 0xe4]
+    return NSData(bytes: privateKeyVersion, length: privateKeyVersion.count)
+  }
 }

@@ -49,4 +49,15 @@ public class BitcoinTestNetParameters: BitcoinParameters {
   public var blockChainStoreFileName: String {
     return "blockchain_testnet"
   }
+  
+  // MARK: - ExtendedKeyVersionParameters
+  
+  public var extendedPublicKeyVersion: NSData {
+    let publicKeyVersion: [UInt8] = [0x04, 0x35, 0x87, 0xcf]
+    return NSData(bytes: publicKeyVersion, length: publicKeyVersion.count)
+  }
+  public var extendedPrivateKeyVersion: NSData {
+    let privateKeyVersion: [UInt8] = [0x04, 0x35, 0x83, 0x94]
+    return NSData(bytes: privateKeyVersion, length: privateKeyVersion.count)
+  }
 }

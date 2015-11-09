@@ -287,4 +287,131 @@ class ExtendedECKeyTests: XCTestCase {
       XCTFail("Failed to create child key.")
     }
   }
+    
+  func testParentPointer() {
+    let child = masterKey0.childKeyWithIndex(0)
+    let grandchild = child!.childKeyWithHardenedIndex(0)
+    
+    XCTAssertNil(masterKey0.parent)
+    XCTAssertEqual(child!.parent!, masterKey0)
+    XCTAssertEqual(grandchild!.parent!, child!)
+  }
+  
+  func testDefaultVersion() {
+    XCTAssert(masterKey0.params === BitcoinMainNetParameters.get())
+  }
+  
+  func testExplicitVersionOverwrite() {
+    let mainnetKey = ExtendedECKey.masterKey(params: BitcoinMainNetParameters.get()).key
+    let testnetKey = ExtendedECKey.masterKey(params: BitcoinTestNetParameters.get()).key
+    
+    XCTAssert(mainnetKey.params === BitcoinMainNetParameters.get())
+    XCTAssert(testnetKey.params === BitcoinTestNetParameters.get())
+  }
+  
+  func testVersionPropagation() {
+    let seed = SecureData(bytes: masterKey0SeedBytes,
+        length: UInt(masterKey0SeedBytes.count))
+    
+    let mMaster = ExtendedECKey.masterKeyWithSeed(seed, params: BitcoinMainNetParameters.get())!
+    let tMaster = ExtendedECKey.masterKeyWithSeed(seed, params: BitcoinTestNetParameters.get())!
+    let mGrandChild = mMaster.childKeyWithIndex(0)!.childKeyWithHardenedIndex(0)!
+    let tGrandChild = tMaster.childKeyWithHardenedIndex(0)!.childKeyWithIndex(0)!
+    
+    XCTAssert(mGrandChild.params === BitcoinMainNetParameters.get())
+    XCTAssert(tGrandChild.params === BitcoinTestNetParameters.get())
+  }
+  
+  func testExtendedKeySerilizationTestVector1() {
+    
+    var key = masterKey0
+    
+    // chain - m
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprv9s21ZrQH143K3QTDL4LXw2F7HEK3wJUD2nW2nRk4stbPy6cq3jPPqjiChkVvvNKmPGJxWUtg6LnF5kejMRNNU3TGtRBeJgk33yuGBxrMPHi")
+    
+    // chain - m/0ʜ
+    key = key.childKeyWithHardenedIndex(0)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub68Gmy5EdvgibQVfPdqkBBCHxA5htiqg55crXYuXoQRKfDBFA1WEjWgP6LHhwBZeNK1VTsfTFUHCdrfp1bgwQ9xv5ski8PX9rL2dZXvgGDnw")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprv9uHRZZhk6KAJC1avXpDAp4MDc3sQKNxDiPvvkX8Br5ngLNv1TxvUxt4cV1rGL5hj6KCesnDYUhd7oWgT11eZG7XnxHrnYeSvkzY7d2bhkJ7")
+    
+    // chain - m/0ʜ/1
+    key = key?.childKeyWithIndex(1)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub6ASuArnXKPbfEwhqN6e3mwBcDTgzisQN1wXN9BJcM47sSikHjJf3UFHKkNAWbWMiGj7Wf5uMash7SyYq527Hqck2AxYysAA7xmALppuCkwQ")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprv9wTYmMFdV23N2TdNG573QoEsfRrWKQgWeibmLntzniatZvR9BmLnvSxqu53Kw1UmYPxLgboyZQaXwTCg8MSY3H2EU4pWcQDnRnrVA1xe8fs")
+    
+    // chain - m/0ʜ/1/2ʜ
+    key = key?.childKeyWithHardenedIndex(2)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub6D4BDPcP2GT577Vvch3R8wDkScZWzQzMMUm3PWbmWvVJrZwQY4VUNgqFJPMM3No2dFDFGTsxxpG5uJh7n7epu4trkrX7x7DogT5Uv6fcLW5")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprv9z4pot5VBttmtdRTWfWQmoH1taj2axGVzFqSb8C9xaxKymcFzXBDptWmT7FwuEzG3ryjH4ktypQSAewRiNMjANTtpgP4mLTj34bhnZX7UiM")
+    
+    // chain - m/0ʜ/1/2ʜ/2
+    key = key?.childKeyWithIndex(2)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub6FHa3pjLCk84BayeJxFW2SP4XRrFd1JYnxeLeU8EqN3vDfZmbqBqaGJAyiLjTAwm6ZLRQUMv1ZACTj37sR62cfN7fe5JnJ7dh8zL4fiyLHV")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprvA2JDeKCSNNZky6uBCviVfJSKyQ1mDYahRjijr5idH2WwLsEd4Hsb2Tyh8RfQMuPh7f7RtyzTtdrbdqqsunu5Mm3wDvUAKRHSC34sJ7in334")
+    
+    // chain - m/0ʜ/1/2ʜ/2/1000000000
+    key = key?.childKeyWithIndex(1000000000)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub6H1LXWLaKsWFhvm6RVpEL9P4KfRZSW7abD2ttkWP3SSQvnyA8FSVqNTEcYFgJS2UaFcxupHiYkro49S8yGasTvXEYBVPamhGW6cFJodrTHy")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprvA41z7zogVVwxVSgdKUHDy1SKmdb533PjDz7J6N6mV6uS3ze1ai8FHa8kmHScGpWmj4WggLyQjgPie1rFSruoUihUZREPSL39UNdE3BBDu76")
+  }
+  
+  func testExtendedKeySerilizationTestVector2() {
+    
+    var key = masterKey1
+    
+    // chain - m
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub661MyMwAqRbcFW31YEwpkMuc5THy2PSt5bDMsktWQcFF8syAmRUapSCGu8ED9W6oDMSgv6Zz8idoc4a6mr8BDzTJY47LJhkJ8UB7WEGuduB")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprv9s21ZrQH143K31xYSDQpPDxsXRTUcvj2iNHm5NUtrGiGG5e2DtALGdso3pGz6ssrdK4PFmM8NSpSBHNqPqm55Qn3LqFtT2emdEXVYsCzC2U")
+    
+    // chain - m/0
+    key = key.childKeyWithIndex(0)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub69H7F5d8KSRgmmdJg2KhpAK8SR3DjMwAdkxj3ZuxV27CprR9LgpeyGmXUbC6wb7ERfvrnKZjXoUmmDznezpbZb7ap6r1D3tgFxHmwMkQTPH")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprv9vHkqa6EV4sPZHYqZznhT2NPtPCjKuDKGY38FBWLvgaDx45zo9WQRUT3dKYnjwih2yJD9mkrocEZXo1ex8G81dwSM1fwqWpWkeS3v86pgKt")
+    
+    // chain - m/0/2147483647ʜ
+    key = key?.childKeyWithHardenedIndex(2147483647)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub6ASAVgeehLbnwdqV6UKMHVzgqAG8Gr6riv3Fxxpj8ksbH9ebxaEyBLZ85ySDhKiLDBrQSARLq1uNRts8RuJiHjaDMBU4Zn9h8LZNnBC5y4a")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprv9wSp6B7kry3Vj9m1zSnLvN3xH8RdsPP1Mh7fAaR7aRLcQMKTR2vidYEeEg2mUCTAwCd6vnxVrcjfy2kRgVsFawNzmjuHc2YmYRmagcEPdU9")
+    
+    // chain - m/0/2147483647ʜ/1
+    key = key?.childKeyWithIndex(1)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub6DF8uhdarytz3FWdA8TvFSvvAh8dP3283MY7p2V4SeE2wyWmG5mg5EwVvmdMVCQcoNJxGoWaU9DCWh89LojfZ537wTfunKau47EL2dhHKon")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprv9zFnWC6h2cLgpmSA46vutJzBcfJ8yaJGg8cX1e5StJh45BBciYTRXSd25UEPVuesF9yog62tGAQtHjXajPPdbRCHuWS6T8XA2ECKADdw4Ef")
+    
+    // chain - m/0/2147483647ʜ/1/2147483646ʜ
+    key = key?.childKeyWithHardenedIndex(2147483646)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub6ERApfZwUNrhLCkDtcHTcxd75RbzS1ed54G1LkBUHQVHQKqhMkhgbmJbZRkrgZw4koxb5JaHWkY4ALHY2grBGRjaDMzQLcgJvLJuZZvRcEL")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprvA1RpRA33e1JQ7ifknakTFpgNXPmW2YvmhqLQYMmrj4xJXXWYpDPS3xz7iAxn8L39njGVyuoseXzU6rcxFLJ8HFsTjSyQbLYnMpCqE2VbFWc")
+    
+    // chain - m/0/2147483647ʜ/1/2147483646ʜ/2
+    key = key?.childKeyWithIndex(2)
+    XCTAssertEqual(key.encodedExtendedPublicKey(),  "xpub6FnCn6nSzZAw5Tw7cgR9bi15UV96gLZhjDstkXXxvCLsUXBGXPdSnLFbdpq8p9HmGsApME5hQTZ3emM2rnY5agb9rXpVGyy3bdW6EEgAtqt")
+    XCTAssertEqual(key.encodedExtendedPrivateKey(), "xprvA2nrNbFZABcdryreWet9Ea4LvTJcGsqrMzxHx98MMrotbir7yrKCEXw7nadnHM8Dq38EGfSh6dqA9QWTyefMLEcBYJUuekgW4BYPJcr9E7j")
+  }
+  
+  func testDeriviation() {
+    let key01 = masterKey0.childKeyWithIndex(1)?.childKeyWithHardenedIndex(2)?.childKeyWithIndex(2147483647)
+    let key02 = key01?.childKeyWithIndex(1)
+    let derivedKey01 = masterKey0.deriveFromExtendedKeyPath("m/1/2'/2147483647")
+    let derivedKey02 = derivedKey01?.deriveFromExtendedKeyPath("/1")
+    XCTAssertEqual(key01!.publicKey, derivedKey01!.publicKey)
+    XCTAssertEqual(key02!.publicKey, derivedKey02!.publicKey)
+    
+    let badKey01 = masterKey0.deriveFromExtendedKeyPath("/3000000000'")
+    let badKey02 = masterKey0.deriveFromExtendedKeyPath("m/1/m/1")
+    let badKey03 = masterKey0.childKeyWithIndex(15)?.deriveFromExtendedKeyPath("m/1", isAbsolute: false)
+    XCTAssertNil(badKey01)
+    XCTAssertNil(badKey02)
+    XCTAssertNil(badKey03)
+  }
+  
+  func testPath() {
+    let key = masterKey0.childKeyWithIndex(1)?.childKeyWithIndex(2)?.childKeyWithIndex(3)
+    let keyPath = key!.path
+    XCTAssertEqual(keyPath, "m/1/2/3")
+    
+    let keyFromPath = key!.deriveFromExtendedKeyPath(keyPath)
+    XCTAssertEqual(key!.publicKey, keyFromPath!.publicKey)
+  }
 }
