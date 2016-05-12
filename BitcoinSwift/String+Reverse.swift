@@ -11,10 +11,6 @@ import Foundation
 extension String {
 
   public var reversedString: String {
-    var reversedString = String()
-    for char in Array(self.characters.reverse()) {
-      reversedString.append(char)
-    }
-    return reversedString
+    return String(self.characters.reverse())
   }
 }
